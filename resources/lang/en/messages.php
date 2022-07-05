@@ -1949,4 +1949,5 @@
   'access_denied!!' => 'Access denied!!',
   'shipping_input_by_customer' => 'Shipping input by customer',
   'no_data_found' => 'No data found',
+  'Seller request for open a shop' => 'Seller request for open a shop',
 );
