@@ -58,7 +58,7 @@
 
                             <div class="card-footer">
                                 <button type="submit"
-                                        class="btn btn-primary ">{{\App\CPU\translate('Submit')}}</button>
+                                        class="btn btn--primary ">{{\App\CPU\translate('Submit')}}</button>
                             </div>
                         </form>
                     </div>

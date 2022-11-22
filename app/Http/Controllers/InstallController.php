@@ -86,6 +86,14 @@ class InstallController extends Controller
             'updated_at' => now(),
         ]);
 
+        DB::table('business_settings')->updateOrInsert(['type' => 'product_brand'], [
+            'value' => 1
+        ]);
+
+        DB::table('business_settings')->updateOrInsert(['type' => 'digital_product'], [
+            'value' => 1
+        ]);
+
         $previousRouteServiceProvier = base_path('app/Providers/RouteServiceProvider.php');
         $newRouteServiceProvier = base_path('app/Providers/RouteServiceProvider.txt');
         copy($newRouteServiceProvier, $previousRouteServiceProvier);
@@ -139,7 +147,7 @@ class InstallController extends Controller
                     BUYER_USERNAME=' . session('username') . '
                     SOFTWARE_ID=MzE0NDg1OTc=
 
-                    SOFTWARE_VERSION=9.0
+                    SOFTWARE_VERSION=12.0
                     ';
             $file = fopen(base_path('.env'), 'w');
             fwrite($file, $output);
@@ -161,8 +169,8 @@ class InstallController extends Controller
     public function import_sql()
     {
         try {
-            $sql_path = base_path('installation/backup/database.sql');
-            DB::unprepared(file_get_contents($sql_path));
+            //$sql_path = base_path('installation/backup/database.sql');
+            //DB::unprepared(file_get_contents($sql_path));
             return redirect('step5');
         } catch (\Exception $exception) {
             session()->flash('error', 'Your database is not clean, do you want to clean database then import?');

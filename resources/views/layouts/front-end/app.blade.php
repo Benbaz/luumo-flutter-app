@@ -38,7 +38,7 @@
     <link rel="stylesheet" href="{{asset('public/assets/front-end')}}/css/home.css"/>
     <link rel="stylesheet" href="{{asset('public/assets/front-end')}}/css/responsive1.css"/>
 
-    
+
     {{--dont touch this--}}
     <meta name="_token" content="{{csrf_token()}}">
     {{--dont touch this--}}
@@ -439,13 +439,13 @@
             line-height: 1.25rem;
         }
 
-        .btn-primary {
+        .btn--primary {
             color: #fff;
             background-color: {{$web_config['primary_color']}}!important;
             border-color: {{$web_config['primary_color']}}!important;
         }
 
-        .btn-primary:hover {
+        .btn--primary:hover {
             color: #fff;
             background-color: {{$web_config['primary_color']}}!important;
             border-color: {{$web_config['primary_color']}}!important;
@@ -641,10 +641,48 @@
         }
     </style>
 
-    {!! \App\CPU\Helpers::get_business_settings('pixel_analytics') !!}
+    @php($google_tag_manager_id = \App\CPU\Helpers::get_business_settings('google_tag_manager_id'))
+    @if($google_tag_manager_id )
+    <!-- Google Tag Manager -->
+        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','{{$google_tag_manager_id}}');</script>
+    <!-- End Google Tag Manager -->
+
+    @endif
+
+    @php($pixel_analytices_user_code =\App\CPU\Helpers::get_business_settings('pixel_analytics'))
+    @if($pixel_analytices_user_code)
+        <!-- Facebook Pixel Code -->
+            <script>
+            !function(f,b,e,v,n,t,s)
+            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+            n.queue=[];t=b.createElement(e);t.async=!0;
+            t.src=v;s=b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t,s)}(window, document,'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+            fbq('init', '{your-pixel-id-goes-here}');
+            fbq('track', 'PageView');
+            </script>
+            <noscript>
+            <img height="1" width="1" style="display:none"
+                src="https://www.facebook.com/tr?id={your-pixel-id-goes-here}&ev=PageView&noscript=1"/>
+            </noscript>
+        <!-- End Facebook Pixel Code -->
+    @endif
 </head>
 <!-- Body-->
 <body class="toolbar-enabled">
+    @if($google_tag_manager_id)
+        <!-- Google Tag Manager (noscript) -->
+        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{$google_tag_manager_id}}"
+        height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+        <!-- End Google Tag Manager (noscript) -->
+    @endif
 <!-- Sign in / sign up modal-->
 @include('layouts.front-end.partials._modals')
 <!-- Navbar-->
@@ -884,13 +922,18 @@
 
     function removeFromCart(key) {
         $.post('{{ route('cart.remove') }}', {_token: '{{ csrf_token() }}', key: key}, function (response) {
-            console.log(response)
+            $('#cod-for-cart').hide();
             updateNavCart();
             $('#cart-summary').empty().html(response.data);
             toastr.info('{{\App\CPU\translate('Item has been removed from cart')}}', {
                 CloseButton: true,
                 ProgressBar: true
             });
+            let segment_array = window.location.pathname.split('/');
+            let segment = segment_array[segment_array.length - 1];
+            if(segment === 'checkout-payment' || segment === 'checkout-details'){
+                location.reload();
+            }
         });
     }
 
@@ -906,10 +949,12 @@
 
             fieldName = $(this).attr('data-field');
             type = $(this).attr('data-type');
+            productType = $(this).attr('product-type');
             var input = $("input[name='" + fieldName + "']");
             var currentVal = parseInt(input.val());
 
             if (!isNaN(currentVal)) {
+                console.log(productType)
                 if (type == 'minus') {
 
                     if (currentVal > input.attr('min')) {
@@ -921,10 +966,11 @@
 
                 } else if (type == 'plus') {
 
-                    if (currentVal < input.attr('max')) {
+                    if (currentVal < input.attr('max') || (productType === 'digital')) {
                         input.val(currentVal + 1).change();
                     }
-                    if (parseInt(input.val()) == input.attr('max')) {
+
+                    if ((parseInt(input.val()) == input.attr('max')) && (productType === 'physical')) {
                         $(this).attr('disabled', true);
                     }
 
@@ -939,7 +985,7 @@
         });
 
         $('.input-number').change(function () {
-
+            productType = $(this).attr('product-type');
             minValue = parseInt($(this).attr('min'));
             maxValue = parseInt($(this).attr('max'));
             valueCurrent = parseInt($(this).val());
@@ -951,11 +997,11 @@
                 Swal.fire({
                     icon: 'error',
                     title: 'Cart',
-                    text: '{{\App\CPU\translate('Sorry, the minimum value was reached')}}'
+                    text: '{{\App\CPU\translate('Sorry, the minimum order quantity does not match')}}'
                 });
                 $(this).val($(this).data('oldValue'));
             }
-            if (valueCurrent <= maxValue) {
+            if (productType === 'digital' || valueCurrent <= maxValue) {
                 $(".btn-number[data-type='plus'][data-field='" + name + "']").removeAttr('disabled')
             } else {
                 Swal.fire({
@@ -996,8 +1042,15 @@
         });
     }
 
-    function updateCartQuantity(key) {
-        var quantity = $("#cartQuantity" + key).children("option:selected").val();
+    function updateCartQuantity(minimum_order_qty, key) {
+        /* var quantity = $("#cartQuantity" + key).children("option:selected").val(); */
+        var quantity = $("#cartQuantity" + key).val();
+        if(minimum_order_qty > quantity ) {
+            toastr.error('{{\App\CPU\translate("minimum_order_quantity_cannot_be_less_than_")}}' + minimum_order_qty);
+            $("#cartQuantity" + key).val(minimum_order_qty);
+            return false;
+        }
+
         $.post('{{route('cart.updateQuantity')}}', {
             _token: '{{csrf_token()}}',
             key: key,
@@ -1196,8 +1249,8 @@
             showCancelButton: true,
             cancelButtonColor: 'default',
             confirmButtonColor: '{{$web_config['primary_color']}}',
-            cancelButtonText: 'No',
-            confirmButtonText: 'Yes',
+            cancelButtonText: '{{\App\CPU\translate('No')}}',
+            confirmButtonText: '{{\App\CPU\translate('Yes')}}',
             reverseButtons: true
         }).then((result) => {
             if (result.value) {

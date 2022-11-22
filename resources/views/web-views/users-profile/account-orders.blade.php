@@ -137,11 +137,11 @@
                                     <td class="bodytr">
                                         @if($order['order_status']=='failed' || $order['order_status']=='canceled')
                                             <span class="badge badge-danger text-capitalize">
-                                                {{\App\CPU\translate($order['order_status'])}}
+                                                {{\App\CPU\translate($order['order_status'] =='failed' ? 'Failed To Deliver' : $order['order_status'])}}
                                             </span>
                                         @elseif($order['order_status']=='confirmed' || $order['order_status']=='processing' || $order['order_status']=='delivered')
                                             <span class="badge badge-success text-capitalize">
-                                                {{\App\CPU\translate($order['order_status'])}}
+                                                {{\App\CPU\translate($order['order_status']=='processing' ? 'packaging' : $order['order_status'])}}
                                             </span>
                                         @else
                                             <span class="badge badge-info text-capitalize">
@@ -154,7 +154,7 @@
                                     </td>
                                     <td class="bodytr">
                                         <a href="{{ route('account-order-details', ['id'=>$order->id]) }}"
-                                           class="btn btn-primary p-2">
+                                           class="btn btn--primary p-2">
                                             <i class="fa fa-eye"></i> {{\App\CPU\translate('view')}}
                                         </a>
                                         @if($order['payment_method']=='cash_on_delivery' && $order['order_status']=='pending')
@@ -176,6 +176,10 @@
                         @if($orders->count()==0)
                             <center class="mt-3 mb-2">{{\App\CPU\translate('no_order_found')}}</center>
                         @endif
+
+                        <div class="card-footer">
+                            {{$orders->links()}}
+                        </div>
                     </div>
                 </div>
             </section>

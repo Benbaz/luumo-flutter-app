@@ -8,17 +8,17 @@
 
 @section('content')
     <div class="content container-fluid">
-        <!-- Page Header -->
-        <div class="page-header">
-            <div class="row align-items-center">
-                <div class="col-sm mb-2 mb-sm-0">
-                    <h1 class="page-header-title"><i class="tio-edit"></i> {{\App\CPU\translate('update')}} {{\App\CPU\translate('deliveryman')}}</h1>
-                </div>
-            </div>
+        <!-- Page Title -->
+        <div class="mb-3">
+            <h2 class="h1 mb-0 text-capitalize d-flex align-items-center gap-2">
+                <img src="{{asset('/public/assets/back-end/img/deliveryman.png')}}" width="20" alt="">
+                {{\App\CPU\translate('Update_Deliveryman')}}
+            </h2>
         </div>
-        <!-- End Page Header -->
-        <div class="row gx-2 gx-lg-3">
-            <div class="col-sm-12 col-lg-12 mb-3 mb-lg-2">
+        <!-- End Page Title -->
+
+        <div class="row">
+            <div class="col-12 mb-3">
                 <div class="card">
                     <div class="card-body">
                         <form action="{{route('admin.delivery-man.update',[$delivery_man['id']])}}" method="post"
@@ -27,17 +27,17 @@
                             <div class="row">
                                 <div class="col-md-6 col-12">
                                     <div class="form-group">
-                                        <label class="input-label" for="exampleFormControlInput1">{{\App\CPU\translate('first')}} {{\App\CPU\translate('name')}}</label>
+                                        <label class="title-color d-flex">{{\App\CPU\translate('first')}} {{\App\CPU\translate('name')}}</label>
                                         <input type="text" value="{{$delivery_man['f_name']}}" name="f_name"
-                                               class="form-control" placeholder="New delivery-man"
+                                               class="form-control" placeholder="{{\App\CPU\translate('New delivery-man')}}"
                                                required>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group">
-                                        <label class="input-label" for="exampleFormControlInput1">{{\App\CPU\translate('last')}} {{\App\CPU\translate('name')}}</label>
+                                        <label class="title-color d-flex">{{\App\CPU\translate('last')}} {{\App\CPU\translate('name')}}</label>
                                         <input type="text" value="{{$delivery_man['l_name']}}" name="l_name"
-                                               class="form-control" placeholder="Last Name"
+                                               class="form-control" placeholder="{{\App\CPU\translate('Last Name')}}"
                                                required>
                                     </div>
                                 </div>
@@ -46,17 +46,17 @@
                             <div class="row">
                                 <div class="col-md-6 col-12">
                                     <div class="form-group">
-                                        <label class="input-label" for="exampleFormControlInput1">{{\App\CPU\translate('email')}}</label>
+                                        <label class="title-color d-flex">{{\App\CPU\translate('email')}}</label>
                                         <input type="email" value="{{$delivery_man['email']}}" name="email" class="form-control"
-                                               placeholder="Ex : ex@example.com"
+                                               placeholder="{{\App\CPU\translate('Ex : ex@example.com')}}"
                                                required>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group">
-                                        <label class="input-label" for="exampleFormControlInput1">{{\App\CPU\translate('phone')}}</label>
+                                        <label class="title-color d-flex">{{\App\CPU\translate('phone')}}</label>
                                         <input type="text" name="phone" value="{{$delivery_man['phone']}}" class="form-control"
-                                               placeholder="Ex : 017********"
+                                               placeholder="{{\App\CPU\translate('Ex : 017********')}}"
                                                required>
                                     </div>
                                 </div>
@@ -65,7 +65,7 @@
                             <div class="row">
                                 <div class="col-md-6 col-12">
                                     <div class="form-group">
-                                        <label class="input-label" for="exampleFormControlInput1">{{\App\CPU\translate('identity')}} {{\App\CPU\translate('type')}}</label>
+                                        <label class="title-color d-flex">{{\App\CPU\translate('identity')}} {{\App\CPU\translate('type')}}</label>
                                         <select name="identity_type" class="form-control">
                                             <option
                                                 value="passport" {{$delivery_man['identity_type']=='passport'?'selected':''}}>
@@ -86,52 +86,55 @@
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group">
-                                        <label class="input-label" for="exampleFormControlInput1">{{\App\CPU\translate('identity')}} {{\App\CPU\translate('number')}}</label>
+                                        <label class="title-color d-flex">{{\App\CPU\translate('identity')}} {{\App\CPU\translate('number')}}</label>
                                         <input type="text" name="identity_number" value="{{$delivery_man['identity_number']}}"
                                                class="form-control"
-                                               placeholder="Ex : DH-23434-LS"
+                                               placeholder="{{\App\CPU\translate('Ex : DH-23434-LS')}}"
                                                required>
                                     </div>
                                 </div>
-                                <div class="col-md-12 col-12">
+                                <div class="col-12">
                                     <div class="form-group">
-                                        <label class="input-label" for="exampleFormControlInput1">{{\App\CPU\translate('identity')}} {{\App\CPU\translate('image')}}</label>
+                                        <label class="title-color d-flex">{{\App\CPU\translate('identity')}} {{\App\CPU\translate('image')}}</label>
                                         <div>
-                                            <div class="row" id="coba"></div>
+                                            <div class="row" id="coba">
+                                                @foreach(json_decode($delivery_man['identity_image'],true) as $img)
+                                                    <div class="col-md-4 mb-3">
+                                                        <img height="150" src="{{asset('storage/app/public/delivery-man').'/'.$img}}">
+                                                    </div>
+                                                @endforeach
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-
-                                <br>
-
-                                @foreach(json_decode($delivery_man['identity_image'],true) as $img)
-                                    <div class="col-md-4 col-12 mb-2">
-                                        <img height="150" src="{{asset('storage/app/public/delivery-man').'/'.$img}}">
-                                    </div>
-                                @endforeach
-                                <hr>
                             </div>
 
                             <div class="form-group">
-                                <label class="input-label" for="exampleFormControlInput1">{{\App\CPU\translate('password')}}</label>
-                                <input type="text" name="password" class="form-control" placeholder="Ex : password">
+                                <label class="title-color d-flex">{{\App\CPU\translate('password')}}</label>
+                                <input type="text" name="password" class="form-control" placeholder="{{\App\CPU\translate('Ex : password')}}">
                             </div>
 
                             <div class="form-group">
-                                <label>{{\App\CPU\translate('deliveryman')}} {{\App\CPU\translate('image')}}</label><small style="color: red">* ( {{\App\CPU\translate('ratio')}} 1:1 )</small>
-                                <div class="custom-file">
-                                    <input type="file" name="image" id="customFileEg1" class="custom-file-input"
-                                           accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
-                                    <label class="custom-file-label" for="customFileEg1">{{\App\CPU\translate('choose')}} {{\App\CPU\translate('file')}}</label>
+                                <div class="d-flex mb-2 gap-2 align-items-center">
+                                    <label class="title-color mb-0">{{\App\CPU\translate('deliveryman')}} {{\App\CPU\translate('image')}}</label>
+                                    <span class="text-info">* ( {{\App\CPU\translate('ratio')}} 1:1 )</span>
                                 </div>
-                                <hr>
+                                <div class="form-group">
+                                    <div class="custom-file">
+                                        <input type="file" name="image" id="customFileEg1" class="custom-file-input"
+                                            accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
+                                        <label class="custom-file-label" for="customFileEg1">{{\App\CPU\translate('choose')}} {{\App\CPU\translate('file')}}</label>
+                                    </div>
+                                </div>
                                 <center>
-                                    <img style="height: 200px;border: 1px solid; border-radius: 10px;" id="viewer"
+                                    <img class="upload-img-view" id="viewer"
                                          src="{{asset('storage/app/public/delivery-man').'/'.$delivery_man['image']}}" alt="delivery-man image"/>
                                 </center>
                             </div>
-                            <hr>
-                            <button type="submit" class="btn btn-primary float-right">{{\App\CPU\translate('submit')}}</button>
+                            <div class="d-flex justify-content-end gap-3">
+                                <button type="reset" id="reset" class="btn btn-secondary px-4">{{\App\CPU\translate('reset')}}</button>
+                                <button type="submit" class="btn btn--primary px-4">{{\App\CPU\translate('submit')}}</button>
+                            </div>
                         </form>
                     </div>
                 </div>

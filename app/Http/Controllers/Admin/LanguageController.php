@@ -7,6 +7,8 @@ use App\Model\BusinessSetting;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Validator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
@@ -25,6 +27,12 @@ class LanguageController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'name' => 'required',
+        ], [
+            'name.required'  => 'Language is required!',
+        ]);
+
         $language = BusinessSetting::where('type', 'language')->first();
         $lang_array = [];
         $codes = [];
@@ -140,6 +148,12 @@ class LanguageController extends Controller
 
     public function update(Request $request)
     {
+        $request->validate([
+            'name' => 'required',
+        ], [
+            'name.required'  => 'Language is required!',
+        ]);
+
         $language = BusinessSetting::where('type', 'language')->first();
         $lang_array = [];
         foreach (json_decode($language['value'], true) as $key => $data) {
@@ -230,16 +244,18 @@ class LanguageController extends Controller
         ]);
 
         $dir = base_path('resources/lang/' . $lang);
-        $it = new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS);
-        $files = new RecursiveIteratorIterator($it, RecursiveIteratorIterator::CHILD_FIRST);
-        foreach ($files as $file) {
-            if ($file->isDir()) {
-                rmdir($file->getRealPath());
-            } else {
-                unlink($file->getRealPath());
+        if(File::isDirectory($dir)) {
+            $it = new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS);
+            $files = new RecursiveIteratorIterator($it, RecursiveIteratorIterator::CHILD_FIRST);
+            foreach ($files as $file) {
+                if ($file->isDir()) {
+                    rmdir($file->getRealPath());
+                } else {
+                    unlink($file->getRealPath());
+                }
             }
+            rmdir($dir);
         }
-        rmdir($dir);
 
 
         $languages = array();

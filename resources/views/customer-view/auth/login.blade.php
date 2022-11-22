@@ -43,7 +43,7 @@
             <div class="col-md-6">
                 <div class="card border-0 box-shadow">
                     <div class="card-body">
-                        <h2 class="h4 mb-1">{{\App\CPU\translate('sing_in')}}</h2>
+                        <h2 class="h4 mb-1">{{\App\CPU\translate('sign_in')}}</h2>
                         <hr class="mt-2">
                         {{-- <h3 class="font-size-base pt-4 pb-2">{{\App\CPU\translate('or_using_form_below')}}</h3> --}}
                         <form class="needs-validation mt-2" autocomplete="off" action="{{route('customer.auth.login')}}"
@@ -107,7 +107,7 @@
                                     </div>
                                 </div>
                             @endif
-                            <button class="btn btn-primary btn-block btn-shadow"
+                            <button class="btn btn--primary btn-block btn-shadow"
                                     type="submit">{{\App\CPU\translate('sign_in')}}</button>
                         </form>
                     </div>
@@ -119,8 +119,8 @@
                                 </div>
                                 <div class="mb-3 {{Session::get('direction') === "rtl" ? 'ml-2' : ''}}">
                                     <a class="btn btn-outline-primary"
-                                       href="{{route('customer.auth.register')}}">
-                                        <i class="fa fa-user-circle"></i> {{\App\CPU\translate('sing_up')}}
+                                       href="{{route('customer.auth.sign-up')}}">
+                                        <i class="fa fa-user-circle"></i> {{\App\CPU\translate('sign_up')}}
                                     </a>
                                 </div>
                             </div>
@@ -130,7 +130,7 @@
                                         <a class="btn btn-outline-primary"
                                            href="{{route('customer.auth.service-login', $socialLoginService['login_medium'])}}"
                                            style="width: 100%">
-                                            <i class="czi-{{ $socialLoginService['login_medium'] }} mr-2 ml-n1"></i>{{\App\CPU\translate('sing_in_with_'.$socialLoginService['login_medium'])}}
+                                            <i class="czi-{{ $socialLoginService['login_medium'] }} mr-2 ml-n1"></i>{{\App\CPU\translate('sign_in_with_'.$socialLoginService['login_medium'])}}
                                         </a>
                                     </div>
                                 @endif
@@ -144,51 +144,7 @@
 @endsection
 
 @push('script')
-    <!--    <script>
-        $('#sign-in-form').submit(function (e) {
-            e.preventDefault();
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.post({
-                url: '{{route('customer.auth.login')}}',
-                dataType: 'json',
-                data: $('#sign-in-form').serialize(),
-                beforeSend: function () {
-                    $('#loading').show();
-                },
-                success: function (data) {
-                    if (data.errors) {
-                        for (var i = 0; i < data.errors.length; i++) {
-                            toastr.error(data.errors[i].message, {
-                                CloseButton: true,
-                                ProgressBar: true
-                            });
-                        }
-                    } else {
-                        toastr.success(data.message, {
-                            CloseButton: true,
-                            ProgressBar: true
-                        });
-                        setInterval(function () {
-                            location.href = data.url;
-                        }, 2000);
-                    }
-                },
-                complete: function () {
-                    $('#loading').hide();
-                },
-                error: function () {
-                    toastr.error('Credentials do not match or account has been suspended.', {
-                        CloseButton: true,
-                        ProgressBar: true
-                    });
-                }
-            });
-        });
-    </script>-->
+    
     {{-- recaptcha scripts start --}}
     @if(isset($recaptcha) && $recaptcha['status'] == 1)
         <script type="text/javascript">

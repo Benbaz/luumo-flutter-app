@@ -107,7 +107,7 @@
 
                             <div class="row mt-4">
                                 <div class="col-6">
-                                    <a href="{{route('home')}}" class="btn btn-primary">
+                                    <a href="{{route('home')}}" class="btn btn--primary">
                                         {{\App\CPU\translate('go_to_shopping')}}
                                     </a>
                                 </div>

@@ -12,22 +12,26 @@
     <!-- Favicon -->
     <link rel="shortcut icon" href="">
     <!-- Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&amp;display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
     <!-- CSS Implementing Plugins -->
     <link rel="stylesheet" href="{{asset('public/assets/back-end')}}/css/vendor.min.css">
+    <link rel="stylesheet" href="{{asset('public/assets/back-end')}}/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{asset('public/assets/back-end')}}/css/custom.css">
 
 
     <link rel="stylesheet" href="{{asset('public/assets/back-end')}}/vendor/icon-set/style.css">
     <!-- CSS Front Template -->
     <link rel="stylesheet" href="{{asset('public/assets/back-end')}}/css/theme.minc619.css?v=1.0">
+    <link rel="stylesheet" href="{{asset('public/assets/back-end')}}/css/style.css">
     @if(Session::get('direction') === "rtl")
         <link rel="stylesheet" href="{{asset('public/assets/back-end')}}/css/menurtl.css">
     @endif
     {{-- light box --}}
     <link rel="stylesheet" href="{{asset('public/css/lightbox.css')}}">
     @stack('css_or_js')
-    <style>
+    <!-- <style>
         :root {
             --theameColor: #045cff;
         }
@@ -35,130 +39,11 @@
         .rtl {
             direction: {{ Session::get('direction') }};
         }
-        .flex-start {
-            display: flex;
-            justify-content:flex-start;
-        }
-        .flex-between {
-            display: flex;
-            justify-content:space-between;
-        }
-        .row-reverse {
-            display: flex;
-            flex-direction: row-reverse;
-        }
-        .row-center {
-            display: flex;
-            justify-content:center;
-        }
 
         .select2-results__options {
             text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};
         }
-
-        .scroll-bar {
-            max-height: calc(100vh - 100px);
-            overflow-y: auto !important;
-        }
-
-        ::-webkit-scrollbar-track {
-            box-shadow: inset 0 0 1px #cfcfcf;
-            /*border-radius: 5px;*/
-        }
-
-        ::-webkit-scrollbar {
-            width: 3px !important;
-            height: 3px !important;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
-            /*border-radius: 5px;*/
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #003638;
-        }
-
-        @media only screen and (max-width: 768px) {
-            /* For mobile phones: */
-            .map-warper {
-                height: 250px;
-                padding-bottom: 10px;
-            }
-        }
-
-        .deco-none {
-            color: inherit;
-            text-decoration: inherit;
-        }
-
-        .qcont:first-letter {
-            text-transform: capitalize
-        }
-    </style>
-    <style>
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 48px;
-            height: 23px;
-        }
-
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            -webkit-transition: .4s;
-            transition: .4s;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 15px;
-            width: 15px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            -webkit-transition: .4s;
-            transition: .4s;
-        }
-
-        input:checked + .slider {
-            background-color: #377dff;
-        }
-
-        input:focus + .slider {
-            box-shadow: 0 0 1px #377dff;
-        }
-
-        input:checked + .slider:before {
-            -webkit-transform: translateX(26px);
-            -ms-transform: translateX(26px);
-            transform: translateX(26px);
-        }
-
-        /* Rounded sliders */
-        .slider.round {
-            border-radius: 34px;
-        }
-
-        .slider.round:before {
-            border-radius: 50%;
-        }
-
-    </style>
+    </style> -->
     <script
         src="{{asset('public/assets/back-end')}}/vendor/hs-navbar-vertical-aside/hs-navbar-vertical-aside-mini-cache.js"></script>
     <link rel="stylesheet" href="{{asset('public/assets/back-end')}}/css/toastr.css">
@@ -168,10 +53,11 @@
 <!-- Builder -->
 @include('layouts.back-end.partials._front-settings')
 <!-- End Builder -->
+<span class="d-none" id="placeholderImg" data-img="{{asset('public/assets/back-end/img/400x400/img3.png')}}"></span>
 {{--loader--}}
 <div class="row">
-    <div class="col-12" style="margin-top:10rem;position: fixed;z-index: 9999;">
-        <div id="loading" style="display: none;">
+    <div class="col-12 position-fixed z-9999 mt-10rem d--none">
+        <div id="loading">
            <center>
             <img width="200"
                  src="{{asset('storage/app/public/company')}}/{{\App\CPU\Helpers::get_business_settings('loader_gif')}}"
@@ -188,7 +74,7 @@
 
 <!-- END ONLY DEV -->
 
-<main id="content" role="main" class="main pointer-event" style="background-color: #ffffff">
+<main id="content" role="main" class="main pointer-event">
     <!-- Content -->
 @yield('content')
 <!-- End Content -->
@@ -228,6 +114,54 @@
 <!-- JS Plugins Init. -->
 <script>
     $(document).on('ready', function () {
+        "use strict"
+
+        // Convert SVG code
+        // =======================================================
+        $("img.svg").each(function () {
+            var $img = jQuery(this);
+            var imgID = $img.attr("id");
+            var imgClass = $img.attr("class");
+            var imgURL = $img.attr("src");
+
+            jQuery.get(
+            imgURL,
+            function (data) {
+                // Get the SVG tag, ignore the rest
+                var $svg = jQuery(data).find("svg");
+
+                // Add replaced image's ID to the new SVG
+                if (typeof imgID !== "undefined") {
+                $svg = $svg.attr("id", imgID);
+                }
+                // Add replaced image's classes to the new SVG
+                if (typeof imgClass !== "undefined") {
+                $svg = $svg.attr("class", imgClass + " replaced-svg");
+                }
+
+                // Remove any invalid XML tags as per http://validator.w3.org
+                $svg = $svg.removeAttr("xmlns:a");
+
+                // Check if the viewport is set, else we gonna set it if we can.
+                if (
+                !$svg.attr("viewBox") &&
+                $svg.attr("height") &&
+                $svg.attr("width")
+                ) {
+                $svg.attr(
+                    "viewBox",
+                    "0 0 " + $svg.attr("height") + " " + $svg.attr("width")
+                );
+                }
+
+                // Replace image with new SVG
+                $img.replaceWith($svg);
+            },
+            "xml"
+            );
+        });
+
+
         // ONLY DEV
         // =======================================================
         if (window.localStorage.getItem('hs-builder-popover') === null) {
@@ -256,11 +190,11 @@
 
         // INITIALIZATION OF MEGA MENU
         // =======================================================
-        var megaMenu = new HSMegaMenu($('.js-mega-menu'), {
+        /*var megaMenu = new HSMegaMenu($('.js-mega-menu'), {
             desktop: {
                 position: 'left'
             }
-        }).init();
+        }).init();*/
 
 
         // INITIALIZATION OF NAVBAR VERTICAL NAVIGATION
@@ -343,7 +277,23 @@
         });
     });
 </script>
+<script>
+    $("#reset").on('click', function (){
+        let placeholderImg = $("#placeholderImg").data('img');
+        $('#viewer').attr('src', placeholderImg);
+        $('.spartan_remove_row').click();
+    });
 
+    function openInfoWeb()
+    {
+        var x = document.getElementById("website_info");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+    }
+</script>
 @stack('script')
 
 
@@ -365,19 +315,21 @@
     }
 </script>
 <script>
-    setInterval(function () {
-        $.get({
-            url: '{{route('admin.get-order-data')}}',
-            dataType: 'json',
-            success: function (response) {
-                let data = response.data;
-                if (data.new_order > 0) {
-                    playAudio();
-                    $('#popup-modal').appendTo("body").modal('show');
-                }
-            },
-        });
-    }, 10000);
+    @if(\App\CPU\Helpers::module_permission_check('order_management'))
+        setInterval(function () {
+            $.get({
+                url: '{{route('admin.get-order-data')}}',
+                dataType: 'json',
+                success: function (response) {
+                    let data = response.data;
+                    if (data.new_order > 0) {
+                        playAudio();
+                        $('#popup-modal').appendTo("body").modal('show');
+                    }
+                },
+            });
+        }, 10000);
+    @endif
 
     function check_order() {
         location.href = '{{route('admin.orders.list',['status'=>'all'])}}';
@@ -452,9 +404,6 @@
 
 <!-- ck editor -->
 
-{{--<script src="{{ asset('public/ckeditor/ckeditor.js')}}"></script>--}}
-{{--<script>CKEDITOR.replace('editor');</script>--}}
-
 <!-- ck editor -->
 
 <script>
@@ -462,15 +411,12 @@
 </script>
 
 <script>
-    // $(document).ready(function () {
-    //     $('.navbar-vertical-content').animate({
-    //         scrollTop: $(".scroll-here").offset().top
-    //     }, 2000);
-    // });
 
-    /*$(function() {
-        $('nav a[href^="/' + location.pathname.split("/")[1] + '"]').addClass('active');
-    });*/
+</script>
+<script>
+    function getRndInteger() {
+        return Math.floor(Math.random() * 90000) + 100000;
+    }
 </script>
 </body>
 </html>

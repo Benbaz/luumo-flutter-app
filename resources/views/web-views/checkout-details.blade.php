@@ -118,7 +118,7 @@
                                             </div>
                                             <div class="form-row">
                                                 <div class="col">
-                                                    <button class="btn btn-primary btn-block"
+                                                    <button class="btn btn--primary btn-block"
                                                             type="submit">{{\App\CPU\translate('sing_in')}}</button>
                                                 </div>
                                             </div>
@@ -205,7 +205,7 @@
                                             </div>
                                             <div class="form-row">
                                                 <div class="col">
-                                                    <button class="btn btn-primary btn-block" type="submit">
+                                                    <button class="btn btn--primary btn-block" type="submit">
                                                         {{\App\CPU\translate('sign-up')}}
                                                     </button>
                                                 </div>
@@ -230,7 +230,7 @@
                     </div>
                     <div class="col-6">
                         @if(auth('customer')->check())
-                            <a class="btn btn-primary btn-block" href="{{route('shop-cart')}}">
+                            <a class="btn btn--primary btn-block" href="{{route('shop-cart')}}">
                                 <span class="d-none d-sm-inline">{{\App\CPU\translate('shop_cart')}}</span>
                                 <span class="d-inline d-sm-none">{{\App\CPU\translate('Next')}}</span>
                                 <i class="czi-arrow-{{Session::get('direction') === "rtl" ? 'left' : 'right'}} mt-sm-0 mx-1"></i>

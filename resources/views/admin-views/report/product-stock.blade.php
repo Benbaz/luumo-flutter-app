@@ -8,66 +8,112 @@
 
 @section('content')
     <div class="content container-fluid">
-        <!-- Page Header -->
-        <div class="page-header">
-            <!-- Nav -->
-            <div class="js-nav-scroller hs-nav-scroller-horizontal">
-                <ul class="nav nav-tabs page-header-tabs" id="projectsTab" role="tablist">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="javascript:">{{\App\CPU\translate('Product stock report')}}</a>
-                    </li>
-                </ul>
-            </div>
-            <!-- End Nav -->
+
+        <!-- Page Title -->
+        <div class="mb-3">
+            <h2 class="h1 mb-0 text-capitalize d-flex gap-2 align-items-center">
+                <img width="20" src="{{asset('/public/assets/back-end/img/seller_sale.png')}}" alt="">
+                {{\App\CPU\translate('product_stock')}}
+            </h2>
         </div>
-        <!-- End Page Header -->
+        <!-- End Page Title -->
 
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
-                        <form style="width: 100%;" action="{{route('admin.stock.product-stock')}}">
-                            <div class="row text-{{Session::get('direction') === "rtl" ? 'right' : 'left'}}">
-                                <div class="col-2">
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">{{\App\CPU\translate('Seller')}}</label>
+                    <div class="px-3 py-4">
+                        <div class="row gy-2 gx-1 align-items-center">
+                            <div class="col-xl-3">
+                                <form action="#" method="GET">
+                                    <!-- Search -->
+                                    <div class="input-group input-group-merge input-group-custom">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="tio-search"></i>
+                                            </div>
+                                        </div>
+                                        <input id="datatableSearch_" type="search" name="search" class="form-control"
+                                               placeholder="{{\App\CPU\translate('Search Product Name')}}" aria-label="Search orders" value="{{ $search }}">
+                                        <button type="submit" class="btn btn--primary">{{\App\CPU\translate('search')}}</button>
                                     </div>
-                                </div>
-                                <div class="col-8">
-                                    <div class="form-group">
-                                        <select class="js-select2-custom form-control"
-                                                name="seller_id">
-                                            <option value="all" selected>{{\App\CPU\translate('All')}}</option>
-                                            <option value="in_house" {{$seller_is=='in_house'?'selected':''}}>{{\App\CPU\translate('In-House')}}
-                                            </option>
-                                            @foreach(\App\Model\Seller::where(['status'=>'approved'])->get() as $seller)
-                                                <option
-                                                    value="{{$seller['id']}}" {{$seller_is==$seller['id']?'selected':''}}>
-                                                    {{$seller['f_name']}} {{$seller['l_name']}}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="col-6 col-md-2">
-                                    <button type="submit" class="btn btn-primary btn-block">
-                                        {{\App\CPU\translate('Filter')}}
-                                    </button>
-                                </div>
+                                    <!-- End Search -->
+                                </form>
                             </div>
-                        </form>
+
+                            <div class="col-xl-9">
+                                <form class="width-100" action="" id="form-data" method="get">
+                                    <div class="row gx-1 align-items-center gy-2 text-{{Session::get('direction') === "rtl" ? 'right' : 'left'}}">
+                                        <div class="col-md-1">
+                                            <div class="">
+                                                <label for="exampleInputEmail1">{{\App\CPU\translate('Seller')}}</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="">
+                                                <select
+                                                    class="js-select2-custom form-control text-ellipsis"
+                                                    name="seller_id">
+                                                    <option value="all" {{ $seller_id == 'all' ? 'selected' : '' }}>{{\App\CPU\translate('All')}}</option>
+                                                    <option value="in_house" {{ $seller_id == 'in_house' ? 'selected' : '' }}>{{\App\CPU\translate('In-House')}}</option>
+                                                    @foreach(\App\Model\Seller::where(['status'=>'approved'])->get() as $seller)
+                                                        <option value="{{ $seller['id'] }}" {{ $seller_id == $seller['id'] ? 'selected' : '' }}>
+                                                            {{$seller['f_name']}} {{$seller['l_name']}}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <div class="">
+                                                <label for="exampleInputEmail1">{{\App\CPU\translate('Sort')}}</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="">
+                                                <select
+                                                    class="form-control"
+                                                    name="sort">
+                                                    <option value="ASC" {{ $sort == 'ASC' ? 'selected' : '' }}>{{\App\CPU\translate('wishlist_sort_by_(low_to_high)')}}</option>
+                                                    <option value="DESC" {{ $sort == 'DESC' ? 'selected' : '' }}>{{\App\CPU\translate('wishlist_sort_by_(high_to_low)')}}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="submit" class="btn btn--primary btn-block" onclick="formUrlChange(this)" data-action="{{ url()->current() }}">
+                                                {{\App\CPU\translate('Filter')}}
+                                            </button>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div>
+                                                <button type="button" class="btn btn-outline--primary text-nowrap btn-block" data-toggle="dropdown">
+                                                    <i class="tio-download-to"></i>
+                                                    {{ \App\CPU\translate('Export') }}
+                                                    <i class="tio-chevron-down"></i>
+                                                </button>
+                                                <ul class="dropdown-menu dropdown-menu-right">
+                                                    <li><a class="dropdown-item" href="{{ route('admin.stock.product-stock-export', ['seller_id' => request('seller_id'), 'sort' => request('sort')]) }}">{{\App\CPU\translate('excel')}}</a></li>
+                                                    <div class="dropdown-divider"></div>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-body" id="products-table"
-                         style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">
-                        <table class="table">
-                            <thead>
+                    <div class="table-responsive" id="products-table">
+
+                        <table class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table w-100 {{Session::get('direction') === "rtl" ? 'text-right' : 'text-left'}}">
+                            <thead class="thead-light thead-50 text-capitalize">
                             <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">
-                                    {{\App\CPU\translate('Product Name')}} 
+                                <th>{{\App\CPU\translate('SL')}}</th>
+                                <th>
+                                    {{\App\CPU\translate('Product Name')}}
                                 </th>
-                                <th scope="col">
+                                <th>
+                                    {{\App\CPU\translate('Date')}}
+                                </th>
+                                <th class="text-center">
                                     {{\App\CPU\translate('Total Stock')}}
                                 </th>
                             </tr>
@@ -77,16 +123,19 @@
                                 <tr>
                                     <th scope="row">{{$products->firstItem()+$key}}</th>
                                     <td>{{$data['name']}}</td>
-                                    <td>{{$data['current_stock']}}</td>
+                                    <td>{{ date('d M Y', $data['created_at'] ? strtotime($data['created_at']) : null) }}</td>
+                                    <td class="text-center">{{$data['current_stock']}}</td>
                                 </tr>
                             @endforeach
                             </tbody>
                         </table>
-                        <table>
-                            <tfoot>
+                    </div>
+
+                    <div class="table-responsive mt-4">
+                        <div class="px-4 d-flex justify-content-center justify-content-md-end">
+                            <!-- Pagination -->
                             {!! $products->links() !!}
-                            </tfoot>
-                        </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -96,7 +145,6 @@
 @endsection
 
 @push('script')
-
 @endpush
 
 @push('script_2')

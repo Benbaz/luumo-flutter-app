@@ -14,8 +14,12 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Mail;
 
+
+
+
 //for maintenance mode
 Route::get('maintenance-mode', 'Web\WebController@maintenance_mode')->name('maintenance-mode');
+
 
 Route::group(['namespace' => 'Web','middleware'=>['maintenance_mode']], function () {
     Route::get('/', 'WebController@home')->name('home');
@@ -32,7 +36,11 @@ Route::group(['namespace' => 'Web','middleware'=>['maintenance_mode']], function
         Route::get('order-placed', 'WebController@order_placed')->name('order-placed')->middleware('customer');
         Route::get('shop-cart', 'WebController@shop_cart')->name('shop-cart');
         Route::post('order_note', 'WebController@order_note')->name('order_note');
+        Route::get('digital-product-download/{id}', 'WebController@digital_product_download')->name('digital-product-download')->middleware('customer');
     });
+
+    //wallet payment
+    Route::get('checkout-complete-wallet', 'WebController@checkout_complete_wallet')->name('checkout-complete-wallet');
 
     Route::post('subscription', 'WebController@subscription')->name('subscription');
     Route::get('search-shop', 'WebController@search_shop')->name('search-shop');
@@ -86,7 +94,7 @@ Route::group(['namespace' => 'Web','middleware'=>['maintenance_mode']], function
     Route::get('account-tickets', 'UserProfileController@account_tickets')->name('account-tickets');
     Route::get('order-cancel/{id}', 'UserProfileController@order_cancel')->name('order-cancel');
     Route::post('ticket-submit', 'UserProfileController@ticket_submit')->name('ticket-submit');
-
+    Route::get('account-delete/{id}','UserProfileController@account_delete')->name('account-delete');
     // Chatting start
     Route::get('chat-with-seller', 'ChattingController@chat_with_seller')->name('chat-with-seller');
     Route::get('messages', 'ChattingController@messages')->name('messages');
@@ -105,6 +113,10 @@ Route::group(['namespace' => 'Web','middleware'=>['maintenance_mode']], function
     Route::get('account-wallet-history', 'UserProfileController@account_wallet_history')->name('account-wallet-history');
 
     Route::post('review', 'ReviewController@store')->name('review.store');
+
+    Route::get('wallet','UserWalletController@index')->name('wallet');
+    Route::get('loyalty','UserLoyaltyController@index')->name('loyalty');
+    Route::post('loyalty-exchange-currency','UserLoyaltyController@loyalty_exchange_currency')->name('loyalty-exchange-currency');
 
     Route::group(['prefix' => 'track-order', 'as' => 'track-order.'], function () {
         Route::get('', 'UserProfileController@track_order')->name('index');
@@ -246,5 +258,7 @@ Route::get('liqpay-payment', 'LiqPayController@payment')->name('liqpay-payment')
 Route::any('liqpay-callback', 'LiqPayController@callback')->name('liqpay-callback');
 
 Route::get('/test', function (){
-    return view('welcome');
+    $product = \App\Model\Product::find(116);
+    $quantity = 6;
+    return view('seller-views.product.barcode-pdf', compact('product', 'quantity'));
 });

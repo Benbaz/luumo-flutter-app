@@ -17,7 +17,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="">
     <link rel="icon" type="image/png" sizes="16x16" href="">
 
-    <link rel="stylesheet" href="{{asset('public/assets/back-end')}}/css/toastr.css"/>
+    {{-- <link rel="stylesheet" href="{{asset('public/assets/back-end')}}/css/toastr.css"/> --}}
     <!-- Main Theme Styles + Bootstrap-->
     <link rel="stylesheet" media="screen" href="{{asset('public/assets/front-end')}}/css/theme.min.css">
     <link rel="stylesheet" media="screen" href="{{asset('public/assets/front-end')}}/css/slick.css">
@@ -51,6 +51,24 @@
 <!-- Page Content-->
 <div class="checkout_details container pb-5 mb-2 mb-md-4">
     <div class="row mt-5">
+        @php($config=\App\CPU\Helpers::get_business_settings('wallet_status'))
+        @if($config==1)
+            <div class="col-md-6 mb-4" style="cursor: pointer">
+                <div class="card">
+                    <div class="card-body" style="height: 100px">
+                        
+                            <button class="btn btn-block click-if-alone" type="submit"
+                            data-toggle="modal" data-target="#wallet_submit_button">
+                            
+                                <img width="150" style="margin-top: -10px"
+                                        src="{{asset('public/assets/front-end/img/wallet.png')}}"/>
+                            </button>
+                        
+                    </div>
+                </div>
+            </div>
+        @endif
+        
         @php($user=\App\CPU\Helpers::get_customer())
         @php($config=\App\CPU\Helpers::get_business_settings('ssl_commerz_payment'))
         @if($config['status'])
@@ -360,6 +378,54 @@
             </div>
         @endif
     </div>
+
+     <!-- Modal -->
+  <div class="modal fade" id="wallet_submit_button" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">{{\App\CPU\translate('wallet_payment')}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        @php($customer_balance = $user->wallet_balance)
+        @php($remain_balance = $customer_balance - $amount)
+        <form action="{{route('checkout-complete-wallet')}}" method="get" class="needs-validation">
+            @csrf
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group col-12">
+                        <label for="">{{\App\CPU\translate('your_current_balance')}}</label>
+                        <input class="form-control" type="text" value="{{\App\CPU\Helpers::currency_converter($customer_balance)}}" readonly>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group col-12">
+                        <label for="">{{\App\CPU\translate('order_amount')}}</label>
+                        <input class="form-control" type="text" value="{{\App\CPU\Helpers::currency_converter($amount)}}" readonly>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-12">
+                        <label for="">{{\App\CPU\translate('remaining_balance')}}</label>
+                        <input class="form-control" type="text" value="{{\App\CPU\Helpers::currency_converter($remain_balance)}}" readonly>
+                        @if ($remain_balance<0)
+                        <label style="color: crimson">{{\App\CPU\translate('you do not have sufficient balance for pay this order!!')}}</label>
+                        @endif
+                    </div>
+                </div>
+            
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">{{\App\CPU\translate('close')}}</button>
+            <button type="submit" class="btn btn--primary" {{$remain_balance>0? '':'disabled'}}>{{\App\CPU\translate('submit')}}</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script src="{{asset('public/assets/front-end')}}/vendor/jquery/dist/jquery-2.2.4.min.js"></script>
@@ -367,7 +433,7 @@
 {{--Toastr--}}
 <script src={{asset("public/assets/back-end/js/toastr.js")}}></script>
 <script src="{{asset('public/assets/front-end')}}/js/sweet_alert.js"></script>
-
+{!! Toastr::message() !!}
 @php($mode = \App\CPU\Helpers::get_business_settings('bkash')['environment']??'sandbox')
 @if($mode=='live')
     <script id="myScript"

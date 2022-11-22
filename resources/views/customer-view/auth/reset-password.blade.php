@@ -55,7 +55,7 @@
                                 </div>
                             </div>
 
-                        <button class="btn btn-primary" type="submit">{{\App\CPU\translate('Reset password')}}</button>
+                        <button class="btn btn--primary" type="submit">{{\App\CPU\translate('Reset password')}}</button>
                     </form>
                 </div>
             </div>

@@ -6,7 +6,7 @@
         <div class="d-flex" style="top:0;position:absolute;">
             <span class="for-discoutn-value p-1 pl-2 pr-2" style="{{Session::get('direction') === "rtl" ? 'border-radius:0px 5px' : 'border-radius:5px 0px'}};background:#FF5555 !important;">
                 @if ($product->discount_type == 'percent')
-                    {{round($product->discount)}}%
+                    {{round($product->discount,(!empty($decimal_point_settings) ? $decimal_point_settings: 0))}}%
                 @elseif($product->discount_type =='flat')
                     {{\App\CPU\Helpers::currency_converter($product->discount)}}
                 @endif {{\App\CPU\translate('off')}}
@@ -51,9 +51,9 @@
                     </div>
                     <div class="flash-product-price">
                         {{\App\CPU\Helpers::currency_converter($product->unit_price-\App\CPU\Helpers::get_product_discount($product,$product->unit_price))}}
-                        
+
                     </div>
-                    
+
                 </div>
             </div>
         </div>

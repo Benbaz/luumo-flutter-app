@@ -62,7 +62,7 @@
                                 </select>
                             </div>
                             <button type="submit"
-                                    class="btn btn-primary float-right ml-3">{{\App\CPU\translate('Save')}}</button>
+                                    class="btn btn--primary float-right ml-3">{{\App\CPU\translate('Save')}}</button>
                         </form>
                     </div>
                 </div>

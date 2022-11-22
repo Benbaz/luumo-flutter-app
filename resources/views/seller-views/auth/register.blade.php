@@ -124,7 +124,7 @@
     
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-primary btn-user btn-block" id="apply" disabled>{{\App\CPU\translate('Apply')}} {{\App\CPU\translate('Shop')}} </button>
+                            <button type="submit" class="btn btn--primary btn-user btn-block" id="apply" disabled>{{\App\CPU\translate('Apply')}} {{\App\CPU\translate('Shop')}} </button>
                         </form>
                         <hr>
                         <div class="text-center">

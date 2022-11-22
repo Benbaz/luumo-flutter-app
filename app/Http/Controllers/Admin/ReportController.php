@@ -3,17 +3,21 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class ReportController extends Controller
 {
     public function order_index(Request $request)
     {
+        $from_date = Carbon::now()->startOfMonth()->format('Y-m-d');
+        $to_date = Carbon::now()->endOfMonth()->format('Y-m-d');
 
         if (session()->has('from_date') == false) {
-            session()->put('from_date', date('Y-m-01'));
-            session()->put('to_date', date('Y-m-30'));
+            session()->put('from_date', $from_date);
+            session()->put('to_date', $to_date);
         }
+
         return view('admin-views.report.order-index');
     }
 

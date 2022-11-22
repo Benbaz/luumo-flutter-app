@@ -65,9 +65,9 @@ class BackEndHelper
         $decimal_point_settings = Helpers::get_business_settings('decimal_point_settings');
         $position = Helpers::get_business_settings('currency_symbol_position');
         if (!is_null($position) && $position == 'left') {
-            $string = currency_symbol() . '' . number_format($amount, $decimal_point_settings);
+            $string = currency_symbol() . '' . number_format($amount, (!empty($decimal_point_settings) ? $decimal_point_settings: 0));
         } else {
-            $string = number_format($amount, $decimal_point_settings) . '' . currency_symbol();
+            $string = number_format($amount, !empty($decimal_point_settings) ? $decimal_point_settings: 0) . '' . currency_symbol();
         }
         return $string;
     }
@@ -112,7 +112,6 @@ class BackEndHelper
         $to = Carbon::now()->endOfYear()->format('Y-m-d');
 
         $data = Order::where([
-            'seller_is' => 'admin',
             'order_type'=>'default_type'
         ])->select(
             DB::raw('COUNT(id) as count'),

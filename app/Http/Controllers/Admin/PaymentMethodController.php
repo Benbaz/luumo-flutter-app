@@ -8,6 +8,7 @@ use App\Model\Currency;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use function App\CPU\translate;
 
 class PaymentMethodController extends Controller
 {
@@ -54,7 +55,7 @@ class PaymentMethodController extends Controller
                     'type' => 'ssl_commerz_payment',
                     'value' => json_encode([
                         'status' => 1,
-                        'environment'=>'sandbox',
+                        'environment' => 'sandbox',
                         'store_id' => '',
                         'store_password' => '',
                     ]),
@@ -76,7 +77,7 @@ class PaymentMethodController extends Controller
                     'type' => 'ssl_commerz_payment',
                     'value' => json_encode([
                         'status' => $request['status'],
-                        'environment'=>$request['environment'],
+                        'environment' => $request['environment'],
                         'store_id' => $request['store_id'],
                         'store_password' => $request['store_password'],
                     ]),
@@ -90,7 +91,7 @@ class PaymentMethodController extends Controller
                     'type' => 'paypal',
                     'value' => json_encode([
                         'status' => 1,
-                        'environment'=>'sandbox',
+                        'environment' => 'sandbox',
                         'paypal_client_id' => '',
                         'paypal_secret' => '',
                     ]),
@@ -108,7 +109,7 @@ class PaymentMethodController extends Controller
                     'type' => 'paypal',
                     'value' => json_encode([
                         'status' => $request['status'],
-                        'environment'=>$request['environment'],
+                        'environment' => $request['environment'],
                         'paypal_client_id' => $request['paypal_client_id'],
                         'paypal_secret' => $request['paypal_secret'],
                     ]),
@@ -122,6 +123,7 @@ class PaymentMethodController extends Controller
                     'type' => 'stripe',
                     'value' => json_encode([
                         'status' => 1,
+                        'environment' => 'sandbox',
                         'api_key' => '',
                         'published_key' => ''
                     ]),
@@ -139,6 +141,7 @@ class PaymentMethodController extends Controller
                     'type' => 'stripe',
                     'value' => json_encode([
                         'status' => $request['status'],
+                        'environment' => $request['environment'],
                         'api_key' => $request['api_key'],
                         'published_key' => $request['published_key']
                     ]),
@@ -152,6 +155,7 @@ class PaymentMethodController extends Controller
                     'type' => 'razor_pay',
                     'value' => json_encode([
                         'status' => 1,
+                        'environment' => 'sandbox',
                         'razor_key' => '',
                         'razor_secret' => ''
                     ]),
@@ -173,6 +177,7 @@ class PaymentMethodController extends Controller
                 DB::table('business_settings')->where(['type' => 'razor_pay'])->update([
                     'value' => json_encode([
                         'status' => $request['status'],
+                        'environment' => $request['environment'],
                         'razor_key' => $request['razor_key'],
                         'razor_secret' => $request['razor_secret']
                     ]),
@@ -186,6 +191,7 @@ class PaymentMethodController extends Controller
                     'type' => 'senang_pay',
                     'value' => json_encode([
                         'status' => 1,
+                        'environment' => 'sandbox',
                         'secret_key' => '',
                         'merchant_id' => '',
                     ]),
@@ -209,6 +215,7 @@ class PaymentMethodController extends Controller
                     'type' => 'senang_pay',
                     'value' => json_encode([
                         'status' => $request['status'],
+                        'environment' => $request['environment'],
                         'secret_key' => $request['secret_key'],
                         'merchant_id' => $request['merchant_id'],
                     ]),
@@ -222,6 +229,7 @@ class PaymentMethodController extends Controller
                     'type' => 'paystack',
                     'value' => json_encode([
                         'status' => 1,
+                        'environment' => 'sandbox',
                         'publicKey' => '',
                         'secretKey' => '',
                         'paymentUrl' => '',
@@ -249,6 +257,7 @@ class PaymentMethodController extends Controller
                     'type' => 'paystack',
                     'value' => json_encode([
                         'status' => $request['status'],
+                        'environment' => $request['environment'],
                         'publicKey' => $request['publicKey'],
                         'secretKey' => $request['secretKey'],
                         'paymentUrl' => $request['paymentUrl'],
@@ -261,6 +270,7 @@ class PaymentMethodController extends Controller
             DB::table('business_settings')->updateOrInsert(['type' => 'paymob_accept'], [
                 'value' => json_encode([
                     'status' => $request['status'],
+                    'environment' => $request['environment'],
                     'api_key' => $request['api_key'],
                     'iframe_id' => $request['iframe_id'],
                     'integration_id' => $request['integration_id'],
@@ -272,7 +282,7 @@ class PaymentMethodController extends Controller
             DB::table('business_settings')->updateOrInsert(['type' => 'bkash'], [
                 'value' => json_encode([
                     'status' => $request['status'],
-                    'environment'=>$request['environment'],
+                    'environment' => $request['environment'],
                     'api_key' => $request['api_key'],
                     'api_secret' => $request['api_secret'],
                     'username' => $request['username'],
@@ -284,6 +294,7 @@ class PaymentMethodController extends Controller
             DB::table('business_settings')->updateOrInsert(['type' => 'paytabs'], [
                 'value' => json_encode([
                     'status' => $request['status'],
+                    'environment' => $request['environment'],
                     'profile_id' => $request['profile_id'],
                     'server_key' => $request['server_key'],
                     'base_url' => $request['base_url']
@@ -294,15 +305,17 @@ class PaymentMethodController extends Controller
             DB::table('business_settings')->updateOrInsert(['type' => 'fawry_pay'], [
                 'value' => json_encode([
                     'status' => $request['status'],
+                    'environment' => $request['environment'],
                     'merchant_code' => $request['merchant_code'],
                     'security_key' => $request['security_key']
                 ]),
                 'updated_at' => now()
             ]);
         } elseif ($name == 'mercadopago') {
-            $payment = BusinessSetting::updateOrInsert(['type' => 'mercadopago'],
+            BusinessSetting::updateOrInsert(['type' => 'mercadopago'],
                 ['value' => json_encode([
                     'status' => $request['status'],
+                    'environment' => $request['environment'],
                     'public_key' => $request['public_key'],
                     'access_token' => $request['access_token'],
                 ]),
@@ -327,6 +340,7 @@ class PaymentMethodController extends Controller
                     'type' => 'flutterwave',
                     'value' => json_encode([
                         'status' => $request['status'],
+                        'environment' => $request['environment'],
                         'public_key' => $request['public_key'],
                         'secret_key' => $request['secret_key'],
                         'hash' => $request['hash'],
@@ -338,6 +352,7 @@ class PaymentMethodController extends Controller
             DB::table('business_settings')->updateOrInsert(['type' => 'liqpay'], [
                 'value' => json_encode([
                     'status' => $request['status'],
+                    'environment' => $request['environment'],
                     'public_key' => $request['public_key'],
                     'private_key' => $request['private_key']
                 ]),
@@ -347,7 +362,7 @@ class PaymentMethodController extends Controller
             DB::table('business_settings')->updateOrInsert(['type' => 'paytm'], [
                 'value' => json_encode([
                     'status' => $request['status'],
-                    'environment'=>$request['environment'],
+                    'environment' => $request['environment'],
                     'paytm_merchant_key' => $request['paytm_merchant_key'],
                     'paytm_merchant_mid' => $request['paytm_merchant_mid'],
                     'paytm_merchant_website' => $request['paytm_merchant_website'],
@@ -356,7 +371,7 @@ class PaymentMethodController extends Controller
                 'updated_at' => now()
             ]);
         }
-
+        Toastr::success(translate('successfully_updated'));
         return back();
     }
 }

@@ -281,9 +281,9 @@
                                     </span>
                                     <input type="text" name="quantity"
                                            class="form-control input-number text-center cart-qty-field"
-                                           placeholder="1" value="1" min="1" max="100">
+                                           placeholder="1" value="{{ $product->minimum_order_qty ?? 1 }}" product-type="{{ $product->product_type }}" min="{{ $product->minimum_order_qty ?? 1 }}" max="100">
                                     <span class="input-group-btn">
-                                        <button class="btn btn-number" type="button" data-type="plus"
+                                        <button class="btn btn-number" product-type="{{ $product->product_type }}" type="button" data-type="plus"
                                                 data-field="quantity" style="padding: 10px">
                                            +
                                         </button>
@@ -303,7 +303,7 @@
                             </div>
                         </div>
                         <div class="col-12">
-                            @if($product['current_stock']<=0)
+                            @if(($product['product_type'] == 'physical') && ($product['current_stock']<=0))
                                 <h5 class="mt-3" style="color: red">{{\App\CPU\translate('out_of_stock')}}</h5>
                             @endif
                         </div>
@@ -315,7 +315,7 @@
                                 style="width:37%; height: 45px">
                             {{\App\CPU\translate('buy_now')}}
                         </button>
-                        <button class="btn btn-primary string-limit"
+                        <button class="btn btn--primary string-limit"
                                 onclick="addToCart()"
                                 type="button"
                                 style="width:37%; height: 45px">

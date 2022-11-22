@@ -11,7 +11,7 @@
             <div class="modal-body">{{\App\CPU\translate('Select "Logout" below if you are ready to end your current session')}}.</div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">{{\App\CPU\translate('Cancel')}}</button>
-                <a class="btn btn-primary" href="{{route('seller.auth.logout')}}">{{\App\CPU\translate('Logout')}}</a>
+                <a class="btn btn--primary" href="{{route('seller.auth.logout')}}">{{\App\CPU\translate('Logout')}}</a>
             </div>
         </div>
     </div>
@@ -28,7 +28,7 @@
                                 <i class="tio-shopping-cart-outlined"></i> {{\App\CPU\translate('You have new order, Check Please')}}.
                             </h2>
                             <hr>
-                            <button onclick="check_order()" class="btn btn-primary">{{\App\CPU\translate('Ok, let me check')}}</button>
+                            <button onclick="check_order()" class="btn btn--primary">{{\App\CPU\translate('Ok, let me check')}}</button>
                         </center>
                     </div>
                 </div>

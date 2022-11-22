@@ -47,7 +47,8 @@
         <!-- Content  -->
             <section class="col-lg-9 col-md-9 mt-2" id="set-wish-list">
                 <!-- Item-->
-                @include('web-views.partials._wish-list-data',['wishlists'=>$wishlists])
+
+                @include('web-views.partials._wish-list-data',['wishlists'=>$wishlists, 'brand_setting'=>$brand_setting])
             </section>
         </div>
     </div>

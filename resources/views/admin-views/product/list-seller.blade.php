@@ -33,7 +33,7 @@
                     @if($pro->first() != null && $pro->first()->added_by == 'in_house')
                         <div class="card-header">
                             <h5>{{\App\CPU\translate('product_table')}}</h5>
-                            <a href="{{route('admin.product.add-new')}}" class="btn btn-primary  float-right">
+                            <a href="{{route('admin.product.add-new')}}" class="btn btn--primary  float-right">
                                 <i class="tio-add-circle"></i>
                                 <span class="text">{{\App\CPU\translate('Add new product')}}</span>
                             </a>
@@ -99,7 +99,7 @@
                                             </td>
                                         @endif
                                         <td>
-                                            <a class="btn btn-primary btn-sm"
+                                            <a class="btn btn--primary btn-sm"
                                                href="{{route('admin.product.edit',[$p['id']])}}">
                                                 <i class="tio-edit"></i>{{\App\CPU\translate('Edit')}}
                                             </a>

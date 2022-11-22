@@ -74,7 +74,7 @@
                                required>
                         <div class="invalid-feedback">{{\App\CPU\translate('please_provide_coupon_code')}}</div>
                     </div>
-                    <button class="btn btn-primary btn-block" type="button" onclick="couponCode()">{{\App\CPU\translate('apply_code')}}
+                    <button class="btn btn--primary btn-block" type="button" onclick="couponCode()">{{\App\CPU\translate('apply_code')}}
                     </button>
                 </form>
             </div>

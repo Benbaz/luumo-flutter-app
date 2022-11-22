@@ -136,10 +136,6 @@
     color: #777;
     font-size: 13px;
 }
-
-.page-item.active .page-link {
-    background-color: #377dff !important;
-}
 ol.breadcrumb {
     padding: 1px;
 }

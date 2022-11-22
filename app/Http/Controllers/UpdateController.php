@@ -23,7 +23,7 @@ class UpdateController extends Controller
         Helpers::setEnvironmentValue('SOFTWARE_ID', 'MzE0NDg1OTc=');
         Helpers::setEnvironmentValue('BUYER_USERNAME', $request['username']);
         Helpers::setEnvironmentValue('PURCHASE_CODE', $request['purchase_key']);
-        Helpers::setEnvironmentValue('SOFTWARE_VERSION', '9.0');
+        Helpers::setEnvironmentValue('SOFTWARE_VERSION', '12.0');
         Helpers::setEnvironmentValue('APP_MODE', 'live');
         Helpers::setEnvironmentValue('APP_NAME', '6valley' . time());
         Helpers::setEnvironmentValue('SESSION_LIFETIME', '60');
@@ -187,7 +187,7 @@ class UpdateController extends Controller
 
         if (BusinessSetting::where(['type' => 'language'])->first() == false) {
             DB::table('business_settings')->updateOrInsert(['type' => 'language'], [
-                'value' => '[{"id":"1","name":"english","direction":"ltr","code":"en","status":1,"default":true}]',
+                'value' => '[{"id":"1","name":"English","direction":"ltr","code":"en","status":1,"default":true}]',
             ]);
         }
 
@@ -310,11 +310,55 @@ class UpdateController extends Controller
             ]);
         }
 
+        if(BusinessSetting::where(['type' => 'minimum_order_limit'])->first() == false)
+        {
+            DB::table('business_settings')->updateOrInsert(['type' => 'minimum_order_limit'], [
+                'value' => 1
+            ]);
+        }
+
         if(BusinessSetting::where(['type' => 'billing_input_by_customer'])->first() == false)
         {
             DB::table('business_settings')->updateOrInsert(['type' => 'billing_input_by_customer'], [
                 'value' => 1
             ]);
+        }
+
+        if(BusinessSetting::where(['type' => 'wallet_status'])->first() == false)
+        {
+            BusinessSetting::updateOrInsert(['type' => 'wallet_status'], [
+                'value' => 0
+            ]);
+        }
+        if(BusinessSetting::where(['type' => 'loyalty_point_status'])->first() == false)
+        {
+            BusinessSetting::updateOrInsert(['type' => 'loyalty_point_status'], [
+                'value' => 0
+            ]);
+        }
+        if(BusinessSetting::where(['type' => 'wallet_add_refund'])->first() == false)
+        {
+            BusinessSetting::updateOrInsert(['type' => 'wallet_add_refund'], [
+                'value' => 0
+            ]);
+        }
+        if(BusinessSetting::where(['type' => 'loyalty_point_exchange_rate'])->first() == false)
+        {
+            BusinessSetting::updateOrInsert(['type' => 'loyalty_point_exchange_rate'], [
+                'value' => 0
+            ]);
+        }
+        if(BusinessSetting::where(['type' => 'loyalty_point_item_purchase_point'])->first() == false)
+        {
+            BusinessSetting::updateOrInsert(['type' => 'loyalty_point_item_purchase_point'], [
+            'value' => 0
+        ]);
+        }
+        if(BusinessSetting::where(['type' => 'loyalty_point_minimum_point'])->first() == false)
+        {
+            BusinessSetting::updateOrInsert(['type' => 'loyalty_point_minimum_point'], [
+            'value' => 0
+        ]);
         }
 
         if (BusinessSetting::where(['type' => 'flutterwave'])->first() == false) {
@@ -362,10 +406,10 @@ class UpdateController extends Controller
         if (BusinessSetting::where(['type' => 'announcement'])->first() == false) {
             DB::table('business_settings')->updateOrInsert(['type' => 'announcement'], [
                 'value' => json_encode(
-                    ['status' => $request['announcement_status'],
-                        'color' => $request['announcement_color'],
-                        'text_color' => $request['text_color'],
-                        'announcement' => $request['announcement'],
+                    ['status' => 0,
+                        'color' => '#ffffff',
+                        'text_color' => '#000000',
+                        'announcement' => '',
                     ]),
             ]);
         }
@@ -544,6 +588,18 @@ class UpdateController extends Controller
             ]);
         }
 
-        return redirect('/admin/auth/login');
+        if (BusinessSetting::where(['type' => 'product_brand'])->first() == false) {
+            DB::table('business_settings')->updateOrInsert(['type' => 'product_brand'], [
+                'value' => 1
+            ]);
+        }
+
+        if (BusinessSetting::where(['type' => 'digital_product'])->first() == false) {
+            DB::table('business_settings')->updateOrInsert(['type' => 'digital_product'], [
+                'value' => 1
+            ]);
+        }
+
+        return redirect(env('APP_URL'));
     }
 }

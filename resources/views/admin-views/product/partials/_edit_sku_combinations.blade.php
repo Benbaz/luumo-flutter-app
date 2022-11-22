@@ -1,18 +1,18 @@
 @if(count($combinations) > 0)
-<table class="table table-bordered">
+<table class="table table-bordered physical_product_show">
     <thead>
     <tr>
         <td class="text-center">
-            <label for="" class="control-label">{{\App\CPU\translate('Variant')}}</label>
+            <label for="" class="title-color">{{\App\CPU\translate('Variant')}}</label>
         </td>
         <td class="text-center">
-            <label for="" class="control-label">{{\App\CPU\translate('Variant Price')}}</label>
+            <label for="" class="title-color">{{\App\CPU\translate('Variant Price')}}</label>
         </td>
         <td class="text-center">
-            <label for="" class="control-label">{{\App\CPU\translate('SKU')}}</label>
+            <label for="" class="title-color">{{\App\CPU\translate('SKU')}}</label>
         </td>
         <td class="text-center">
-            <label for="" class="control-label">{{\App\CPU\translate('Quantity')}}</label>
+            <label for="" class="title-color">{{\App\CPU\translate('Quantity')}}</label>
         </td>
     </tr>
     </thead>

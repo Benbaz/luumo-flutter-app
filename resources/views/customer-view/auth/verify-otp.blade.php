@@ -46,7 +46,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button class="btn btn-primary" type="submit">{{\App\CPU\translate('proceed')}}</button>
+                        <button class="btn btn--primary" type="submit">{{\App\CPU\translate('proceed')}}</button>
                     </form>
                 </div>
             </div>

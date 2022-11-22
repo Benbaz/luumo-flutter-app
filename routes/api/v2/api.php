@@ -8,6 +8,7 @@ Route::group(['namespace' => 'api\v2', 'prefix' => 'v2', 'middleware' => ['api_l
         Route::get('seller-info', 'SellerController@seller_info');
         Route::get('seller-delivery-man', 'SellerController@seller_delivery_man');
         Route::get('shop-product-reviews', 'SellerController@shop_product_reviews');
+        Route::get('shop-product-reviews-status','SellerController@shop_product_reviews_status');
         Route::put('seller-update', 'SellerController@seller_info_update');
         Route::get('monthly-earning', 'SellerController@monthly_earning');
         Route::get('monthly-commission-given', 'SellerController@monthly_commission_given');
@@ -20,14 +21,21 @@ Route::group(['namespace' => 'api\v2', 'prefix' => 'v2', 'middleware' => ['api_l
         Route::post('balance-withdraw', 'SellerController@withdraw_request');
         Route::delete('close-withdraw-request', 'SellerController@close_withdraw_request');
 
+        Route::group(['prefix' => 'brands'], function () {
+            Route::get('/', 'BrandController@getBrands');
+        });
+
         Route::group(['prefix' => 'products'], function () {
             Route::post('upload-images', 'ProductController@upload_images');
+            Route::post('upload-digital-product', 'ProductController@upload_digital_product');
             Route::post('add', 'ProductController@add_new');
             Route::get('list', 'ProductController@list');
             Route::get('stock-out-list', 'ProductController@stock_out_list');
+            Route::get('status-update','ProductController@status_update');
             Route::get('edit/{id}', 'ProductController@edit');
             Route::put('update/{id}', 'ProductController@update');
             Route::delete('delete/{id}', 'ProductController@delete');
+            Route::get('barcode/generate', 'ProductController@barcode_generate');
         });
 
         Route::group(['prefix' => 'orders'], function () {
@@ -35,14 +43,16 @@ Route::group(['namespace' => 'api\v2', 'prefix' => 'v2', 'middleware' => ['api_l
             Route::get('/{id}', 'OrderController@details');
             Route::put('order-detail-status/{id}', 'OrderController@order_detail_status');
             Route::put('assign-delivery-man', 'OrderController@assign_delivery_man');
+            Route::put('order-wise-product-upload', 'OrderController@digital_file_upload_after_sell');
 
             Route::post('assign-third-party-delivery','OrderController@assign_third_party_delivery');
+            Route::post('update-payment-status','OrderController@update_payment_status');
         });
         Route::group(['prefix' => 'refund'], function () {
             Route::get('list', 'RefundController@list');
             Route::get('refund-details', 'RefundController@refund_details');
             Route::post('refund-status-update', 'RefundController@refund_status_update');
-            
+
         });
 
         Route::group(['prefix' => 'shipping'], function () {
@@ -68,6 +78,14 @@ Route::group(['namespace' => 'api\v2', 'prefix' => 'v2', 'middleware' => ['api_l
 
         Route::group(['prefix' => 'auth', 'namespace' => 'auth'], function () {
             Route::post('login', 'LoginController@login');
+
+            Route::post('forgot-password', 'ForgotPasswordController@reset_password_request');
+            Route::post('verify-otp', 'ForgotPasswordController@otp_verification_submit');
+            Route::put('reset-password', 'ForgotPasswordController@reset_password_submit');
+        });
+
+        Route::group(['prefix' => 'registration', 'namespace' => 'auth'], function () {
+            Route::post('/', 'RegisterController@store');
         });
     });
     Route::post('ls-lib-update', 'LsLibController@lib_update');

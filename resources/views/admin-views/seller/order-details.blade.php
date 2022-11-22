@@ -41,11 +41,11 @@
                         </span>
                         @elseif($order['order_status']=='failed')
                             <span class="badge badge-danger {{Session::get('direction') === "rtl" ? 'mr-2 mr-sm-3' : 'ml-2 ml-sm-3'}} text-capitalize">
-                          <span class="legend-indicator bg-info" style="{{Session::get('direction') === "rtl" ? 'margin-right: 0;margin-left: .4375rem;' : 'margin-left: 0;margin-right: .4375rem;'}}"></span>{{str_replace('_',' ',$order['order_status'])}}
+                          <span class="legend-indicator bg-info" style="{{Session::get('direction') === "rtl" ? 'margin-right: 0;margin-left: .4375rem;' : 'margin-left: 0;margin-right: .4375rem;'}}"></span>{{str_replace('_',' ',$order['order_status']=='failed'?'Failed to Deliver':$order['order_status'])}}
                         </span>
                         @elseif($order['order_status']=='processing'|| $order['order_status']=='out_for_delivery')
                             <span class="badge badge-soft-warning {{Session::get('direction') === "rtl" ? 'mr-2 mr-sm-3' : 'ml-2 ml-sm-3'}} text-capitalize">
-                          <span class="legend-indicator bg-warning" style="{{Session::get('direction') === "rtl" ? 'margin-right: 0;margin-left: .4375rem;' : 'margin-left: 0;margin-right: .4375rem;'}}"></span>{{str_replace('_',' ',$order['order_status'])}}
+                          <span class="legend-indicator bg-warning" style="{{Session::get('direction') === "rtl" ? 'margin-right: 0;margin-left: .4375rem;' : 'margin-left: 0;margin-right: .4375rem;'}}"></span>{{str_replace('_',' ',$order['order_status']=='processing'?'Packaging':$order['order_status'])}}
                         </span>
                         @elseif($order['order_status']=='delivered'|| $order['order_status']=='confirmed')
                             <span class="badge badge-soft-success {{Session::get('direction') === "rtl" ? 'mr-2 mr-sm-3' : 'ml-2 ml-sm-3'}} text-capitalize">
@@ -92,7 +92,7 @@
                                         <option
                                             value="confirmed" {{$order->order_status == 'confirmed'?'selected':''}} > {{\App\CPU\translate('Confirmed')}}</option>
                                         <option
-                                            value="processing" {{$order->order_status == 'processing'?'selected':''}} >{{\App\CPU\translate('Processing')}} </option>
+                                            value="processing" {{$order->order_status == 'processing'?'selected':''}} >{{\App\CPU\translate('Packaging')}} </option>
                                         <option class="text-capitalize"
                                             value="out_for_delivery" {{$order->order_status == 'out_for_delivery'?'selected':''}} >{{\App\CPU\translate('out_for_delivery')}} </option>
                                         <option
@@ -100,7 +100,7 @@
                                         <option
                                             value="returned" {{$order->order_status == 'returned'?'selected':''}} > {{\App\CPU\translate('Returned')}}</option>
                                         <option
-                                            value="failed" {{$order->order_status == 'failed'?'selected':''}} >{{\App\CPU\translate('Failed')}} </option>
+                                            value="failed" {{$order->order_status == 'failed'?'selected':''}} >{{\App\CPU\translate('Failed_to_Deliver')}} </option>
                                         <option
                                             value="canceled" {{$order->order_status == 'canceled'?'selected':''}} >{{\App\CPU\translate('Canceled')}} </option>
 
@@ -132,8 +132,6 @@
                 </div>
             </div>
         </div>
-
-
         <!-- End Page Header -->
 
         <div class="row" id="printableArea">
@@ -194,8 +192,6 @@
 
 
                                     <div class="col col-md-2 align-self-center text-{{Session::get('direction') === "rtl" ? 'left' : 'right'}}">
-
-
                                         <p> {{\App\CPU\translate('Subtotal')}}</p>
                                     </div>
                                 </div>
@@ -216,8 +212,6 @@
                                         <img class="img-fluid"
                                              onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
                                              src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$detail->product['thumbnail']}}"
-
-
                                              alt="Image Description">
                                     </div>
 
@@ -299,8 +293,6 @@
                     <!-- End Body -->
                 </div>
                 <!-- End Card -->
-
-
             </div>
 
             <div class="col-lg-4">
@@ -329,7 +321,7 @@
                                     <option value="0">
                                         {{\App\CPU\translate('choose_delivery_type')}}
                                     </option>
-                                    
+
                                     <option value="self_delivery" {{$order->delivery_type=='self_delivery'?'selected':''}}>
                                         {{\App\CPU\translate('by_self_delivery_man')}}
                                     </option>
@@ -438,7 +430,7 @@
                                 <div>{{\App\CPU\translate('Name')}} :</div>
                                 <div class="mx-1"><strong>{{$order->shippingAddress ? $order->shippingAddress['contact_person_name'] : "empty"}}</strong></div>
                             </div>
-                            
+
                             <div class="flex-start">
                                 <div>{{\App\CPU\translate('City')}} :</div>
                                 <div class="mx-1"><strong>{{$order->shippingAddress ? $order->shippingAddress['city'] : "Empty"}}</strong></div>
@@ -455,7 +447,6 @@
                                 <div>{{\App\CPU\translate('Phone')}} :</div>
                                 <div class="mx-1"><strong>{{$order->shippingAddress ? $order->shippingAddress['phone']  : "Empty"}}</strong></div>
                             </div>
-
                         </div>
                 @endif
                 <!-- End Body -->
@@ -490,13 +481,13 @@
                                         <label for="">{{\App\CPU\translate('tracking_id')}} ({{\App\CPU\translate('optional')}})</label>
                                         <input class="form-control" type="text" name="third_party_delivery_tracking_id" value="{{$order['third_party_delivery_tracking_id']}}" id="">
                                     </div>
-                                    <button class="btn btn-primary" type="submit">{{\App\CPU\translate('update')}}</button>
+                                    <button class="btn btn--primary" type="submit">{{\App\CPU\translate('update')}}</button>
                                 </div>
                             </form>
                         </div>
                     </div>
-                        
-                    
+
+
                 </div>
             </div>
         </div>
@@ -616,8 +607,8 @@
     <script>
         $( document ).ready(function() {
             let delivery_type = '{{$order->delivery_type}}';
-    
-            
+
+
             if(delivery_type === 'self_delivery'){
                 $('#choose_delivery_man').show();
                 $('#by_third_party_delivery_service_info').hide();
@@ -634,7 +625,7 @@
     <script>
         function choose_delivery_type(val)
         {
-    
+
             if(val==='self_delivery')
             {
                 $('#choose_delivery_man').show();
@@ -647,7 +638,7 @@
                 $('#choose_delivery_man').hide();
                 $('#by_third_party_delivery_service_info').hide();
             }
-            
+
         }
         function addDeliveryMan(id) {
             $.ajax({

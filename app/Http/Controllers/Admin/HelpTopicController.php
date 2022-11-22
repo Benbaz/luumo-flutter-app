@@ -28,6 +28,7 @@ class HelpTopicController extends Controller
         $helps = new HelpTopic;
         $helps->question = $request->question;
         $helps->answer = $request->answer;
+        $helps->ranking = $request->ranking;
         $helps->save();
 
         Toastr::success('FAQ added successfully!');

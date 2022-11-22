@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\v1;
 use App\CPU\Helpers;
 use App\CPU\ProductManager;
 use App\Http\Controllers\Controller;
+use App\Model\BusinessSetting;
 use App\Model\Color;
 use App\Model\Currency;
 use App\Model\HelpTopic;
@@ -38,12 +39,16 @@ class ConfigController extends Controller
         $shipping_type = isset($admin_shipping)==true?$admin_shipping->shipping_type:'order_wise';
 
         return response()->json([
+            'brand_setting' => BusinessSetting::where('type', 'product_brand')->first()->value,
+            'digital_product_setting' => BusinessSetting::where('type', 'digital_product')->first()->value,
             'system_default_currency' => (int)Helpers::get_business_settings('system_default_currency'),
             'digital_payment' => (boolean)Helpers::get_business_settings('digital_payment')['status'] ?? 0,
             'cash_on_delivery' => (boolean)Helpers::get_business_settings('cash_on_delivery')['status'] ?? 0,
+            'seller_registration' => BusinessSetting::where('type', 'seller_registration')->first()->value,
             'base_urls' => [
                 'product_image_url' => ProductManager::product_image_path('product'),
                 'product_thumbnail_url' => ProductManager::product_image_path('thumbnail'),
+                'digital_product_url' => asset('storage/app/public/product/digital-product'),
                 'brand_image_url' => asset('storage/app/public/brand'),
                 'customer_image_url' => asset('storage/app/public/profile'),
                 'banner_image_url' => asset('storage/app/public/banner'),
@@ -82,7 +87,13 @@ class ConfigController extends Controller
             'software_version'=>env('SOFTWARE_VERSION'),
             'decimal_point_settings'=>Helpers::get_business_settings('decimal_point_settings'),
             'inhouse_selected_shipping_type'=>$shipping_type,
-            'billing_input_by_customer'=>Helpers::get_business_settings('billing_input_by_customer')
+            'billing_input_by_customer'=>Helpers::get_business_settings('billing_input_by_customer'),
+            'minimum_order_limit'=>Helpers::get_business_settings('minimum_order_limit'),
+            'wallet_status'=>Helpers::get_business_settings('wallet_status'),
+            'loyalty_point_status'=>Helpers::get_business_settings('loyalty_point_status'),
+            'loyalty_point_exchange_rate'=>Helpers::get_business_settings('loyalty_point_exchange_rate'),
+            'loyalty_point_minimum_point'=>Helpers::get_business_settings('loyalty_point_minimum_point')
+
         ]);
     }
 }

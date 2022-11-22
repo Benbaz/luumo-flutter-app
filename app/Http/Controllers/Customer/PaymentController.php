@@ -44,8 +44,13 @@ class PaymentController extends Controller
         // }
         $shippingMethod = Helpers::get_business_settings('shipping_method');
         $carts = Cart::whereIn('cart_group_id', $cart_group_ids)->get();
+        $physical_product = false;
         foreach($carts as $cart)
         {
+            if($cart->product_type == 'physical'){
+                $physical_product = true;
+            }
+
             if ($shippingMethod == 'inhouse_shipping') {
                 $admin_shipping = ShippingType::where('seller_id',0)->first();
                 $shipping_type = isset($admin_shipping)==true?$admin_shipping->shipping_type:'order_wise';
@@ -58,10 +63,10 @@ class PaymentController extends Controller
                     $shipping_type = isset($seller_shipping)==true?$seller_shipping->shipping_type:'order_wise';
                 }
             }
-            
+
             if($shipping_type == 'order_wise'){
                 $cart_shipping = CartShipping::where('cart_group_id', $cart->cart_group_id)->first();
-                if (!isset($cart_shipping)) {
+                if (!isset($cart_shipping) && $physical_product) {
                     return response()->json(['errors' => ['code' => 'shipping-method', 'message' => 'Data not found']], 403);
                 }
             }

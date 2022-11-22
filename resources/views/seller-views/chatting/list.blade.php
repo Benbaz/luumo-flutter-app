@@ -42,7 +42,7 @@
                                     <td></td>
                                     <td></td>
                                     <td>
-                                        <a class="btn btn-primary btn-sm view"
+                                        <a class="btn btn--primary btn-sm view"
                                            href="">
                                             <i class="fa fa-eye"></i>
                                         </a>

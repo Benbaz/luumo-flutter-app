@@ -89,7 +89,7 @@
                             </div>
                         </div>
 
-                        <button class="btn btn-primary" type="submit">{{\App\CPU\translate('reset_password')}}</button>
+                        <button class="btn btn--primary" type="submit">{{\App\CPU\translate('reset_password')}}</button>
                     </form>
                 </div>
             </div>

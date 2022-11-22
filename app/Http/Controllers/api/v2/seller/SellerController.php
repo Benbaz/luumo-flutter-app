@@ -79,6 +79,22 @@ class SellerController extends Controller
         return response()->json($reviews, 200);
     }
 
+    public function shop_product_reviews_status(Request $request)
+    {
+        $data = Helpers::get_seller_by_token($request);
+
+        if ($data['success'] == 1) {
+            $reviews = Review::find($request->id);
+            $reviews->status = $request->status;
+            $reviews->save();
+            return response()->json(['message'=>translate('status updated successfully!!')],200);
+        } else {
+            return response()->json([
+                'auth-001' => translate('Your existing session token does not authorize you any more')
+            ], 401);
+        }
+    }
+
     public function seller_info(Request $request)
     {
         $data = Helpers::get_seller_by_token($request);
@@ -152,6 +168,7 @@ class SellerController extends Controller
             'branch' => $request['branch'],
             'account_no' => $request['account_no'],
             'holder_name' => $request['holder_name'],
+            'phone'=> $request['phone'],
             'password' => $request['password'] != null ? bcrypt($request['password']) : Seller::where(['id' => $seller['id']])->first()->password,
             'image' => $imageName,
             'updated_at' => now()
@@ -176,6 +193,10 @@ class SellerController extends Controller
                 'auth-001' => translate('Your existing session token does not authorize you any more')
             ], 401);
         }
+        if($seller->account_no==null || $seller->bank_name==null)
+        {
+            return response()->json(['message'=>translate('Update your bank info first')], 202);
+        }
 
         $wallet = SellerWallet::where('seller_id', $seller['id'])->first();
         if (($wallet->total_earning) >= Convert::usd($request['amount']) && $request['amount'] > 1) {
@@ -192,7 +213,7 @@ class SellerController extends Controller
             $wallet->save();
             return response()->json(translate('Withdraw request sent successfully!'), 200);
         }
-        return response()->json(translate('Invalid withdraw request'), 400);
+        return response()->json(['message'=>translate('Invalid withdraw request')], 400);
     }
 
     public function close_withdraw_request(Request $request)

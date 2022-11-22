@@ -13,34 +13,13 @@
     <!-- Font -->
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&amp;display=swap" rel="stylesheet">
     <!-- CSS Implementing Plugins -->
+    <link rel="stylesheet" href="{{asset('public/assets/back-end')}}/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{asset('public/assets/back-end')}}/css/vendor.min.css">
     <link rel="stylesheet" href="{{asset('public/assets/back-end')}}/vendor/icon-set/style.css">
     <!-- CSS Front Template -->
-    <link rel="stylesheet" href="{{asset('public/assets/back-end')}}/css/theme.minc619.css?v=1.0">
     <link rel="stylesheet" href="{{asset('public/assets/back-end')}}/css/toastr.css">
-    <style>
-        .input-icons i {
-            position: absolute;
-            cursor: pointer;
-        }
-
-        .input-icons {
-            width: 100%;
-            margin-bottom: 10px;
-        }
-
-        .icon {
-            padding: 9% 0 0 0;
-            min-width: 40px;
-        }
-
-        .input-field {
-            width: 94%;
-            padding: 10px 0 10px 10px;
-            text-align: center;
-            border-right-style: none;
-        }
-    </style>
+    <link rel="stylesheet" href="{{asset('public/assets/back-end')}}/css/theme.minc619.css?v=1.0">
+    <link rel="stylesheet" href="{{asset('public/assets/back-end')}}/css/style.css">
 </head>
 
 <body>
@@ -61,9 +40,8 @@
     <div class="container py-5 py-sm-7">
         @php($e_commerce_logo=\App\Model\BusinessSetting::where(['type'=>'company_web_logo'])->first()->value)
         <a class="d-flex justify-content-center mb-5" href="javascript:">
-            <img class="z-index-2" src="{{asset("storage/app/public/company/".$e_commerce_logo)}}" alt="Logo"
-                 onerror="this.src='{{asset('public/assets/back-end/img/400x400/img2.jpg')}}'"
-                 style="width: 8rem;">
+            <img class="z-index-2" height="40" src="{{asset("storage/app/public/company/".$e_commerce_logo)}}" alt="Logo"
+                 onerror="this.src='{{asset('public/assets/back-end/img/400x400/img2.jpg')}}'">
         </a>
 
         <div class="row justify-content-center">
@@ -81,14 +59,7 @@
                                     <center><h1 class="h4 text-gray-900 mb-4">{{\App\CPU\translate('welcome_back_to_seller_login')}}</h1>
                                     </center>
                                 </div>
-                                {{--<a class="btn btn-lg btn-block btn-white mb-4" href="#">
-                                    <span class="d-flex justify-content-center align-items-center">
-                                      <img class="avatar avatar-xss mr-2"
-                                           src="{{asset('public/assets/admin')}}/svg/brands/google.svg" alt="Image Description">
-                                      Sign in with Google
-                                    </span>
-                                </a>
-                                <span class="divider text-muted mb-4">OR</span>--}}
+                                
                             </div>
 
                             <!-- Form Group -->
@@ -148,24 +119,24 @@
                             {{-- recaptcha --}}
                             @php($recaptcha = \App\CPU\Helpers::get_business_settings('recaptcha'))
                             @if(isset($recaptcha) && $recaptcha['status'] == 1)
-                                <div id="recaptcha_element" style="width: 100%;" data-type="image"></div>
+                                <div id="recaptcha_element" class="w-100" data-type="image"></div>
                                 <br/>
                             @else
                                 <div class="row p-2">
                                     <div class="col-6 pr-0">
                                         <input type="text" class="form-control form-control-lg" name="default_captcha_value" value=""
-                                            placeholder="{{\App\CPU\translate('Enter captcha value')}}" style="border: none" autocomplete="off">
+                                            placeholder="{{\App\CPU\translate('Enter captcha value')}}" class="border-0" autocomplete="off">
                                     </div>
-                                    <div class="col-6 input-icons" style="background-color: #FFFFFF; border-radius: 5px;">
+                                    <div class="col-6 input-icons" class="bg-white rounded">
                                         <a onclick="javascript:re_captcha();">
-                                            <img src="{{ URL('/seller/auth/code/captcha/1') }}" class="input-field" id="default_recaptcha_id" style="display: inline;width: 90%; height: 75%">
+                                            <img src="{{ URL('/seller/auth/code/captcha/1') }}" class="input-field w-90 h-75" id="default_recaptcha_id">
                                             <i class="tio-refresh icon"></i>
                                         </a>
                                     </div>
                                 </div>
                             @endif
 
-                            <button type="submit" class="btn btn-lg btn-block btn-primary">{{\App\CPU\translate('sign_in')}}</button>
+                            <button type="submit" class="btn btn-lg btn-block btn--primary">{{\App\CPU\translate('sign_in')}}</button>
                         </form>
                         <!-- End Form -->
                     </div>
@@ -177,7 +148,7 @@
                                     <span>{{\App\CPU\translate('Password')}} : 12345678</span>
                                 </div>
                                 <div class="col-2">
-                                    <button class="btn btn-primary" onclick="copy_cred()"><i class="tio-copy"></i>
+                                    <button class="btn btn--primary" onclick="copy_cred()"><i class="tio-copy"></i>
                                     </button>
                                 </div>
                             </div>

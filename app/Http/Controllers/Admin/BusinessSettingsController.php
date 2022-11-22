@@ -202,6 +202,17 @@ class BusinessSettingsController extends Controller
         ]);
     }
 
+    public function productSettings()
+    {
+        $company_name = BusinessSetting::where('type', 'company_name')->first();
+        $company_email = BusinessSetting::where('type', 'company_email')->first();
+        $company_phone = BusinessSetting::where('type', 'company_phone')->first();
+        $digital_product = \App\Model\BusinessSetting::where('type','digital_product')->first()->value;
+        $brand = \App\Model\BusinessSetting::where('type','product_brand')->first()->value;
+
+        return view('admin-views.business-settings.product-settings', compact('company_name','company_email','company_phone','digital_product','brand'));
+    }
+
     public function updateInfo(Request $request)
     {
         if ($request['email_verification'] == 1) {
@@ -229,10 +240,6 @@ class BusinessSettingsController extends Controller
         // company Phone
         DB::table('business_settings')->updateOrInsert(['type' => 'company_phone'], [
             'value' => $request['company_phone']
-        ]);
-        // stock limit
-        DB::table('business_settings')->updateOrInsert(['type' => 'stock_limit'], [
-            'value' => $request['stock_limit']
         ]);
         //company copy right text
         DB::table('business_settings')->updateOrInsert(['type' => 'company_copyright_text'], [
@@ -265,14 +272,11 @@ class BusinessSettingsController extends Controller
         DB::table('business_settings')->updateOrInsert(['type' => 'decimal_point_settings'], [
             'value' => $request['decimal_point_settings']
         ]);
-        
+
         DB::table('business_settings')->updateOrInsert(['type' => 'shop_address'], [
             'value' => $request['shop_address']
         ]);
 
-        DB::table('business_settings')->updateOrInsert(['type' => 'billing_input_by_customer'], [
-            'value' => $request['billing_input_by_customer']
-        ]);
 
         //web logo
         $webLogo = BusinessSetting::where(['type' => 'company_web_logo'])->first();
@@ -336,14 +340,6 @@ class BusinessSettingsController extends Controller
                     ]),
             ]);
         }
-        DB::table('business_settings')->updateOrInsert(['type' => 'announcement'], [
-            'value' => json_encode(
-                [   'status' => $request['announcement_status'],
-                    'color' => $request['announcement_color'],
-                    'text_color' => $request['text_color'],
-                    'announcement' => $request['announcement'],
-                ]),
-        ]);
 
         DB::table('business_settings')->updateOrInsert(['type' => 'default_location'], [
             'value' => json_encode(
@@ -361,6 +357,27 @@ class BusinessSettingsController extends Controller
         ]);
 
         Toastr::success('Updated successfully');
+        return back();
+    }
+
+    public function announcement()
+    {
+        $announcement=\App\CPU\Helpers::get_business_settings('announcement');
+        return view('admin-views.business-settings.website-announcement', compact('announcement'));
+    }
+
+    public function updateAnnouncement(Request $request)
+    {
+        DB::table('business_settings')->updateOrInsert(['type' => 'announcement'], [
+            'value' => json_encode(
+                [   'status' => $request['announcement_status'],
+                    'color' => $request['announcement_color'],
+                    'text_color' => $request['text_color'],
+                    'announcement' => $request['announcement'],
+                ]),
+        ]);
+
+        Toastr::success('Announcement Updated successfully!');
         return back();
     }
 
@@ -723,7 +740,7 @@ class BusinessSettingsController extends Controller
 
     public function product_approval(Request $request)
     {
-        
+
         DB::table('business_settings')->updateOrInsert(['type' => 'new_product_approval'], [
             'value' => $request->new_product_approval == 'on'?1:0
         ]);
@@ -831,6 +848,57 @@ class BusinessSettingsController extends Controller
         ]);
 
         Toastr::success(\App\CPU\translate('config_data_updated'));
+        return back();
+    }
+    public function google_tag_analytics_update(Request $request)
+    {
+        DB::table('business_settings')->updateOrInsert(['type' => 'google_tag_manager_id'], [
+            'value' => $request['google_tag_manager_id']
+        ]);
+
+        Toastr::success(\App\CPU\translate('google_tag_manager_id_updated'));
+        return back();
+    }
+
+    // stock limit
+    public function stock_limit_warning(Request $request){
+        DB::table('business_settings')->updateOrInsert(['type' => 'stock_limit'], [
+            'value' => $request['stock_limit']
+        ]);
+
+        Toastr::success('Updated successfully');
+        return back();
+    }
+
+    public function updateDigitalProduct(Request $request){
+        $digital_product = BusinessSetting::where('type', 'digital_product')->first();
+        if (isset($digital_product)) {
+            BusinessSetting::where(['type' => 'digital_product'])->update(['value' => $request->digital_product]);
+        } else {
+            DB::table('business_settings')->insert([
+                'type' => 'digital_product',
+                'value' => $request->digital_product,
+                'updated_at' => now()
+            ]);
+        }
+
+        Toastr::success(\App\CPU\translate('digital_product_updated'));
+        return back();
+    }
+
+    public function updateProductBrand(Request $request){
+        $product_brand = BusinessSetting::where('type', 'product_brand')->first();
+        if (isset($product_brand)) {
+            BusinessSetting::where(['type' => 'product_brand'])->update(['value' => $request->product_brand]);
+        } else {
+            DB::table('business_settings')->insert([
+                'type' => 'product_brand',
+                'value' => $request->product_brand,
+                'updated_at' => now()
+            ]);
+        }
+
+        Toastr::success(\App\CPU\translate('product_brand_updated'));
         return back();
     }
 }

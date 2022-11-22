@@ -104,9 +104,10 @@
                                     <a href="{{route('product',$product['slug'])}}">{{$product['name']}}</a>
                                 </span>
                                 <br>
-                                <span
-                                    class="sellerName"> {{\App\CPU\translate('Brand')}} :{{$product->brand?$product->brand['name']:''}} </span>
-                    
+                                @if($brand_setting)
+                                <span class="sellerName"> {{\App\CPU\translate('Brand')}} :{{$product->brand?$product->brand['name']:''}} </span>
+                                @endif
+
                                 <div class="">
                                     @if($product->discount > 0)
                                     <strike style="color: #E96A6A;" class="{{Session::get('direction') === "rtl" ? 'ml-1' : 'mr-3'}}">

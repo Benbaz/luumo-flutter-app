@@ -65,6 +65,15 @@ class ProductController extends Controller
         $product = Product::with(['reviews.customer'])->where(['slug' => $slug])->first();
         if (isset($product)) {
             $product = Helpers::product_data_formatting($product, false);
+
+            if(isset($product->reviews) && !empty($product->reviews)){
+                $overallRating = \App\CPU\ProductManager::get_overall_rating($product->reviews);
+                $product['average_review'] = $overallRating[0];
+            }else{
+                $product['average_review'] = 0;
+            }
+
+
         }
         return response()->json($product, 200);
     }
@@ -73,6 +82,7 @@ class ProductController extends Controller
     {
         $products = ProductManager::get_best_selling_products($request['limit'], $request['offset']);
         $products['products'] = Helpers::product_data_formatting($products['products'], true);
+
         return response()->json($products, 200);
     }
 

@@ -132,7 +132,7 @@
                             </div>
                         @endif
                         <div class=" ">
-                          <button class="btn btn-primary" type="submit" >{{\App\CPU\translate('send')}}</button>
+                          <button class="btn btn--primary" type="submit" >{{\App\CPU\translate('send')}}</button>
                       </div>
                     </form>
             </div>

@@ -9,45 +9,55 @@
 
 @section('content')
     <div class="content container-fluid">
-        <nav aria-label="breadcrumb">
+        <!-- <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">{{\App\CPU\translate('Dashboard')}}</a>
                 </li>
                 <li class="breadcrumb-item"
                     aria-current="page">{{\App\CPU\translate('Withdraw')}}</li>
             </ol>
-        </nav>
+        </nav> -->
+
+        <!-- Page Title -->
+        <div class="mb-3">
+            <h2 class="h1 mb-0 text-capitalize d-flex align-items-center gap-2">
+                <img width="20" src="{{asset('/public/assets/back-end/img/withdraw-icon.png')}}" alt="">
+                {{\App\CPU\translate('withdraw')}}
+            </h2>
+        </div>
+        <!-- End Page Title -->
 
         <!-- Page Heading -->
         <div class="row">
             <div class="col-md-12 mb-3">
                 <div class="card">
-                    <div class="card-header p-3">
-                        <h3 class="text-center text-capitalize">
-                            {{\App\CPU\translate('seller')}} {{\App\CPU\translate('Withdraw')}} {{\App\CPU\translate('information')}}
-                        </h3>
-
-                        <i class="tio-wallet-outlined" style="font-size: 30px"></i>
-                    </div>
                     <div class="card-body" style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">
+                        <div class="text-capitalize d-flex align-items-center justify-content-between gap-2 border-bottom pb-2 mb-4">
+                            <h3 class="text-capitalize">
+                                {{\App\CPU\translate('seller')}} {{\App\CPU\translate('Withdraw')}} {{\App\CPU\translate('information')}}
+                            </h3>
+
+                            <i class="tio-wallet-outlined fz-30"></i>
+                        </div>
+
                         <div class="row">
-                            <div class="col-4">
-                                <div class="flex-start">
+                            <div class="col-md-4 mb-2 mb-md-0">
+                                <div class="flex-start flex-wrap">
                                     <div><h5 class="text-capitalize">{{\App\CPU\translate('amount')}} : </h5></div>
                                     <div class="mx-1"><h5>{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\Convert::default($seller->amount))}}</h5></div>
                                 </div>
-                                <div class="flex-start">
+                                <div class="flex-start flex-wrap">
                                     <div><h5>{{\App\CPU\translate('request_time')}} : </h5></div>
                                     <div class="mx-1">{{$seller->created_at}}</div>
                                 </div>
                             </div>
-                            <div class="col-4">
+                            <div class="col-md-4 mb-2 mb-md-0">
                                 <div class="flex-start">
-                                    <div>{{\App\CPU\translate('Note')}} :</div>
+                                    <div class="title-color">{{\App\CPU\translate('Note')}} :</div>
                                     <div class="mx-1">{{$seller->transaction_note}}</div>
                                 </div>
                             </div>
-                            <div class="col-4">
+                            <div class="col-md-4">
                                 @if ($seller->approved== 0)
                                     <button type="button" class="btn btn-success float-{{Session::get('direction') === "rtl" ? 'left' : 'right'}}" data-toggle="modal"
                                             data-target="#exampleModal">{{\App\CPU\translate('proceed')}}
@@ -72,14 +82,16 @@
                 </div>
             </div>
 
-            <div class="col-md-4">
-                <div class="card" style="min-height: 260px;">
-                    <div class="card-header">
-                        <h3 class="h3 mb-0">{{\App\CPU\translate('my_bank_info')}} </h3>
-                        <i class="tio tio-dollar-outlined"></i>
-                    </div>
+            <div class="col-md-4 mb-3">
+                <div class="card h-100">
                     <div class="card-body" style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">
-                        <div class="col-md-8 mt-2">
+
+                        <div class="text-capitalize d-flex align-items-center justify-content-between gap-2 border-bottom pb-3 mb-4">
+                            <h3 class="h3 mb-0">{{\App\CPU\translate('my_bank_info')}} </h3>
+                            <i class="tio tio-dollar-outlined"></i>
+                        </div>
+
+                        <div class="mt-2">
                             <div class="flex-start">
                                 <div><h4>{{\App\CPU\translate('bank_name')}} : </h4></div>
                                 <div class="mx-1"><h4>{{$seller->seller->bank_name ? $seller->seller->bank_name : 'No Data found'}}</h4></div>
@@ -101,13 +113,15 @@
                 </div>
             </div>
             @if($seller->seller->shop)
-                <div class="col-md-4">
-                    <div class="card" style="min-height: 260px;">
-                        <div class="card-header">
-                            <h3 class="h3 mb-0">{{\App\CPU\translate('Shop')}} {{\App\CPU\translate('info')}}</h3>
-                            <i class="tio tio-shop-outlined"></i>
-                        </div>
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100">
                         <div class="card-body" style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">
+
+                            <div class="text-capitalize d-flex align-items-center justify-content-between gap-2 border-bottom pb-3 mb-4">
+                                <h3 class="h3 mb-0">{{\App\CPU\translate('shop_info')}} </h3>
+                                <i class="tio tio-shop-outlined"></i>
+                            </div>
+
                             <div class="flex-start">
                                 <div><h5>{{\App\CPU\translate('seller_b')}} : </h5></div>
                                 <div class="mx-1"><h5>{{$seller->seller->shop->name}}</h5></div>
@@ -120,21 +134,18 @@
                                 <div><h5>{{\App\CPU\translate('address')}} : </h5></div>
                                 <div class="mx-1"><h5>{{$seller->seller->shop->address}}</h5></div>
                             </div>
-                            {{-- <div class="flex-start">
-                                <div><h5 class="text-capitalize badge badge-success">{{\App\CPU\translate('balance')}} : </h5></div>
-                                <div class="mx-1"><h5>{{\App\CPU\Convert::default($seller->seller->wallet->balance)}} {{\App\CPU\currency_symbol()}}</h5></div>
-                            </div> --}}
+
                         </div>
                     </div>
                 </div>
             @endif
-            <div class="col-md-4">
-                <div class="card" style="min-height: 260px;">
-                    <div class="card-header">
-                        <h3 class="h3 mb-0 "> {{\App\CPU\translate('Seller')}} {{\App\CPU\translate('info')}}</h3>
-                        <i class="tio tio-user-big-outlined"></i>
-                    </div>
+            <div class="col-md-4 mb-3">
+                <div class="card h-100">
                     <div class="card-body" style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">
+                        <div class="text-capitalize d-flex align-items-center justify-content-between gap-2 border-bottom pb-3 mb-4">
+                            <h3 class="h3 mb-0">{{\App\CPU\translate('seller_info')}} </h3>
+                            <i class="tio tio-user-big-outlined"></i>
+                        </div>
                         <div class="flex-start">
                             <div><h5>{{\App\CPU\translate('name')}} : </h5></div>
                             <div class="mx-1"><h5>{{$seller->seller->f_name}} {{$seller->seller->l_name}}</h5></div>
@@ -178,7 +189,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">{{\App\CPU\translate('Close')}}</button>
-                                <button type="submit" class="btn btn-primary">{{\App\CPU\translate('Submit')}}</button>
+                                <button type="submit" class="btn btn--primary">{{\App\CPU\translate('Submit')}}</button>
                             </div>
                         </form>
                     </div>

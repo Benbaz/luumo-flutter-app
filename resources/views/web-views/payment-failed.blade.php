@@ -61,7 +61,7 @@
                         <center>
                             <h3>{{\App\CPU\translate('Order payment is incomplete')}}.</h3>
                             <div class="justify-content-center mt-4 ">
-                                <a href="{{route('home')}}" class="btn btn-primary"
+                                <a href="{{route('home')}}" class="btn btn--primary"
                                    style="width:49%;">
                                     {{\App\CPU\translate('go_to_shopping')}}
                                 </a>

@@ -262,16 +262,7 @@
                                     <input class="form-control" type="number" id="zip_code" name="zip" value="{{$shippingAddress->zip}}" required>
                                 </div>
                             </div>
-                            {{-- <div class="form-row">
-                                <div class="form-group col-md-6">
-                                <label for="own_state">{{\App\CPU\translate('State')}}</label>
-                                    <input type="text" class="form-control" name="state" value="{{ $shippingAddress->state }}" id="own_state"  placeholder="" required>
-                                </div>
-                                <div class="form-group col-md-6">
-                                <label for="own_country">{{\App\CPU\translate('Country')}}</label>
-                                    <input type="text" class="form-control" id="own_country" name="country" value="{{ $shippingAddress->country }}" placeholder="" required>
-                                </div>
-                            </div> --}}
+
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <label for="own_address">{{\App\CPU\translate('address')}}</label>
@@ -292,8 +283,8 @@
                                 name="longitude" class="form-control"
                                 placeholder="Ex : 103.344322" id="longitude" value="{{$shipping_longitude??0}}" required readonly>
                             <div class="modal-footer">
-                                <button type="button" class="closeB btn btn-secondary" data-dismiss="modal">{{\App\CPU\translate('close')}}</button>
-                                <button type="submit" class="btn btn-primary">{{\App\CPU\translate('update')}}  </button>
+                                <a href="{{ route('account-address') }}" class="closeB btn btn-secondary">{{\App\CPU\translate('close')}}</a>
+                                <button type="submit" class="btn btn--primary">{{\App\CPU\translate('update')}}  </button>
                             </div>
                         </form>
                     </div>
@@ -305,7 +296,7 @@
 @endsection
 
 @push('script')
-<script src="https://maps.googleapis.com/maps/api/js?key={{\App\CPU\Helpers::get_business_settings('map_api_key')}}&libraries=places&v=3.45.8"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{\App\CPU\Helpers::get_business_settings('map_api_key')}}&libraries=places&v=3.49"></script>
 <script>
 
     function initAutocomplete() {

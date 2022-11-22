@@ -64,7 +64,7 @@
                                            placeholder="{{\App\CPU\translate('your_phone_number')}}" required>
                                 </div>
                                 <div class="input-group-append">
-                                    <button class="btn btn-primary" type="submit" name="trackOrder">{{\App\CPU\translate('track_order')}}</button>
+                                    <button class="btn btn--primary" type="submit" name="trackOrder">{{\App\CPU\translate('track_order')}}</button>
                                 </div>
                             </form>
                         </div>

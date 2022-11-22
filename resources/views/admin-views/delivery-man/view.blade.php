@@ -15,7 +15,7 @@
                     <h1 class="page-header-title">{{$dm['f_name'].' '.$dm['f_name']}}</h1>
                 </div>
                 <div class="col-6">
-                    <a href="{{url()->previous()}}" class="btn btn-primary float-right">
+                    <a href="{{url()->previous()}}" class="btn btn--primary float-right">
                         <i class="tio-back-ui"></i> {{\App\CentralLogics\translate('back')}}
                     </a>
                 </div>

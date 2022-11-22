@@ -36,7 +36,7 @@ class DeliveryManController extends Controller
             $delivery_men = new DeliveryMan();
         }
 
-        $delivery_men = $delivery_men->latest()->where(['seller_id' => 0])->paginate(25)->appends($query_param);
+        $delivery_men = $delivery_men->latest()->withCount('orders')->where(['seller_id' => 0])->paginate(25)->appends($query_param);
         return view('admin-views.delivery-man.list', compact('delivery_men', 'search'));
     }
 

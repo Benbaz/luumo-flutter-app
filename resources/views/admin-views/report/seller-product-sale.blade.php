@@ -4,45 +4,29 @@
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <style>
-        .dataTables_info {
-            margin-bottom: 20px;
-            border-top: 1px solid;
-            padding-top: 20px;
-        }
-    </style>
 @endpush
 
 @section('content')
     <div class="content container-fluid">
-        <!-- Page Header -->
-        <div class="page-header">
-            <!-- Nav -->
-            <div class="js-nav-scroller hs-nav-scroller-horizontal">
-                <ul class="nav nav-tabs page-header-tabs" id="projectsTab" role="tablist">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="javascript:">{{\App\CPU\translate('Seller product sale report')}}</a>
-                    </li>
-                </ul>
-            </div>
-            <!-- End Nav -->
+        <!-- Page Title -->
+        <div class="mb-3">
+            <h2 class="h1 mb-0 text-capitalize d-flex align-items-center gap-2">
+            <img width="20" src="{{asset('/public/assets/back-end/img/seller_sale.png')}}" alt="">
+                {{\App\CPU\translate('Seller_sale')}}
+            </h2>
         </div>
-        <!-- End Page Header -->
+        <!-- End Page Title -->
 
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
-                        <form style="width: 100%;" action="{{route('admin.report.seller-product-sale')}}">
+                    <div class="px-3 py-4">
+                        <form class="w-100" action="{{route('admin.report.seller-product-sale')}}">
                             @csrf
-                            <div class="row">
-                                <div class="col-6 col-md-1">
-                                    <div class="form-group text-center">
-                                        <label for="exampleInputEmail1">{{\App\CPU\translate('Seller')}}</label>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-md-4">
-                                    <div class="form-group">
+                            <div class="row gy-2">
+                                <div class="col-sm-6 col-md-5">
+                                    <div class="d-flex align-items-center gap-10">
+                                        <label for="exampleInputEmail1" class="title-color mb-0">{{\App\CPU\translate('Seller')}}</label>
                                         <select class="js-select2-custom form-control" name="seller_id">
                                             <option value="all">{{\App\CPU\translate('All')}}</option>
                                             @foreach(\App\Model\Seller::where(['status'=>'approved'])->get() as $seller)
@@ -54,16 +38,11 @@
                                         </select>
                                     </div>
                                 </div>
-
-                                <div class="col-6 col-md-1 text-center">
-                                    <div class="form-group ">
-                                        <label for="exampleInputEmail1">{{\App\CPU\translate('Category')}}</label>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-md-4">
-                                    <div class="form-group">
+                                <div class="col-sm-6 col-md-5">
+                                    <div class="d-flex align-items-center gap-10">
+                                        <label for="exampleInputEmail1" class="title-color mb-0">{{\App\CPU\translate('Category')}}</label>
                                         <select
-                                            class="js-select2-custom form-control"
+                                            class="js-select2-custom form-control w-100"
                                             name="category_id">
                                             <option value="all">{{\App\CPU\translate('All')}}</option>
                                             @foreach($categories as $c)
@@ -76,44 +55,43 @@
                                 </div>
 
                                 <div class="col-12 col-md-2">
-                                    <button type="submit" class="btn btn-primary btn-block">
+                                    <button type="submit" class="btn btn--primary btn-block">
                                         {{\App\CPU\translate('Filter')}}
                                     </button>
                                 </div>
                             </div>
                         </form>
                     </div>
-                    <div class="card-body"
-                         style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">
-                        <table class="table">
-                            <thead>
+                    <div class="table-responsive" style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">
+                        <table class="table table-hover table-borderless table-thead-bordered table-align-middle card-table w-100">
+                            <thead class="thead-light thead-50 text-capitalize table-nowrap">
                             <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">
-                                    {{\App\CPU\translate('Product Name')}} <label class="badge badge-success ml-3"
-                                                        style="cursor: pointer">{{\App\CPU\translate('ASE/DESC')}}</label>
+                                <th>{{\App\CPU\translate('SL')}} </th>
+                                <th>
+                                    {{\App\CPU\translate('Product Name')}}
                                 </th>
-                                <th scope="col">
-                                    {{\App\CPU\translate('Total Sale')}} <label class="badge badge-success ml-3"
-                                                      style="cursor: pointer">{{\App\CPU\translate('ASE/DESC')}}</label>
+                                <th class="text-center">
+                                    {{\App\CPU\translate('Total Sale')}}
                                 </th>
                             </tr>
                             </thead>
                             <tbody>
                             @foreach($products as $key=>$data)
                                 <tr>
-                                    <th scope="row">{{$key+1}}</th>
+                                    <td>{{$key+1}}</td>
                                     <td>{{$data['name']}}</td>
-                                    <td>{{$data->order_delivered->sum('qty')}}</td>
+                                    <td class="text-center">{{$data->order_delivered->sum('qty')}}</td>
                                 </tr>
                             @endforeach
                             </tbody>
                         </table>
-                        <table>
-                            <tfoot>
+                    </div>
+
+                    <div class="table-responsive mt-4">
+                        <div class="px-4 d-flex justify-content-lg-end">
+                            <!-- Pagination -->
                             {!! $products->links() !!}
-                            </tfoot>
-                        </table>
+                        </div>
                     </div>
                 </div>
             </div>

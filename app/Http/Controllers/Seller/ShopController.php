@@ -9,6 +9,7 @@ use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class ShopController extends Controller
 {
@@ -39,6 +40,16 @@ class ShopController extends Controller
 
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'banner'      => 'mimes:png,jpg,jpeg|max:2048',
+            'image'       => 'mimes:png,jpg,jpeg|max:2048',
+        ], [
+            'banner.mimes'   => 'Banner image type jpg, jpeg or png',
+            'banner.max'     => 'Banner Maximum size 2MB',
+            'image.mimes'    => 'Image type jpg, jpeg or png',
+            'image.max'      => 'Image Maximum size 2MB',
+        ]);
+
         $shop = Shop::find($id);
         $shop->name = $request->name;
         $shop->address = $request->address;

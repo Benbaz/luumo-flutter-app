@@ -7,22 +7,31 @@
 
 @section('content')
     <div class="content container-fluid">
+        <!-- Page Title -->
+        <div class="mb-3">
+            <h2 class="h1 mb-0 text-capitalize d-flex align-items-center gap-2">
+                <img width="20" src="{{asset('/public/assets/back-end/img/shop-info.png')}}" alt="">
+                {{\App\CPU\translate('Shop_Info')}}
+            </h2>
+        </div>
+        <!-- End Page Title -->
+
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="h3 mb-0  ">{{\App\CPU\translate('my_shop')}} {{\App\CPU\translate('Info')}} </h3>
+                        <h4 class="mb-0">{{\App\CPU\translate('my_shop')}} {{\App\CPU\translate('Info')}} </h4>
                     </div>
                     <div class="card-body">
-                        <div class="row mt-2">
+                        <div class="d-flex align-items-center flex-wrap gap-5">
                             @if($shop->image=='def.png')
-                                <div class="col-md-3 text-{{Session::get('direction') === "rtl" ? 'right' : 'left'}}">
+                                <div class="text-{{Session::get('direction') === "rtl" ? 'right' : 'left'}}">
                                     <img height="200" width="200" class="rounded-circle border"
                                          onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
                                          src="{{asset('public/assets/back-end')}}/img/shop.png">
                                 </div>
                             @else
-                                <div class="col-md-3 text-{{Session::get('direction') === "rtl" ? 'right' : 'left'}}">
+                                <div class="text-{{Session::get('direction') === "rtl" ? 'right' : 'left'}}">
                                     <img src="{{asset('storage/app/public/shop/'.$shop->image)}}"
                                          onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
                                          class="rounded-circle border"
@@ -31,7 +40,7 @@
                             @endif
 
 
-                            <div class="col-md-4 mt-4">
+                            <div class="">
                                 <div class="flex-start">
                                     <h4>{{\App\CPU\translate('Name')}} : </h4>
                                     <h4 class="mx-1">{{$shop->name}}</h4>
@@ -46,10 +55,10 @@
                                 </div>
 
                                 <div class="flex-start">
-                                    <a class="btn btn-primary" href="{{route('seller.shop.edit',[$shop->id])}}">{{\App\CPU\translate('edit')}}</a>
+                                    <a class="btn btn--primary px-4" href="{{route('seller.shop.edit',[$shop->id])}}">{{\App\CPU\translate('edit')}}</a>
                                 </div>
                             </div>
-                            <div class="col-md-5"></div>
+                            <div class=""></div>
                         </div>
                     </div>
                 </div>

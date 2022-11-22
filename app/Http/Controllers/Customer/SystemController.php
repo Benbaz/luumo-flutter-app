@@ -56,6 +56,7 @@ class SystemController extends Controller
 
     public function choose_shipping_address(Request $request)
     {
+        $physical_product = $request->physical_product;
         $shipping = [];
         $billing = [];
         parse_str($request->shipping, $shipping);
@@ -84,7 +85,7 @@ class SystemController extends Controller
                 'updated_at' => now(),
             ]);
 
-        } else if ($shipping['shipping_method_id'] == 0) {
+        } else if (isset($shipping['shipping_method_id']) && $shipping['shipping_method_id'] == 0) {
 
             if ($shipping['contact_person_name'] == null || $shipping['address'] == null || $shipping['city'] == null ) {
                 return response()->json([
@@ -107,12 +108,11 @@ class SystemController extends Controller
                 'updated_at' => now(),
             ]);
         } else {
-            $address_id = $shipping['shipping_method_id'];
+            $address_id = isset($shipping['shipping_method_id']) ? $shipping['shipping_method_id'] : 0;
         }
 
 
         if ($request->billing_addresss_same_shipping == 'false') {
-
             if (isset($billing['save_address_billing']) && $billing['save_address_billing'] == 'on') {
 
                 if ($billing['billing_contact_person_name'] == null || $billing['billing_address'] == null || $billing['billing_city'] == null ) {

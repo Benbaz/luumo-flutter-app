@@ -8,22 +8,19 @@
 
 @section('content')
     <div class="content container-fluid">
-
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">{{\App\CPU\translate('Dashboard')}}</a>
-                </li>
-                <li class="breadcrumb-item" aria-current="page">{{\App\CPU\translate('Notification')}}</li>
-            </ol>
-        </nav>
+        <!-- Page Title -->
+        <div class="mb-3">
+            <h2 class="h1 mb-0 text-capitalize d-flex align-items-center gap-2">
+                <img width="20" src="{{asset('/public/assets/back-end/img/push_notification.png')}}" alt="">
+                {{\App\CPU\translate('push_notification_update')}}
+            </h2>
+        </div>
+        <!-- End Page Title -->
 
         <!-- End Page Header -->
         <div class="row gx-2 gx-lg-3">
             <div class="col-sm-12 col-lg-12 mb-3 mb-lg-2">
                 <div class="card">
-                    <div class="card-header">
-                        <h1 class="page-header-title">{{\App\CPU\translate('Notification Update')}}</h1>
-                    </div>
                     <div class="card-body">
                         <form action="{{route('admin.notification.update',[$notification['id']])}}" method="post"
                               style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};"
@@ -39,22 +36,27 @@
                                 <textarea name="description" class="form-control"
                                           required>{{$notification['description']}}</textarea>
                             </div>
-                            <div class="form-group" style="text-align: left">
-                                <label>{{\App\CPU\translate('Image')}}</label><small style="color: red">* ( {{\App\CPU\translate('Ratio_1:1')}}  )</small>
+                            <div class="form-group text-left">
+                                <label class="title-color">{{\App\CPU\translate('Image')}}</label>
+                                <span class="text-info"> ( {{\App\CPU\translate('Ratio_1:1')}}  )</span>
                                 <div class="custom-file">
                                     <input type="file" name="image" id="customFileEg1" class="custom-file-input"
                                            accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
                                     <label class="custom-file-label" for="customFileEg1">{{\App\CPU\translate('Choose file')}}</label>
                                 </div>
-                                <hr>
                                 <center>
-                                    <img style="width: 20%;max-height:200px;border: 1px solid; border-radius: 10px;" id="viewer"
-                                         src="{{asset('storage/app/public/notification')}}/{{$notification['image']}}"
+                                    <img class="upload-img-view mt-4" 
+                                        id="viewer"
+                                        onerror="this.src='{{asset('public/assets/back-end/img/160x160/img2.jpg')}}'"
+                                        src="{{asset('storage/app/public/notification')}}/{{$notification['image']}}"
                                          alt="image"/>
                                 </center>
                             </div>
-                          
-                            <button type="submit" class="btn btn-primary float-right">{{\App\CPU\translate('Update')}}</button>
+
+                            <div class="d-flex justify-content-end gap-3">
+                                <button type="reset" class="btn btn-secondary">{{\App\CPU\translate('reset')}}</button>
+                                <button type="submit" class="btn btn--primary">{{\App\CPU\translate('Update')}}</button>
+                            </div>
                         </form>
                     </div>
                 </div>

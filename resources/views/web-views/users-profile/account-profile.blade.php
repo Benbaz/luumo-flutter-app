@@ -130,6 +130,8 @@
             <section class="col-lg-9 col-md-9">
                 <div class="card box-shadow-sm">
                     <div class="card-header">
+                        
+                        
                         <form class="mt-3" action="{{route('user-update')}}" method="post"
                               enctype="multipart/form-data">
                             <div class="row photoHeader">
@@ -147,9 +149,11 @@
                                            class="spandHeadO">
                                         {{\App\CPU\translate('change_your_profile')}}
                                     </label>
-                                    <span style="color: red;font-size: 10px">( * {{\App\CPU\translate('Image ratio should be')}} 1:1 )</span>
+                                    <span style="color: red;font-size: 10px">( * {{\App\CPU\translate('Image ratio should be 1:1')}}  )</span>
                                     <input id="files" name="image" style="visibility:hidden;" type="file">
                                 </div>
+
+                                
 
                                 <div class="card-body mt-md-3" style="padding: 0px;">
                                     <h3 class="font-nameA">{{\App\CPU\translate('account_information')}} </h3>
@@ -174,7 +178,7 @@
                                                    value="{{$customerDetail['email']}}" disabled>
                                         </div>
                                         <div class="form-group col-md-6">
-                                            <label for="phone">{{\App\CPU\translate('phone_name')}} </label>
+                                            <label for="phone">{{\App\CPU\translate('phone_number')}} </label>
                                             <small class="text-primary">(
                                                 * {{\App\CPU\translate('country_code_is_must')}} {{\App\CPU\translate('like_for_BD_880')}}
                                                 )</small></label>
@@ -219,8 +223,16 @@
                                             <div id='message'></div>
                                         </div>
                                     </div>
+                                   
+                                    <a class="btn btn-danger float-{{Session::get('direction') === "rtl" ? 'right' : 'left'}}"
+                                        href="javascript:"
+                                        onclick="route_alert('{{ route('account-delete',[$customerDetail['id']]) }}','{{\App\CPU\translate('want_to_delete_this_account?')}}')">
+                                        {{\App\CPU\translate('delete_account')}}
+                                    </a>   
+                                    
+                                
                                     <button type="submit"
-                                            class="btn btn-primary float-{{Session::get('direction') === "rtl" ? 'left' : 'right'}}">{{\App\CPU\translate('update')}} {{\App\CPU\translate('Informations')}}  </button>
+                                            class="btn btn--primary float-{{Session::get('direction') === "rtl" ? 'left' : 'right'}}">{{\App\CPU\translate('update')}}   </button>
                                 </div>
                             </div>
                         </form>
@@ -230,7 +242,7 @@
             {{-- <section class="col-lg-8">
                 <!-- Toolbar-->
                 <div class="d-none d-lg-flex justify-content-between align-items-center pt-lg-3 pb-4 pb-lg-5 mb-lg-3">
-                    <h6 class="font-size-base text-light mb-0">Update you profile details below:</h6><a class="btn btn-primaryrimary btn-sm" href="{{route('customer.auth.logout')}}"><i class="czi-sign-out mr-2"></i>Sign out</a>
+                    <h6 class="font-size-base text-light mb-0">Update you profile details below:</h6><a class="btn btn--primaryrimary btn-sm" href="{{route('customer.auth.logout')}}"><i class="czi-sign-out mr-2"></i>Sign out</a>
                 </div>
                 <!-- Profile form-->
                     <form action="{{route('user-update')}}" method="post" enctype="multipart/form-data">
@@ -298,7 +310,7 @@
                             <div class="d-flex flex-wrap justify-content-between align-items-center">
                                 <div class="custom-control custom-checkbox d-block">
                                 </div>
-                                <button class="btn btn-primaryrimary mt-3 mt-sm-0" type="submit">Update profile</button>
+                                <button class="btn btn--primaryrimary mt-3 mt-sm-0" type="submit">Update profile</button>
                             </div>
                         </div>
                     </div>
@@ -361,5 +373,24 @@
             readURL(this);
         });
 
+    </script>
+    <script>
+        function form_alert(id, message) {
+            Swal.fire({
+                title: '{{\App\CPU\translate('Are you sure')}}?',
+                text: message,
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: 'No',
+                confirmButtonText: 'Yes',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    $('#' + id).submit()
+                }
+            })
+        }
     </script>
 @endpush

@@ -124,11 +124,7 @@
             transition: .2s ease-in-out;
         }
 
-        /*//for -message*/
-        /* .container {
-            max-width: 1170px;
-            margin: auto;
-        } */
+
 
         img {
             max-width: 100%;
@@ -445,7 +441,7 @@
                                         class="form-control form-control-sm {{Session::get('direction') === "rtl" ? 'ml-3' : 'mr-3'}} w-75"
                                         id="myInput" type="text"
                                         placeholder="{{\App\CPU\translate('Search')}}"
-                                        aria-label="Search" 
+                                        aria-label="Search"
                                         style="border: none !important;">
                                     <i class="fa fa-search" style="color: #92C6FF" aria-hidden="true"></i>
                                 </form>
@@ -454,7 +450,7 @@
                             <div class="inbox_chat">
                                 @if (isset($unique_shops))
                                     @foreach($unique_shops as $key=>$shop)
-                                        <div class="chat_list @if ($key == 0) btn-primary @endif"
+                                        <div class="chat_list @if ($key == 0) btn--primary @endif"
                                              id="user_{{$shop->shop_id}}">
                                             <div class="chat_people" id="chat_people">
                                                 <div class="chat_img">
@@ -505,7 +501,7 @@
 
                                                     <div class="outgoing_msg">
                                                         <div class="send_msg">
-                                                            <p class="btn-primary">
+                                                            <p class="btn--primary">
                                                                 {{$chat->message}}
                                                             </p>
                                                             <span class="time_date"> {{$chat->created_at->format('h:i A')}}    |    {{$chat->created_at->format('M d')}} </span>
@@ -535,9 +531,7 @@
                                                     id="msgInputValue"
                                                     type="text" placeholder="{{\App\CPU\translate('Send a message')}}" aria-label="Search">
                                                 <input class="aSend" type="submit" id="msgSendBtn" style="width: 45px;"
-                                                       value="Send">
-                                                {{-- <a class="aSend" id="msgSendBtn">Send</a> --}}
-                                                {{-- <i class="fa fa-send" style="color: #92C6FF" aria-hidden="true"></i> --}}
+                                                       value="{{\App\CPU\translate('Send')}}">
 
                                             </form>
                                         </div>
@@ -569,8 +563,8 @@
                 e.stopPropagation();
                 shop_id = e.target.id;
                 //active when click on seller
-                $('.chat_list.btn-primary').removeClass('btn-primary');
-                $(`#user_${shop_id}`).addClass("btn-primary");
+                $('.chat_list.btn--primary').removeClass('btn--primary');
+                $(`#user_${shop_id}`).addClass("btn--primary");
                 $('.seller').css('color', 'black');
                 $(`#user_${shop_id} h5`).css('color', 'white');
 
@@ -592,28 +586,28 @@
                                 if (element.sent_by_customer) {
 
                                     $(".msg_history").append(`
-                    <div class="outgoing_msg">
-                      <div class='send_msg'>
-                        <p  class="btn-primary">${element.message}</p>
-                        <span class='time_date'> ${time}    |    ${date}</span>
-                      </div>
-                    </div>`
+                                        <div class="outgoing_msg">
+                                          <div class='send_msg'>
+                                            <p  class="btn--primary">${element.message}</p>
+                                            <span class='time_date'> ${time}    |    ${date}</span>
+                                          </div>
+                                        </div>`
                                     )
 
                                 } else {
                                     let img_path = element.image == 'def.png' ? `${window.location.origin}/storage/app/public/${element.image}` : `${window.location.origin}/storage/app/public/shop/${element.image}`;
 
                                     $(".msg_history").append(`
-                    <div class="incoming_msg" style="display: flex;" id="incoming_msg">
-                      <div class="incoming_msg_img" id="">
-                        <img src="${img_path}" alt="">
-                      </div>
-                      <div class="received_msg">
-                        <div class="received_withd_msg">
-                          <p id="receive_msg">${element.message}</p>
-                        <span class="time_date">${time}    |    ${date}</span></div>
-                      </div>
-                    </div>`
+                                        <div class="incoming_msg" style="display: flex;" id="incoming_msg">
+                                          <div class="incoming_msg_img" id="">
+                                            <img src="${img_path}" alt="">
+                                          </div>
+                                          <div class="received_msg">
+                                            <div class="received_withd_msg">
+                                              <p id="receive_msg">${element.message}</p>
+                                            <span class="time_date">${time}    |    ${date}</span></div>
+                                          </div>
+                                        </div>`
                                     )
                                 }
                                 $('#hidden_value').attr("value", shop_id);
@@ -665,12 +659,12 @@
                     data: data,
                     success: function (respons) {
                         $(".msg_history").append(`
-                <div class="outgoing_msg" id="outgoing_msg">
-                  <div class='send_msg'>
-                    <p>${respons}</p>
-                    <span class='time_date'> now</span>
-                  </div>
-                </div>`
+                            <div class="outgoing_msg" id="outgoing_msg">
+                              <div class='send_msg'>
+                                <p>${respons}</p>
+                                <span class='time_date'> now</span>
+                              </div>
+                            </div>`
                         )
                     }
                 });

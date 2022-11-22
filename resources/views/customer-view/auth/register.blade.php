@@ -17,13 +17,13 @@
     <div class="container py-4 py-lg-5 my-4"
          style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">
         <div class="row justify-content-center">
-            <div class="col-md-6">
+            <div class="col-md-8">
                 <div class="card border-0 box-shadow">
                     <div class="card-body">
                         <h2 class="h4 mb-1">{{\App\CPU\translate('no_account')}}</h2>
                         <p class="font-size-sm text-muted mb-4">{{\App\CPU\translate('register_control_your_order')}}
                             .</p>
-                        <form class="needs-validation_" action="{{route('customer.auth.register')}}"
+                        <form class="needs-validation_" action="{{route('customer.auth.sign-up')}}"
                               method="post" id="sign-up-form">
                             @csrf
                             <div class="row">
@@ -78,11 +78,6 @@
                                         </div>
                                     </div>
 
-                                    {{-- <div class="form-group">
-                                        <label for="reg-password">{{\App\CPU\translate('password')}}</label>
-                                        <input class="form-control" type="password" name="password">
-                                        <div class="invalid-feedback">Please enter password!</div>
-                                    </div> --}}
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
@@ -101,11 +96,7 @@
                                             </label>
                                         </div>
                                     </div>
-                                    {{-- <div class="form-group">
-                                        <label for="reg-password-confirm">{{\App\CPU\translate('confirm_password')}}</label>
-                                        <input class="form-control" type="password" name="con_password">
-                                        <div class="invalid-feedback">Passwords do not match!</div>
-                                    </div> --}}
+
                                 </div>
                             </div>
                             <div class="form-group d-flex flex-wrap justify-content-between">
@@ -115,7 +106,7 @@
                                         <input type="checkbox" class="mr-1"
                                                name="remember" id="inputCheckd">
                                     </strong>
-                                    <label class="" for="remember">{{\App\CPU\translate('i_agree_to_Your_terms')}}<a
+                                    <label class="" for="remember">{{\App\CPU\translate('i_agree_to_Your')}}<a
                                             class="font-size-sm" target="_blank" href="{{route('terms')}}">
                                             {{\App\CPU\translate('terms_and_condition')}}
                                         </a></label>
@@ -125,15 +116,15 @@
                             <div class="flex-between row" style="direction: {{ Session::get('direction') }}">
                                 <div class="mx-1">
                                     <div class="text-right">
-                                        <button class="btn btn-primary" id="sign-up" type="submit" disabled>
+                                        <button class="btn btn--primary" id="sign-up" type="submit" disabled>
                                             <i class="czi-user {{Session::get('direction') === "rtl" ? 'ml-2 mr-n1' : 'mr-2 ml-n1'}}"></i>
-                                            {{\App\CPU\translate('sing_up')}}
+                                            {{\App\CPU\translate('sign_up')}}
                                         </button>
                                     </div>
                                 </div>
                                 <div class="mx-1">
                                     <a class="btn btn-outline-primary" href="{{route('customer.auth.login')}}">
-                                        <i class="fa fa-sign-in"></i> {{\App\CPU\translate('sing_in')}}
+                                        <i class="fa fa-sign-in"></i> {{\App\CPU\translate('sign_in')}}
                                     </a>
                                 </div>
                                 <div class="col-12 mt-3">
@@ -172,45 +163,6 @@
             }
 
         });
-        /*$('#sign-up-form').submit(function (e) {
-            e.preventDefault();
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.post({
-                url: '{{route('customer.auth.register')}}',
-                dataType: 'json',
-                data: $('#sign-up-form').serialize(),
-                beforeSend: function () {
-                    $('#loading').show();
-                },
-                success: function (data) {
-                    if (data.errors) {
-                        for (var i = 0; i < data.errors.length; i++) {
-                            toastr.error(data.errors[i].message, {
-                                CloseButton: true,
-                                ProgressBar: true
-                            });
-                        }
-                    } else {
-                        toastr.success(data.message, {
-                            CloseButton: true,
-                            ProgressBar: true
-                        });
-                        setInterval(function () {
-                            location.href = data.url;
-                        }, 2000);
-                    }
-                },
-                complete: function () {
-                    $('#loading').hide();
-                },
-                error: function () {
-                  console.log(response)
-                }
-            });
-        });*/
+
     </script>
 @endpush

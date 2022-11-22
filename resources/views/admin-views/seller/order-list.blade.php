@@ -68,7 +68,7 @@
                                         @if($order->order_status=='pending')
                                             <label class="badge badge-primary">{{str_replace('_',' ',$order->order_status)}}</label>
                                         @elseif($order->order_status=='processing' || $order->order_status=='out_for_delivery')
-                                            <label class="badge badge-warning">{{str_replace('_',' ',$order->order_status)}}</label>
+                                            <label class="badge badge-warning">{{str_replace('_',' ',$order->order_status=='processing' ? 'packaging':$order->order_status)}}</label>
                                         @elseif($order->order_status=='processed')
                                             <label class="badge badge-warning">{{str_replace('_',' ',$order->order_status)}}</label>
                                         @elseif($order->order_status=='delivered' || $order->order_status=='confirmed')
@@ -76,7 +76,7 @@
                                         @elseif($order->order_status=='returned')
                                             <label class="badge badge-warning">{{str_replace('_',' ',$order->order_status)}}</label>
                                         @elseif($order->order_status=='failed' || $order->order_status=='canceled')
-                                            <label class="badge badge-danger">{{str_replace('_',' ',$order->order_status)}}</label>
+                                            <label class="badge badge-danger">{{str_replace('_',' ',$order->order_status=='failed' ? 'Failed To Deliver':$order->order_status)}}</label>
                                         @endif
                                     </td>
                                     <td>
@@ -107,10 +107,6 @@
                                                         class="tio-download"></i> {{\App\CPU\translate('Invoice')}}</a>
                                             </div>
                                         </div>
-                                        {{-- <a href="{{route('admin.sellers.order-details',[$order['id'],$seller['id']])}}"
-                                           class="btn btn-outline-info btn-block">
-                                            <i class="fa fa-eye"></i>
-                                        </a> --}}
                                     </td>
                                 </tr>
                             @endforeach
@@ -125,9 +121,7 @@
 
                         <div class="col-sm-auto">
                             <div class="d-flex justify-content-center justify-content-sm-end">
-                                <!-- Pagination -->
                                 {!! $orders->links() !!}
-                                {{--<nav id="datatablePagination" aria-label="Activity pagination"></nav>--}}
                             </div>
                         </div>
                     </div>

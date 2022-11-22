@@ -9,16 +9,37 @@ use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use function App\CPU\translate;
+use App\CPU\Helpers;
 
 class DeliveryManController extends Controller
 {
     public function index()
     {
+        $shippingMethod=Helpers::get_business_settings('shipping_method');
+        if($shippingMethod=='inhouse_shipping')
+        {
+            Toastr::warning(translate('access_denied!!'));
+            return redirect('/');
+        }
+
         return view('seller-views.delivery-man.index');
     }
 
     public function list(Request $request)
     {
+        $shippingMethod=Helpers::get_business_settings('shipping_method');
+        if($shippingMethod=='inhouse_shipping')
+        {
+            Toastr::warning(translate('access_denied!!'));
+            return redirect('/');
+        }
+
+        $shippingMethod=Helpers::get_business_settings('shipping_method');
+        if($shippingMethod=='inhouse_shipping')
+        {
+            Toastr::warning(translate('access_denied!!'));
+            return back();
+        }
         $query_param = [];
         $search = $request['search'];
         if ($request->has('search')) {
@@ -35,7 +56,7 @@ class DeliveryManController extends Controller
             $delivery_men = new DeliveryMan();
         }
 
-        $delivery_men = $delivery_men->latest()->where(['seller_id' => auth('seller')->id()])->paginate(25)->appends($query_param);
+        $delivery_men = $delivery_men->withCount('orders')->latest()->where(['seller_id' => auth('seller')->id()])->paginate(25)->appends($query_param);
         return view('seller-views.delivery-man.list', compact('delivery_men', 'search'));
     }
 
@@ -172,7 +193,7 @@ class DeliveryManController extends Controller
         $delivery_man->save();
 
         Toastr::success('Delivery-man updated successfully!');
-        
+
         return redirect('seller/delivery-man/list');
     }
 

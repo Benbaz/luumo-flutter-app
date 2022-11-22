@@ -37,12 +37,13 @@
 @endpush
 
 @section('content')
+@php($billing_input_by_customer=\App\CPU\Helpers::get_business_settings('billing_input_by_customer'))
     <div class="container pb-5 mb-2 mb-md-4 rtl"
          style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">
         <div class="row">
             <div class="col-md-12 mb-5 pt-5">
                 <div class="feature_header">
-                    <span>{{ \App\CPU\translate('shipping_and_billing_address')}}</span>
+                    <span>{{ \App\CPU\translate('shipping')}} {{$billing_input_by_customer==1?\App\CPU\translate('and').' '.\App\CPU\translate('billing'):' '}} {{\App\CPU\translate('address')}}</span>
                 </div>
             </div>
             <section class="col-lg-8">
@@ -50,159 +51,156 @@
                 <div class="checkout_details mt-3">
                     <!-- Steps-->
                 @include('web-views.partials._checkout-steps',['step'=>2])
-                <!-- Shipping methods table-->
-                    <h2 class="h4 pb-3 mb-2 mt-5">{{ \App\CPU\translate('choose_shipping_address')}}</h2>
-                    @php($shipping_addresses=\App\Model\ShippingAddress::where('customer_id',auth('customer')->id())->where('is_billing',0)->get())
-                    <form method="post" action="" id="address-form">
+                    @php($default_location=\App\CPU\Helpers::get_business_settings('default_location'))
+                    <input type="hidden" id="physical_product" name="physical_product" value="{{ $physical_product ? 'yes':'no'}}">
 
-                        <div class="card-body" style="padding: 0!important;">
-                            <ul class="list-group">
-                                @foreach($shipping_addresses as $key=>$address)
-                                    <li class="list-group-item mb-2 mt-2"
-                                        style="cursor: pointer;background: rgba(245,245,245,0.51)"
-                                        onclick="$('#sh-{{$address['id']}}').prop( 'checked', true )">
+                <!-- Shipping methods table-->
+                    @if($physical_product)
+                        <h2 class="h4 pb-3 mb-2 mt-5">{{ \App\CPU\translate('choose_shipping_address')}}</h2>
+                        @php($shipping_addresses=\App\Model\ShippingAddress::where('customer_id',auth('customer')->id())->where('is_billing',0)->get())
+                        <form method="post" action="" id="address-form">
+
+                            <div class="card-body" style="padding: 0!important;">
+                                <ul class="list-group">
+                                    @foreach($shipping_addresses as $key=>$address)
+                                        <li class="list-group-item mb-2 mt-2"
+                                            style="cursor: pointer;background: rgba(245,245,245,0.51)"
+                                            onclick="$('#sh-{{$address['id']}}').prop( 'checked', true )">
+                                            <input type="radio" name="shipping_method_id"
+                                                   id="sh-{{$address['id']}}"
+                                                   value="{{$address['id']}}" {{$key==0?'checked':''}}>
+                                            <span class="checkmark"
+                                                  style="margin-{{Session::get('direction') === "rtl" ? 'left' : 'right'}}: 10px"></span>
+                                            <label class="badge"
+                                                   style="background: {{$web_config['primary_color']}}; color:white !important;">{{$address['address_type']}}</label>
+                                            <small>
+                                                <i class="fa fa-phone"></i> {{$address['phone']}}
+                                            </small>
+                                            <hr>
+                                            <span>{{ \App\CPU\translate('contact_person_name')}}: {{$address['contact_person_name']}}</span><br>
+                                            <span>{{ \App\CPU\translate('address')}} : {{$address['address']}}, {{$address['city']}}, {{$address['zip']}}.</span>
+                                        </li>
+                                    @endforeach
+                                    <li class="list-group-item mb-2 mt-2" onclick="anotherAddress()">
                                         <input type="radio" name="shipping_method_id"
-                                               id="sh-{{$address['id']}}"
-                                               value="{{$address['id']}}" {{$key==0?'checked':''}}>
+                                               id="sh-0" value="0" data-toggle="collapse"
+                                               data-target="#collapseThree" {{$shipping_addresses->count()==0?'checked':''}}>
                                         <span class="checkmark"
                                               style="margin-{{Session::get('direction') === "rtl" ? 'left' : 'right'}}: 10px"></span>
-                                        <label class="badge"
-                                               style="background: {{$web_config['primary_color']}}; color:white !important;">{{$address['address_type']}}</label>
-                                        <small>
-                                            <i class="fa fa-phone"></i> {{$address['phone']}}
-                                        </small>
-                                        <hr>
-                                        <span>{{ \App\CPU\translate('contact_person_name')}}: {{$address['contact_person_name']}}</span><br>
-                                        <span>{{ \App\CPU\translate('address')}} : {{$address['address']}}, {{$address['city']}}, {{$address['zip']}}.</span>
-                                    </li>
-                                @endforeach
-                                <li class="list-group-item mb-2 mt-2" onclick="anotherAddress()">
-                                    <input type="radio" name="shipping_method_id"
-                                           id="sh-0" value="0" data-toggle="collapse"
-                                           data-target="#collapseThree" {{$shipping_addresses->count()==0?'checked':''}}>
-                                    <span class="checkmark"
-                                          style="margin-{{Session::get('direction') === "rtl" ? 'left' : 'right'}}: 10px"></span>
-                                    {{-- <label class="badge"
-                                           style="background: {{$web_config['primary_color']}}; color:white !important;">
-                                        <i class="fa fa-plus-circle"></i></label> --}}
-                                    <button type="button" class="btn btn-outline" data-toggle="collapse"
-                                            data-target="#collapseThree">{{ \App\CPU\translate('Another')}} {{ \App\CPU\translate('address')}}
-                                    </button>
-                                    <div id="accordion">
-                                        <div id="collapseThree"
-                                             class="collapse {{$shipping_addresses->count()==0?'show':''}}"
-                                             aria-labelledby="headingThree"
-                                             data-parent="#accordion">
-                                            <div class="card-body">
-                                                <div class="form-group">
-                                                    <label
-                                                        for="exampleInputEmail1">{{ \App\CPU\translate('contact_person_name')}}
-                                                        <span style="color: red">*</span></label>
-                                                    <input type="text" class="form-control"
-                                                           name="contact_person_name" {{$shipping_addresses->count()==0?'required':''}}>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="exampleInputEmail1">{{ \App\CPU\translate('Phone')}}
-                                                        <span
-                                                            style="color: red">*</span></label>
-                                                    <input type="text" class="form-control"
-                                                           name="phone" {{$shipping_addresses->count()==0?'required':''}}>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label
-                                                        for="exampleInputPassword1">{{ \App\CPU\translate('address')}} {{ \App\CPU\translate('Type')}}</label>
-                                                    <select class="form-control" name="address_type">
-                                                        <option
-                                                            value="permanent">{{ \App\CPU\translate('Permanent')}}</option>
-                                                        <option value="home">{{ \App\CPU\translate('Home')}}</option>
-                                                        <option
-                                                            value="others">{{ \App\CPU\translate('Others')}}</option>
-                                                    </select>
-                                                </div>
-                                                {{-- <div class="form-group">
-                                                    <label>{{ \App\CPU\translate('Country')}} <span
-                                                            style="color: red">*</span></label>
-                                                    <input type="text" class="form-control"
-                                                           name="country" {{$shipping_addresses->count()==0?'required':''}}>
-                                                </div> --}}
-                                                <div class="form-group">
-                                                    <label for="exampleInputEmail1">{{ \App\CPU\translate('City')}}<span
-                                                            style="color: red">*</span></label>
-                                                    <input type="text" class="form-control"
-                                                           name="city" {{$shipping_addresses->count()==0?'required':''}}>
-                                                </div>
 
-                                                <div class="form-group">
-                                                    <label
-                                                        for="exampleInputEmail1">{{ \App\CPU\translate('zip_code')}}
-                                                        <span
-                                                            style="color: red">*</span></label>
-                                                    <input type="number" class="form-control"
-                                                           name="zip" {{$shipping_addresses->count()==0?'required':''}}>
-                                                </div>
+                                        <button type="button" class="btn btn-outline" data-toggle="collapse"
+                                                data-target="#collapseThree">{{ \App\CPU\translate('Another')}} {{ \App\CPU\translate('address')}}
+                                        </button>
+                                        <div id="accordion">
+                                            <div id="collapseThree"
+                                                 class="collapse {{$shipping_addresses->count()==0?'show':''}}"
+                                                 aria-labelledby="headingThree"
+                                                 data-parent="#accordion">
+                                                <div class="card-body">
+                                                    <div class="form-group">
+                                                        <label
+                                                            for="exampleInputEmail1">{{ \App\CPU\translate('contact_person_name')}}
+                                                            <span style="color: red">*</span></label>
+                                                        <input type="text" class="form-control"
+                                                               name="contact_person_name" {{$shipping_addresses->count()==0?'required':''}}>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="exampleInputEmail1">{{ \App\CPU\translate('Phone')}}
+                                                            <span
+                                                                style="color: red">*</span></label>
+                                                        <input type="text" class="form-control"
+                                                               name="phone" {{$shipping_addresses->count()==0?'required':''}}>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label
+                                                            for="exampleInputPassword1">{{ \App\CPU\translate('address')}} {{ \App\CPU\translate('Type')}}</label>
+                                                        <select class="form-control" name="address_type">
+                                                            <option
+                                                                value="permanent">{{ \App\CPU\translate('Permanent')}}</option>
+                                                            <option value="home">{{ \App\CPU\translate('Home')}}</option>
+                                                            <option
+                                                                value="others">{{ \App\CPU\translate('Others')}}</option>
+                                                        </select>
+                                                    </div>
 
-                                                <div class="form-group">
-                                                    <label
-                                                        for="exampleInputEmail1">{{ \App\CPU\translate('address')}}<span
-                                                            style="color: red">*</span></label>
-                                                    <textarea class="form-control" id="address"
-                                                              type="text"
-                                                              name="address" {{$shipping_addresses->count()==0?'required':''}}></textarea>
-                                                </div>
-                                                @php($default_location=\App\CPU\Helpers::get_business_settings('default_location'))
-                                                <div class="form-group">
-                                                    <input id="pac-input" class="controls rounded"
-                                                           style="height: 3em;width:fit-content;"
-                                                           title="{{\App\CPU\translate('search_your_location_here')}}"
-                                                           type="text"
-                                                           placeholder="{{\App\CPU\translate('search_here')}}"/>
-                                                    <div style="height: 200px;" id="location_map_canvas"></div>
-                                                </div>
-                                                 <div class="form-check" style="padding-{{Session::get('direction') === "rtl" ? 'right' : 'left'}}: 1.25rem;">
-                                                    <input type="checkbox" name="save_address" class="form-check-input"
-                                                           id="exampleCheck1">
-                                                    <label class="form-check-label" for="exampleCheck1" style="padding-{{Session::get('direction') === "rtl" ? 'right' : 'left'}}: 1.09rem">
-                                                        {{ \App\CPU\translate('save_this_address')}}
-                                                    </label>
-                                                </div>
-                                                <input type="hidden" id="latitude"
-                                                       name="latitude" class="form-control d-inline"
-                                                       placeholder="Ex : -94.22213"
-                                                       value="{{$default_location?$default_location['lat']:0}}" required
-                                                       readonly>
-                                                <input type="hidden"
-                                                       name="longitude" class="form-control"
-                                                       placeholder="Ex : 103.344322" id="longitude"
-                                                       value="{{$default_location?$default_location['lng']:0}}" required
-                                                       readonly>
+                                                    <div class="form-group">
+                                                        <label for="exampleInputEmail1">{{ \App\CPU\translate('City')}}<span
+                                                                style="color: red">*</span></label>
+                                                        <input type="text" class="form-control"
+                                                               name="city" {{$shipping_addresses->count()==0?'required':''}}>
+                                                    </div>
 
-                                                <button type="submit" class="btn btn-primary" style="display: none"
-                                                        id="address_submit"></button>
+                                                    <div class="form-group">
+                                                        <label
+                                                            for="exampleInputEmail1">{{ \App\CPU\translate('zip_code')}}
+                                                            <span
+                                                                style="color: red">*</span></label>
+                                                        <input type="number" class="form-control"
+                                                               name="zip" {{$shipping_addresses->count()==0?'required':''}}>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label
+                                                            for="exampleInputEmail1">{{ \App\CPU\translate('address')}}<span
+                                                                style="color: red">*</span></label>
+                                                        <textarea class="form-control" id="address"
+                                                                  type="text"
+                                                                  name="address" {{$shipping_addresses->count()==0?'required':''}}></textarea>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <input id="pac-input" class="controls rounded"
+                                                               style="height: 3em;width:fit-content;"
+                                                               title="{{\App\CPU\translate('search_your_location_here')}}"
+                                                               type="text"
+                                                               placeholder="{{\App\CPU\translate('search_here')}}"/>
+                                                        <div style="height: 200px;" id="location_map_canvas"></div>
+                                                    </div>
+                                                     <div class="form-check" style="padding-{{Session::get('direction') === "rtl" ? 'right' : 'left'}}: 1.25rem;">
+                                                        <input type="checkbox" name="save_address" class="form-check-input"
+                                                               id="exampleCheck1">
+                                                        <label class="form-check-label" for="exampleCheck1" style="padding-{{Session::get('direction') === "rtl" ? 'right' : 'left'}}: 1.09rem">
+                                                            {{ \App\CPU\translate('save_this_address')}}
+                                                        </label>
+                                                    </div>
+                                                    <input type="hidden" id="latitude"
+                                                           name="latitude" class="form-control d-inline"
+                                                           placeholder="Ex : -94.22213"
+                                                           value="{{$default_location?$default_location['lat']:0}}" required
+                                                           readonly>
+                                                    <input type="hidden"
+                                                           name="longitude" class="form-control"
+                                                           placeholder="Ex : 103.344322" id="longitude"
+                                                           value="{{$default_location?$default_location['lng']:0}}" required
+                                                           readonly>
+
+                                                    <button type="submit" class="btn btn--primary" style="display: none"
+                                                            id="address_submit"></button>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </form>
-                    @php($billing_input_by_customer=\App\CPU\Helpers::get_business_settings('billing_input_by_customer'))
-                        
+                                    </li>
+                                </ul>
+                            </div>
+                        </form>
+                    @endif
+
                     <div style="display: {{$billing_input_by_customer==1?'':'none'}}">
                         <!-- billing methods table-->
                         <h2 class="h4 pb-3 mb-2 mt-5">{{ \App\CPU\translate('choose_billing_address')}}</h2>
 
                         @php($billing_addresses=\App\Model\ShippingAddress::where('customer_id',auth('customer')->id())->where('is_billing',1)->get())
                         <form method="post" action="" id="billing-address-form">
-
-                            <div class="form-check"
-                                style="padding-{{Session::get('direction') === "rtl" ? 'right' : 'left'}}: 1.25rem;">
-                                <input type="checkbox" id="same_as_shipping_address" onclick="hide_billingAddress()"
-                                    name="same_as_shipping_address" class="form-check-input" {{$billing_input_by_customer==1?'':'checked'}}>
-                                <label class="form-check-label"
-                                    style="padding-{{Session::get('direction') === "rtl" ? 'right' : 'left'}}: 1.09rem">
-                                    {{ \App\CPU\translate('same_as_shipping_address')}}
-                                </label>
-                            </div>
+                            @if($physical_product)
+                                <div class="form-check"
+                                    style="padding-{{Session::get('direction') === "rtl" ? 'right' : 'left'}}: 1.25rem;">
+                                    <input type="checkbox" id="same_as_shipping_address" onclick="hide_billingAddress()"
+                                        name="same_as_shipping_address" class="form-check-input" {{$billing_input_by_customer==1?'':'checked'}}>
+                                    <label class="form-check-label"
+                                        style="padding-{{Session::get('direction') === "rtl" ? 'right' : 'left'}}: 1.09rem">
+                                        {{ \App\CPU\translate('same_as_shipping_address')}}
+                                    </label>
+                                </div>
+                            @endif
                             <div id="hide_billing_address" class="card-body" style="padding: 0!important;">
                                 <ul class="list-group">
                                     @foreach($billing_addresses as $key=>$address)
@@ -231,9 +229,7 @@
                                             data-target="#billing_model" {{$billing_addresses->count()==0?'checked':''}}>
                                         <span class="checkmark"
                                             style="margin-{{Session::get('direction') === "rtl" ? 'left' : 'right'}}: 10px"></span>
-                                        {{-- <label class="badge"
-                                            style="background: {{$web_config['primary_color']}}; color:white !important;">
-                                            <i class="fa fa-plus-circle"></i></label> --}}
+
                                         <button type="button" class="btn btn-outline" data-toggle="collapse"
                                                 data-target="#billing_model">{{ \App\CPU\translate('Another')}} {{ \App\CPU\translate('address')}}
                                         </button>
@@ -268,12 +264,7 @@
                                                                 value="others">{{ \App\CPU\translate('Others')}}</option>
                                                         </select>
                                                     </div>
-                                                    {{-- <div class="form-group">
-                                                        <label>{{ \App\CPU\translate('Country')}} <span
-                                                                style="color: red">*</span></label>
-                                                        <input type="text" class="form-control"
-                                                            name="billing_country" {{$billing_addresses->count()==0?'required':''}}>
-                                                    </div> --}}
+
                                                     <div class="form-group">
                                                         <label for="exampleInputEmail1">{{ \App\CPU\translate('City')}}<span
                                                                 style="color: red">*</span></label>
@@ -325,7 +316,7 @@
                                                         value="{{$default_location?$default_location['lng']:0}}" required
                                                         readonly>
 
-                                                    <button type="submit" class="btn btn-primary" style="display: none"
+                                                    <button type="submit" class="btn btn--primary" style="display: none"
                                                             id="address_submit"></button>
                                                 </div>
                                             </div>
@@ -335,9 +326,9 @@
                             </div>
                         </form>
                     </div>
-                    
-                        
-                    
+
+
+
 
                     <!-- Navigation (desktop)-->
                     <div class="row">
@@ -349,7 +340,7 @@
                             </a>
                         </div>
                         <div class="col-6">
-                            <a class="btn btn-primary btn-block" href="javascript:" onclick="proceed_to_next()">
+                            <a class="btn btn--primary btn-block" href="javascript:" onclick="proceed_to_next()">
                                 <span class="d-none d-sm-inline">{{ \App\CPU\translate('proceed_payment')}}</span>
                                 <span class="d-inline d-sm-none">{{ \App\CPU\translate('Next')}}</span>
                                 <i class="czi-arrow-{{Session::get('direction') === "rtl" ? 'left' : 'right'}} mt-sm-0 mx-1"></i>
@@ -390,7 +381,7 @@
         }
     </script>
     <script
-        src="https://maps.googleapis.com/maps/api/js?key={{\App\CPU\Helpers::get_business_settings('map_api_key')}}&libraries=places&v=3.45.8"></script>
+        src="https://maps.googleapis.com/maps/api/js?key={{\App\CPU\Helpers::get_business_settings('map_api_key')}}&libraries=places&v=3.49"></script>
     <script>
         function initAutocomplete() {
             var myLatLng = {
@@ -604,37 +595,43 @@
     </script>
     <script>
         function proceed_to_next() {
-            let billing_addresss_same_shipping = $('#same_as_shipping_address').is(":checked");
+            let physical_product = $('#physical_product').val();
 
-            let allAreFilled = true;
-            document.getElementById("address-form").querySelectorAll("[required]").forEach(function (i) {
-                if (!allAreFilled) return;
-                if (!i.value) allAreFilled = false;
-                if (i.type === "radio") {
-                    let radioValueCheck = false;
-                    document.getElementById("address-form").querySelectorAll(`[name=${i.name}]`).forEach(function (r) {
-                        if (r.checked) radioValueCheck = true;
-                    });
-                    allAreFilled = radioValueCheck;
-                }
-            });
+            if(physical_product === 'yes') {
+                var billing_addresss_same_shipping = $('#same_as_shipping_address').is(":checked");
 
-            //billing address saved
-            let allAreFilled_shipping = true;
-
-            if (billing_addresss_same_shipping != true) {
-
-                document.getElementById("billing-address-form").querySelectorAll("[required]").forEach(function (i) {
-                    if (!allAreFilled_shipping) return;
-                    if (!i.value) allAreFilled_shipping = false;
+                let allAreFilled = true;
+                document.getElementById("address-form").querySelectorAll("[required]").forEach(function (i) {
+                    if (!allAreFilled) return;
+                    if (!i.value) allAreFilled = false;
                     if (i.type === "radio") {
                         let radioValueCheck = false;
-                        document.getElementById("billing-address-form").querySelectorAll(`[name=${i.name}]`).forEach(function (r) {
+                        document.getElementById("address-form").querySelectorAll(`[name=${i.name}]`).forEach(function (r) {
                             if (r.checked) radioValueCheck = true;
                         });
-                        allAreFilled_shipping = radioValueCheck;
+                        allAreFilled = radioValueCheck;
                     }
                 });
+
+                //billing address saved
+                let allAreFilled_shipping = true;
+
+                if (billing_addresss_same_shipping != true) {
+
+                    document.getElementById("billing-address-form").querySelectorAll("[required]").forEach(function (i) {
+                        if (!allAreFilled_shipping) return;
+                        if (!i.value) allAreFilled_shipping = false;
+                        if (i.type === "radio") {
+                            let radioValueCheck = false;
+                            document.getElementById("billing-address-form").querySelectorAll(`[name=${i.name}]`).forEach(function (r) {
+                                if (r.checked) radioValueCheck = true;
+                            });
+                            allAreFilled_shipping = radioValueCheck;
+                        }
+                    });
+                }
+            }else {
+                var billing_addresss_same_shipping = false;
             }
 
             $.ajaxSetup({
@@ -646,7 +643,8 @@
                 url: '{{route('customer.choose-shipping-address')}}',
                 // dataType: 'json',
                 data: {
-                    shipping: $('#address-form').serialize(),
+                    physical_product: physical_product,
+                    shipping: physical_product === 'yes' ? $('#address-form').serialize() : null,
                     billing: $('#billing-address-form').serialize(),
                     billing_addresss_same_shipping: billing_addresss_same_shipping
                 },
@@ -676,14 +674,7 @@
                 }
             });
 
-            /*if (allAreFilled && allAreFilled_shipping) {
 
-            } else {
-                toastr.error('{{\App\CPU\translate('Please fill all required fields of shipping/billing address')}}', {
-                    CloseButton: true,
-                    ProgressBar: true
-                });
-            }*/
         }
     </script>
 @endpush

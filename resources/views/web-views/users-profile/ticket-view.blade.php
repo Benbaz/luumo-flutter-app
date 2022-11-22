@@ -123,22 +123,20 @@
                     class="d-none d-lg-flex justify-content-between align-items-center pt-lg-3 pb-4 pb-lg-5 mb-lg-4">
                     <div class="d-flex w-100 text-light text-center {{Session::get('direction') === "rtl" ? 'ml-3' : 'mr-3'}}">
                         <div class="font-size-ms px-3">
-                            <div class="font-weight-medium">{{\App\CPU\translate('Date Submitted')}}</div>
-                            <div
-                                class="opacity-60">{{Carbon\Carbon::createFromFormat('Y-m-d H:i:s',$ticket['created_at'])->format('Y-m-d')}}</div>
+                            <div class="font-weight-medium text-dark">{{\App\CPU\translate('Date Submitted')}}</div>
+                            <div class="text-dark">{{Carbon\Carbon::createFromFormat('Y-m-d H:i:s',$ticket['created_at'])->format('Y-m-d')}}</div>
                         </div>
                         <div class="font-size-ms px-3">
-                            <div class="font-weight-medium">{{\App\CPU\translate('Last Updated')}}</div>
-                            <div
-                                class="opacity-60">{{Carbon\Carbon::createFromFormat('Y-m-d H:i:s',$ticket['updated_at'])->format('Y-m-d')}}</div>
+                            <div class="font-weight-medium text-dark">{{\App\CPU\translate('Last Updated')}}</div>
+                            <div class="text-dark">{{Carbon\Carbon::createFromFormat('Y-m-d H:i:s',$ticket['updated_at'])->format('Y-m-d')}}</div>
                         </div>
                         <div class="font-size-ms px-3">
-                            <div class="font-weight-medium">{{\App\CPU\translate('Type')}}</div>
-                            <div class="opacity-60">{{$ticket['type']}}</div>
+                            <div class="font-weight-medium text-dark">{{\App\CPU\translate('Type')}}</div>
+                            <div class="text-dark">{{$ticket['type']}}</div>
                         </div>
                         <div class="font-size-ms px-3">
-                            <div class="font-weight-medium" style="color:black">{{\App\CPU\translate('Priority')}}</div>
-                            <span class="badge badge-warning">{{$ticket['priority']}}</span>
+                            <div class="font-weight-medium text-dark" style="color:black">{{\App\CPU\translate('Priority')}}</div>
+                            <span class="badge badge-warning text-dark">{{$ticket['priority']}}</span>
                         </div>
                         <div class="font-size-ms px-3">
                             <div class="font-weight-medium" style="color: black">{{\App\CPU\translate('Status')}}</div>
@@ -236,7 +234,7 @@
                         @csrf
                         <div class="form-group">
                             <textarea class="form-control" name="comment" rows="8"
-                                      placeholder="Write your message here..." required></textarea>
+                                      placeholder="{{\App\CPU\translate('Write your message here...')}}" required></textarea>
                             <div class="invalid-tooltip">{{\App\CPU\translate('Please write the message')}}!</div>
                         </div>
                         <div class="d-flex flex-wrap justify-content-between align-items-center">
@@ -244,7 +242,7 @@
                                 <a href="{{route('support-ticket.close',[$ticket['id']])}}" class="btn btn-secondary"
                                    style="color: white">{{\App\CPU\translate('close')}}</a>
                             </div>
-                            <button class="btn btn-primary my-2" type="submit">{{\App\CPU\translate('Submit message')}}</button>
+                            <button class="btn btn--primary my-2" type="submit">{{\App\CPU\translate('Submit message')}}</button>
                         </div>
                     </form>
                 </div>
