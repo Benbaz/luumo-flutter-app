@@ -276,9 +276,47 @@
                                                    class="switcher_content">{{\App\CPU\translate('deliveryman')}} {{\App\CPU\translate('delivered')}} {{\App\CPU\translate('message')}}</label>
                                         </div>
 
-                                        <textarea name="delivery_boy_delivered_message" class="form-control">
-                                            {{$data['message']}}
-                                        </textarea>
+                                        <textarea name="delivery_boy_delivered_message" class="form-control">{{$data['message']}}</textarea>
+                                    </div>
+                                </div>
+
+                                @php($dbc=\App\Model\BusinessSetting::where('type','delivery_boy_expected_delivery_date_message')->first()->value)
+                                @php($data=json_decode($dbc,true))
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="d-flex align-items-center mb-3 flex-wrap gap-10">
+                                            <label class="switcher" for="delivery_boy_expected_delivery_date_status">
+                                                <input type="checkbox" name="delivery_boy_expected_delivery_date_status"
+                                                       class="switcher_input"
+                                                       value="1"
+                                                       id="delivery_boy_expected_delivery_date_status" {{$data['status']==1?'checked':''}}>
+                                                <span class="switcher_control"></span>
+                                            </label>
+                                            <label for="delivery_boy_expected_delivery_date_status"
+                                                   class="switcher_content">{{\App\CPU\translate('deliveryman')}} {{\App\CPU\translate('reschedule')}} {{\App\CPU\translate('message')}}</label>
+                                        </div>
+
+                                        <textarea name="delivery_boy_expected_delivery_date_message" class="form-control">{{$data['message']}}</textarea>
+                                    </div>
+                                </div>
+
+                                @php($dbc=\App\Model\BusinessSetting::where('type','order_canceled')->first()->value)
+                                @php($data=json_decode($dbc,true))
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="d-flex align-items-center mb-3 flex-wrap gap-10">
+                                            <label class="switcher" for="order_canceled_status">
+                                                <input type="checkbox" name="order_canceled_status"
+                                                       class="switcher_input"
+                                                       value="1"
+                                                       id="order_canceled_status" {{$data['status']==1?'checked':''}}>
+                                                <span class="switcher_control"></span>
+                                            </label>
+                                            <label for="order_canceled_status"
+                                                   class="switcher_content">{{\App\CPU\translate('order')}} {{\App\CPU\translate('canceled')}} {{\App\CPU\translate('message')}}</label>
+                                        </div>
+
+                                        <textarea name="order_canceled_message" class="form-control">{{$data['message']}}</textarea>
                                     </div>
                                 </div>
                             </div>

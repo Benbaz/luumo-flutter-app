@@ -210,7 +210,7 @@
                                              onerror="this.src='{{asset('public/assets/front-end/img/placeholder.png')}}'"
                                              src="{{asset('storage/app/public/banner')}}/{{$banner['photo']}}">
                                     </td>
-                                    <td>{{$banner->banner_type}}</td>
+                                    <td>{{\App\CPU\translate(str_replace('_',' ',$banner->banner_type))}}</td>
                                     <td>
                                         <label class="switcher">
                                             <input type="checkbox" class="switcher_input status"

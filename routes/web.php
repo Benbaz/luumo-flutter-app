@@ -37,6 +37,10 @@ Route::group(['namespace' => 'Web','middleware'=>['maintenance_mode']], function
         Route::get('shop-cart', 'WebController@shop_cart')->name('shop-cart');
         Route::post('order_note', 'WebController@order_note')->name('order_note');
         Route::get('digital-product-download/{id}', 'WebController@digital_product_download')->name('digital-product-download')->middleware('customer');
+        Route::get('submit-review/{id}','UserProfileController@submit_review')->name('submit-review');
+        Route::post('review', 'ReviewController@store')->name('review.store');
+        Route::get('deliveryman-review/{id}','ReviewController@delivery_man_review')->name('deliveryman-review');
+        Route::post('submit-deliveryman-review','ReviewController@delivery_man_submit')->name('submit-deliveryman-review');
     });
 
     //wallet payment
@@ -55,6 +59,9 @@ Route::group(['namespace' => 'Web','middleware'=>['maintenance_mode']], function
     Route::get('flash-deals/{id}', 'WebController@flash_deals')->name('flash-deals');
     Route::get('terms', 'WebController@termsandCondition')->name('terms');
     Route::get('privacy-policy', 'WebController@privacy_policy')->name('privacy-policy');
+    Route::get('refund-policy', 'WebController@refund_policy')->name('refund-policy');
+    Route::get('return-policy', 'WebController@return_policy')->name('return-policy');
+    Route::get('cancellation-policy', 'WebController@cancellation_policy')->name('cancellation-policy');
 
     Route::get('/product/{slug}', 'WebController@product')->name('product');
     Route::get('products', 'WebController@products')->name('products');
@@ -89,14 +96,13 @@ Route::group(['namespace' => 'Web','middleware'=>['maintenance_mode']], function
     Route::get('account-wishlist', 'UserProfileController@account_wishlist')->name('account-wishlist'); //add to card not work
     Route::get('refund-request/{id}','UserProfileController@refund_request')->name('refund-request');
     Route::get('refund-details/{id}','UserProfileController@refund_details')->name('refund-details');
-    Route::get('submit-review/{id}','UserProfileController@submit_review')->name('submit-review');
     Route::post('refund-store','UserProfileController@store_refund')->name('refund-store');
     Route::get('account-tickets', 'UserProfileController@account_tickets')->name('account-tickets');
     Route::get('order-cancel/{id}', 'UserProfileController@order_cancel')->name('order-cancel');
     Route::post('ticket-submit', 'UserProfileController@ticket_submit')->name('ticket-submit');
     Route::get('account-delete/{id}','UserProfileController@account_delete')->name('account-delete');
     // Chatting start
-    Route::get('chat-with-seller', 'ChattingController@chat_with_seller')->name('chat-with-seller');
+    Route::get('chat/{type}', 'ChattingController@chat_list')->name('chat');
     Route::get('messages', 'ChattingController@messages')->name('messages');
     Route::post('messages-store', 'ChattingController@messages_store')->name('messages_store');
     // chatting end
@@ -111,8 +117,6 @@ Route::group(['namespace' => 'Web','middleware'=>['maintenance_mode']], function
 
     Route::get('account-transaction', 'UserProfileController@account_transaction')->name('account-transaction');
     Route::get('account-wallet-history', 'UserProfileController@account_wallet_history')->name('account-wallet-history');
-
-    Route::post('review', 'ReviewController@store')->name('review.store');
 
     Route::get('wallet','UserWalletController@index')->name('wallet');
     Route::get('loyalty','UserLoyaltyController@index')->name('loyalty');
@@ -258,7 +262,5 @@ Route::get('liqpay-payment', 'LiqPayController@payment')->name('liqpay-payment')
 Route::any('liqpay-callback', 'LiqPayController@callback')->name('liqpay-callback');
 
 Route::get('/test', function (){
-    $product = \App\Model\Product::find(116);
-    $quantity = 6;
-    return view('seller-views.product.barcode-pdf', compact('product', 'quantity'));
+    return view('welcome');
 });

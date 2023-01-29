@@ -31,7 +31,7 @@
                             <div class="d-flex justify-content-between align-items-center gap-10">
                                 <h5 class="mb-0 text-capitalize d-flex align-items-center gap-2">
                                     <i class="tio-wallet"></i>
-                                    {{\App\CPU\translate('customer_allet_settings')}} :
+                                    {{\App\CPU\translate('customer_wallet_settings')}} :
                                 </h5>
 
                                 <label class="switcher" for="customer_wallet">

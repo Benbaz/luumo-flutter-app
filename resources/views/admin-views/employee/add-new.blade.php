@@ -34,7 +34,7 @@
                                         <label for="name"
                                                class="title-color">{{\App\CPU\translate('Full Name')}}</label>
                                         <input type="text" name="name" class="form-control" id="name"
-                                               placeholder="{{\App\CPU\translate('Ex')}} : {{\App\CPU\translate('Md. Al Imrun')}}"
+                                               placeholder="{{\App\CPU\translate('Ex')}} : Jhon Doe"
                                                value="{{old('name')}}" required>
                                     </div>
                                     <div class="form-group">

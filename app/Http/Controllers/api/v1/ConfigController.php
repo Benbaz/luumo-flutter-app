@@ -38,6 +38,8 @@ class ConfigController extends Controller
         $admin_shipping = ShippingType::where('seller_id',0)->first();
         $shipping_type = isset($admin_shipping)==true?$admin_shipping->shipping_type:'order_wise';
 
+        $company_logo = asset("storage/app/public/company/").'/'.BusinessSetting::where(['type'=>'company_web_logo'])->first()->value;
+
         return response()->json([
             'brand_setting' => BusinessSetting::where('type', 'product_brand')->first()->value,
             'digital_product_setting' => BusinessSetting::where('type', 'digital_product')->first()->value,
@@ -45,6 +47,12 @@ class ConfigController extends Controller
             'digital_payment' => (boolean)Helpers::get_business_settings('digital_payment')['status'] ?? 0,
             'cash_on_delivery' => (boolean)Helpers::get_business_settings('cash_on_delivery')['status'] ?? 0,
             'seller_registration' => BusinessSetting::where('type', 'seller_registration')->first()->value,
+            'pos_active' => BusinessSetting::where('type','seller_pos')->first()->value,
+            'company_phone' => Helpers::get_business_settings('company_phone'),
+            'company_email' => Helpers::get_business_settings('company_email'),
+            'company_logo' => $company_logo,
+            'delivery_country_restriction' => Helpers::get_business_settings('delivery_country_restriction'),
+            'delivery_zip_code_area_restriction' => Helpers::get_business_settings('delivery_zip_code_area_restriction'),
             'base_urls' => [
                 'product_image_url' => ProductManager::product_image_path('product'),
                 'product_thumbnail_url' => ProductManager::product_image_path('thumbnail'),
@@ -57,6 +65,7 @@ class ConfigController extends Controller
                 'seller_image_url' => asset('storage/app/public/seller'),
                 'shop_image_url' => asset('storage/app/public/shop'),
                 'notification_image_url' => asset('storage/app/public/notification'),
+                'delivery_man_image_url' => asset('storage/app/public/delivery-man'),
             ],
             'static_urls' => [
                 'contact_us' => route('contacts'),
@@ -68,6 +77,9 @@ class ConfigController extends Controller
             'privacy_policy' => Helpers::get_business_settings('privacy_policy'),
             'faq' => HelpTopic::all(),
             'terms_&_conditions' => Helpers::get_business_settings('terms_condition'),
+            'refund_policy' => Helpers::get_business_settings('refund-policy'),
+            'return_policy' => Helpers::get_business_settings('return-policy'),
+            'cancellation_policy' => Helpers::get_business_settings('cancellation-policy'),
             'currency_list' => $currency,
             'currency_symbol_position' => Helpers::get_business_settings('currency_symbol_position') ?? 'right',
             'business_mode'=> Helpers::get_business_settings('business_mode'),

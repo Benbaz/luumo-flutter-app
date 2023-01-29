@@ -37,7 +37,7 @@
         <span class="currency">
             {{ $product['selling_price'] . ' ' . \App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($product->unit_price)) }}</span>
         <br>
-        <div class="bar-code" style="margin-left: 10px !important; font-weight:bold">{!! DNS1D::getBarcodeHTML($product->code, 'CODABAR') !!}</div>
+        <div class="bar-code" style="margin-left: 10px !important; font-weight:bold">{!! DNS1D::getBarcodeHTML($product->code, 'C128') !!}</div>
         <p class="">{{ \App\CPU\translate('code') }} :
             {{ $product->code }}</p>
     </div>

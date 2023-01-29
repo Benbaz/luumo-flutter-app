@@ -17,6 +17,17 @@ class Review extends Model
         'updated_at'  => 'datetime',
     ];
 
+    protected $fillable = [
+        'product_id',
+        'customer_id',
+        'delivery_man_id',
+        'order_id',
+        'comment',
+        'attachment',
+        'rating',
+        'status',
+    ];
+
     public function scopeActive($query)
     {
         $query->where('status',1);
@@ -35,6 +46,16 @@ class Review extends Model
         return $this->belongsTo(User::class, 'customer_id');
     }
 
+    public function delivery_man()
+    {
+        return $this->belongsTo(DeliveryMan::class, 'delivery_man_id');
+    }
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class, 'order_id');
+    }
+
 
     protected static function boot()
     {
@@ -46,7 +67,7 @@ class Review extends Model
             }else{
                 $builder->where('status',1);
             }
-            
+
         });
     }
 }

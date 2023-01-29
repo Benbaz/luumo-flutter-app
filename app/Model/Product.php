@@ -106,6 +106,7 @@ class Product extends Model
     {
         return $this->hasMany(Review::class)
             ->select(DB::raw('avg(rating) average, product_id'))
+            ->whereNull('delivery_man_id')
             ->groupBy('product_id');
     }
 
@@ -153,7 +154,11 @@ class Product extends Model
                 } else {
                     return $query->where('locale', Helpers::default_lang());
                 }
-            }, 'reviews'])->withCount('reviews');
+            }, 'reviews'=>function($query){
+                $query->whereNull('delivery_man_id');
+            }])->withCount(['reviews'=>function($query){
+                $query->whereNull('delivery_man_id');
+            }]);
         });
     }
 }

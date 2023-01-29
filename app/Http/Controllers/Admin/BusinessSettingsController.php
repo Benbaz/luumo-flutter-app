@@ -7,8 +7,11 @@ use App\Http\Controllers\Controller;
 use App\Model\BusinessSetting;
 use App\Model\SocialMedia;
 use Brian2694\Toastr\Facades\Toastr;
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use phpseclib3\Crypt\RSA\Formats\Keys\JWK;
 
 class BusinessSettingsController extends Controller
 {
@@ -156,6 +159,44 @@ class BusinessSettingsController extends Controller
         return response()->json([
             'success' => 1,
         ], 200);
+    }
+
+    public function page($page)
+    {
+        $pages = array(
+            'refund-policy',
+            'return-policy',
+            'cancellation-policy',
+        );
+
+        if(in_array($page, $pages)){
+            $data = BusinessSetting::where('type', $page)->first();
+            return view('admin-views.business-settings.page', compact('page', 'data'));
+        }
+
+        Toastr::error('invalid_page');
+        return redirect()->back();
+    }
+
+    public function page_update(Request $request, $page)
+    {
+        $request->validate([
+            'value' => 'required',
+        ]);
+
+        $pages = array(
+            'refund-policy',
+            'return-policy',
+            'cancellation-policy',
+        );
+
+        if(in_array($page, $pages)){
+            BusinessSetting::where('type', $page)->update(['value' => $request->value]);
+            Toastr::success('Updated successfully!');
+        }else{
+            Toastr::error('invalid_page');
+        }
+        return redirect()->back();
     }
 
     public function terms_condition()
@@ -429,6 +470,11 @@ class BusinessSettingsController extends Controller
         return back();
     }
 
+    public function app_settings()
+    {
+        return view('admin-views.business-settings.apps-settings');
+    }
+
     public function update(Request $request, $name)
     {
 
@@ -669,6 +715,20 @@ class BusinessSettingsController extends Controller
             ]),
         ]);
 
+        DB::table('business_settings')->updateOrInsert(['type' => 'delivery_boy_expected_delivery_date_message'], [
+            'value' => json_encode([
+                'status' => $request['delivery_boy_expected_delivery_date_status'] == 1 ? 1 : 0,
+                'message' => $request['delivery_boy_expected_delivery_date_message'],
+            ]),
+        ]);
+
+        DB::table('business_settings')->updateOrInsert(['type' => 'order_canceled'], [
+            'value' => json_encode([
+                'status' => $request['order_canceled_status'] == 1 ? 1 : 0,
+                'message' => $request['order_canceled_message'],
+            ]),
+        ]);
+
         Toastr::success('Message updated!');
         return back();
     }
@@ -794,6 +854,7 @@ class BusinessSettingsController extends Controller
 
         Toastr::success($service . ' credentials  updated!');
         return redirect()->back();
+
     }
 
     //recaptcha
@@ -901,4 +962,44 @@ class BusinessSettingsController extends Controller
         Toastr::success(\App\CPU\translate('product_brand_updated'));
         return back();
     }
+
+    public function countryRestrictionStatusChange(Request $request){
+
+        $delivery_country_restriction_status = BusinessSetting::where('type', 'delivery_country_restriction')->first();
+
+        if (isset($delivery_country_restriction_status)) {
+            BusinessSetting::where(['type' => 'delivery_country_restriction'])->update(['value' => $request->status]);
+        } else {
+            BusinessSetting::insert([
+                'type' => 'delivery_country_restriction',
+                'value' => $request->status,
+                'updated_at' => now()
+            ]);
+        }
+        return [
+            'message' =>\App\CPU\translate('delivery_country_restriction_status_changed_successfully'),
+            'status' => true
+        ];
+    }
+
+    public function zipcodeRestrictionStatusChange(Request $request){
+
+        $zip_code_area_restriction_status = BusinessSetting::where('type', 'delivery_zip_code_area_restriction')->first();
+
+        if (isset($zip_code_area_restriction_status)) {
+            BusinessSetting::where(['type' => 'delivery_zip_code_area_restriction'])->update(['value' => $request->status]);
+        } else {
+            BusinessSetting::insert([
+                'type' => 'delivery_zip_code_area_restriction',
+                'value' => $request->status,
+                'updated_at' => now()
+            ]);
+        }
+        return [
+            'message' => \App\CPU\translate('delivery_zip_code_restriction_status_changed_successfully'),
+            'status' => true,
+        ];
+    }
+
+
 }

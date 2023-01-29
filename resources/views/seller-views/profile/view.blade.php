@@ -28,7 +28,7 @@
 
                         <div class="d-flex gap-2 align-items-center">
                             <a href="{{route('seller.profile.bankInfo',[$data->id])}}" class="btn btn--primary">
-                                Update
+                                {{\App\CPU\translate('Edit')}}
                             </a>
                         </div>
                     </div>

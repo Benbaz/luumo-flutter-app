@@ -32,6 +32,17 @@ class ReportController extends Controller
         return view('admin-views.report.earning-index', compact('from', 'to'));
     }
 
+    public function seller_earning(Request $request)
+    {
+        if (!$request->has('from_date')) {
+            $from = $to = date('Y-m-01');
+        } else {
+            $from = $request['from_date'];
+            $to = $request['to_date'];
+        }
+        return view('admin-views.report.seller-earning', compact('from', 'to'));
+    }
+
     public function set_date(Request $request)
     {
         $from = $request['from'];
@@ -42,5 +53,13 @@ class ReportController extends Controller
 
         $previousUrl = strtok(url()->previous(), '?');
         return redirect()->to($previousUrl . '?' . http_build_query(['from_date' => $request['from'], 'to_date' => $request['to']]))->with(['from' => $from, 'to' => $to]);
+    }
+
+    public function all_product(Request $request){
+        $search = $request['search'];
+        $from = $request['from'];
+        $to = $request['to'];
+
+        return view('admin-views.report.all-product', compact('search', 'from', 'to'));
     }
 }

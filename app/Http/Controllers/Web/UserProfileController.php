@@ -7,12 +7,15 @@ use App\CPU\Helpers;
 use App\CPU\ImageManager;
 use App\CPU\OrderManager;
 use App\Http\Controllers\Controller;
+use App\Model\DeliveryCountryCode;
+use App\Model\DeliveryZipCode;
 use App\Model\Order;
 use App\Model\OrderDetail;
 use App\Model\ShippingAddress;
 use App\Model\SupportTicket;
 use App\Model\Wishlist;
 use App\Model\RefundRequest;
+use App\Traits\CommonTrait;
 use App\User;
 use Barryvdh\DomPDF\Facade as PDF;
 use Brian2694\Toastr\Facades\Toastr;
@@ -23,9 +26,11 @@ use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 use function App\CPU\translate;
 use App\CPU\Convert;
+use function React\Promise\all;
 
 class UserProfileController extends Controller
 {
+    use CommonTrait;
     public function user_account(Request $request)
     {
         if (auth('customer')->check()) {
@@ -41,11 +46,15 @@ class UserProfileController extends Controller
         $request->validate([
             'f_name' => 'required',
             'l_name' => 'required',
-            'password' => 'required|min:6|same:con_password'
         ], [
             'f_name.required' => 'First name is required',
             'l_name.required' => 'Last name is required',
         ]);
+        if ($request->password) {
+            $request->validate([
+                'password' => 'required|min:6|same:confirm_password'
+            ]);
+        }
 
         $image = $request->file('image');
 
@@ -58,11 +67,6 @@ class UserProfileController extends Controller
         User::where('id', auth('customer')->id())->update([
             'image' => $imageName,
         ]);
-
-        if ($request['password'] != $request['con_password']) {
-            Toastr::error('Password did not match.');
-            return back();
-        }
 
         $userDetails = [
             'f_name' => $request->f_name,
@@ -100,9 +104,23 @@ class UserProfileController extends Controller
 
     public function account_address()
     {
+        $country_restrict_status = Helpers::get_business_settings('delivery_country_restriction');
+        $zip_restrict_status = Helpers::get_business_settings('delivery_zip_code_area_restriction');
+
+        if ($country_restrict_status) {
+            $data = $this->get_delivery_country_array();
+        } else {
+            $data = COUNTRIES;
+        }
+
+        if ($zip_restrict_status) {
+            $zip_codes = DeliveryZipCode::all();
+        } else {
+            $zip_codes = 0;
+        }
         if (auth('customer')->check()) {
             $shippingAddresses = \App\Model\ShippingAddress::where('customer_id', auth('customer')->id())->get();
-            return view('web-views.users-profile.account-address', compact('shippingAddresses'));
+            return view('web-views.users-profile.account-address', compact('shippingAddresses', 'country_restrict_status', 'zip_restrict_status', 'data', 'zip_codes'));
         } else {
             return redirect()->route('home');
         }
@@ -110,6 +128,31 @@ class UserProfileController extends Controller
 
     public function address_store(Request $request)
     {
+        $request->validate([
+            'name' => 'required',
+            'phone' => 'required',
+            'city' => 'required',
+            'zip' => 'required',
+            'country' => 'required',
+            'address' => 'required',
+        ]);
+
+        $country_restrict_status = Helpers::get_business_settings('delivery_country_restriction');
+        $zip_restrict_status = Helpers::get_business_settings('delivery_zip_code_area_restriction');
+
+        $country_exist = self::delivery_country_exist_check($request->country);
+        $zipcode_exist = self::delivery_zipcode_exist_check($request->zip);
+
+        if ($country_restrict_status && !$country_exist) {
+            Toastr::error(translate('Delivery_unavailable_in_this_country!'));
+            return back();
+        }
+
+        if ($zip_restrict_status && !$zipcode_exist) {
+            Toastr::error(translate('Delivery_unavailable_in_this_zip_code_area!'));
+            return back();
+        }
+
         $address = [
             'customer_id' => auth('customer')->check() ? auth('customer')->id() : null,
             'contact_person_name' => $request->name,
@@ -117,6 +160,7 @@ class UserProfileController extends Controller
             'address' => $request->address,
             'city' => $request->city,
             'zip' => $request->zip,
+            'country' => $request->country,
             'phone' => $request->phone,
             'is_billing' =>$request->is_billing,
             'latitude' =>$request->latitude,
@@ -127,12 +171,26 @@ class UserProfileController extends Controller
         DB::table('shipping_addresses')->insert($address);
         return back();
     }
+
     public function address_edit(Request $request,$id)
     {
         $shippingAddress = ShippingAddress::where('customer_id',auth('customer')->id())->find($id);
+        $country_restrict_status = Helpers::get_business_settings('delivery_country_restriction');
+        $zip_restrict_status = Helpers::get_business_settings('delivery_zip_code_area_restriction');
+
+        if ($country_restrict_status) {
+            $delivery_countries = self::get_delivery_country_array();
+        } else {
+            $delivery_countries = 0;
+        }
+        if ($zip_restrict_status) {
+            $delivery_zipcodes = DeliveryZipCode::all();
+        } else {
+            $delivery_zipcodes = 0;
+        }
         if(isset($shippingAddress))
         {
-            return view('web-views.users-profile.account-address-edit',compact('shippingAddress'));
+            return view('web-views.users-profile.account-address-edit',compact('shippingAddress', 'country_restrict_status', 'zip_restrict_status', 'delivery_countries', 'delivery_zipcodes'));
         }else{
             Toastr::warning(translate('access_denied'));
             return back();
@@ -141,12 +199,38 @@ class UserProfileController extends Controller
 
     public function address_update(Request $request)
     {
+        $request->validate([
+            'name' => 'required',
+            'phone' => 'required',
+            'city' => 'required',
+            'zip' => 'required',
+            'country' => 'required',
+            'address' => 'required',
+        ]);
+
+        $country_restrict_status = Helpers::get_business_settings('delivery_country_restriction');
+        $zip_restrict_status = Helpers::get_business_settings('delivery_zip_code_area_restriction');
+
+        $country_exist = self::delivery_country_exist_check($request->country);
+        $zipcode_exist = self::delivery_zipcode_exist_check($request->zip);
+
+        if ($country_restrict_status && !$country_exist) {
+            Toastr::error(translate('Delivery_unavailable_in_this_country!'));
+            return back();
+        }
+
+        if ($zip_restrict_status && !$zipcode_exist) {
+            Toastr::error(translate('Delivery_unavailable_in_this_zip_code_area!'));
+            return back();
+        }
+
         $updateAddress = [
             'contact_person_name' => $request->name,
             'address_type' => $request->addressAs,
             'address' => $request->address,
             'city' => $request->city,
             'zip' => $request->zip,
+            'country' => $request->country,
             'phone' => $request->phone,
             'is_billing' =>$request->is_billing,
             'latitude' =>$request->latitude,
@@ -156,8 +240,10 @@ class UserProfileController extends Controller
         ];
         if (auth('customer')->check()) {
             ShippingAddress::where('id', $request->id)->update($updateAddress);
+            Toastr::success(translate('Data_updated_successfully!'));
             return redirect()->back();
         } else {
+            Toastr::error(translate('Insufficient_permission!'));
             return redirect()->back();
         }
     }
@@ -191,7 +277,7 @@ class UserProfileController extends Controller
 
     public function account_order_details(Request $request)
     {
-        $order = Order::with('details.product')->find($request->id);
+        $order = Order::with(['details.product', 'delivery_man_review'])->find($request->id);
         return view('web-views.users-profile.account-order-details', compact('order'));
     }
 
@@ -436,7 +522,8 @@ class UserProfileController extends Controller
         $data["email"] = $order->customer["email"];
         $data["order"] = $order;
 
-        $mpdf_view = \View::make('web-views.invoice')->with('order', $order);
+//        return view('web-views.invoice',compact('order'));
+        $mpdf_view = \View::make('web-views.invoice', compact('order'));
         Helpers::gen_mpdf($mpdf_view, 'order_invoice_', $order->id);
     }
     public function refund_details($id)
@@ -451,8 +538,15 @@ class UserProfileController extends Controller
 
     public function submit_review(Request $request,$id)
     {
+        $order_details = OrderDetail::where(['id'=>$id])->whereHas('order', function($q){
+            $q->where(['customer_id'=>auth('customer')->id(),'payment_status'=>'paid']);
+        })->first();
 
-        $order_details = OrderDetail::find($id);
+        if(!$order_details){
+            Toastr::error(translate('Invalid order!'));
+            return redirect('/');
+        }
+
         return view('web-views.users-profile.submit-review',compact('order_details'));
 
     }

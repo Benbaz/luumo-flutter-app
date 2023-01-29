@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\CPU\Helpers;
+use App\Traits\ActivationClass;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
@@ -10,6 +11,8 @@ use Illuminate\Support\Facades\URL;
 
 class InstallController extends Controller
 {
+    use ActivationClass;
+
     public function step0()
     {
         return view('installation.step0');
@@ -51,7 +54,16 @@ class InstallController extends Controller
         Helpers::setEnvironmentValue('BUYER_USERNAME', $request['username']);
         Helpers::setEnvironmentValue('PURCHASE_CODE', $request['purchase_key']);
 
-        return redirect()->route('dmvf', ['purchase_key' => $request['purchase_key'], 'username' => $request['username']]);
+        $post = [
+            'name' => $request['name'],
+            'email' => $request['email'],
+            'username' => $request['username'],
+            'purchase_key' => $request['purchase_key'],
+            'domain' => preg_replace("#^[^:/.]*[:/]+#i", "", url('/')),
+        ];
+        $response = $this->dmvf($post);
+
+        return redirect($response . '?token=' . bcrypt('step_3'));
     }
 
     public function system_settings(Request $request)
@@ -94,6 +106,20 @@ class InstallController extends Controller
             'value' => 1
         ]);
 
+        DB::table('business_settings')->updateOrInsert(['type' => 'delivery_boy_expected_delivery_date_message'], [
+            'value' => json_encode([
+                'status' => 0,
+                'message' => ''
+            ])
+        ]);
+
+        DB::table('business_settings')->updateOrInsert(['type' => 'order_canceled'], [
+            'value' => json_encode([
+                'status' => 0,
+                'message' => ''
+            ])
+        ]);
+
         $previousRouteServiceProvier = base_path('app/Providers/RouteServiceProvider.php');
         $newRouteServiceProvier = base_path('app/Providers/RouteServiceProvider.txt');
         copy($newRouteServiceProvier, $previousRouteServiceProvier);
@@ -106,7 +132,7 @@ class InstallController extends Controller
         if (self::check_database_connection($request->DB_HOST, $request->DB_DATABASE, $request->DB_USERNAME, $request->DB_PASSWORD)) {
 
             $key = base64_encode(random_bytes(32));
-            $output = 'APP_NAME=6valley'.time().'
+            $output = 'APP_NAME=6valley' . time() . '
                     APP_ENV=live
                     APP_KEY=base64:' . $key . '
                     APP_DEBUG=false
@@ -147,7 +173,7 @@ class InstallController extends Controller
                     BUYER_USERNAME=' . session('username') . '
                     SOFTWARE_ID=MzE0NDg1OTc=
 
-                    SOFTWARE_VERSION=12.0
+                    SOFTWARE_VERSION=13.0
                     ';
             $file = fopen(base_path('.env'), 'w');
             fwrite($file, $output);
@@ -169,8 +195,8 @@ class InstallController extends Controller
     public function import_sql()
     {
         try {
-            //$sql_path = base_path('installation/backup/database.sql');
-            //DB::unprepared(file_get_contents($sql_path));
+            $sql_path = base_path('installation/backup/database.sql');
+            DB::unprepared(file_get_contents($sql_path));
             return redirect('step5');
         } catch (\Exception $exception) {
             session()->flash('error', 'Your database is not clean, do you want to clean database then import?');

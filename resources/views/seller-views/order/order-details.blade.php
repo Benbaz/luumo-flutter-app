@@ -69,18 +69,20 @@
                                     <!-- Payment Method -->
                                     <div class="payment-method d-flex justify-content-sm-end gap-10 text-capitalize">
                                         <span class="title-color">{{\App\CPU\translate('Payment')}} {{\App\CPU\translate('Method')}} :</span>
-                                        <strong>{{str_replace('_',' ',$order['payment_method'])}}</strong>
+                                        <strong>{{\App\CPU\translate(str_replace('_',' ',$order['payment_method']))}}</strong>
                                     </div>
 
                                     <!-- reference-code -->
-                                    <div class="reference-code d-flex justify-content-sm-end gap-10 text-capitalize">
-                                        <span class="title-color">{{\App\CPU\translate('Reference')}} {{\App\CPU\translate('Code')}} :</span>
-                                        <strong>{{str_replace('_',' ',$order['transaction_ref'])}}</strong>
-                                    </div>
+                                    @if($order->payment_method != 'cash_on_delivery' && $order->payment_method != 'pay_by_wallet')
+                                        <div class="reference-code d-flex justify-content-sm-end gap-10 text-capitalize">
+                                            <span class="title-color">{{\App\CPU\translate('Reference')}} {{\App\CPU\translate('Code')}} :</span>
+                                            <strong>{{str_replace('_',' ',$order['transaction_ref'])}}</strong>
+                                        </div>
+                                    @endif
 
                                     <!-- Payment Status -->
                                     <div class="payment-status d-flex justify-content-sm-end gap-10">
-                                        <span class="title-color">{{\App\CPU\translate('Payment Status')}}:</span>
+                                        <span class="title-color">{{\App\CPU\translate('Payment_Status')}}:</span>
                                         @if($order['payment_status']=='paid')
                                             <span class="text-success font-weight-bold text-capitalize">{{\App\CPU\translate('Paid')}}</span>
                                         @else
@@ -142,8 +144,8 @@
                                                          alt="Image Description">
                                                     <div>
                                                         <h6 class="title-color">{{substr($detail->product['name'],0,30)}}{{strlen($detail->product['name'])>10?'...':''}}</h6>
-                                                        <div><strong>Price :</strong> {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($detail['price']))}}</div>
-                                                        <div><strong>Qty :</strong> {{$detail->qty}}</div>
+                                                        <div><strong>{{\App\CPU\translate('price')}} :</strong> {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($detail['price']))}}</div>
+                                                        <div><strong>{{\App\CPU\translate('qty')}} :</strong> {{$detail->qty}}</div>
                                                     </div>
                                                 </div>
                                                 @if($detail->product->digital_product_type == 'ready_after_sell')
@@ -215,6 +217,13 @@
                                         - {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($coupon_discount))}}
                                     </dd>
 
+                                    @if($order['coupon_discount_bearer'] == 'inhouse' && !in_array($order['coupon_code'], [0, NULL]))
+                                        <dt class="col-sm-6 font-weight-normal">{{\App\CPU\translate('coupon_discount')}} ({{\App\CPU\translate('admin_bearer')}})</dt>
+                                        <dd class="col-sm-6 font-weight-normal title-color">
+                                            + {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($coupon_discount))}}
+                                        </dd>
+                                        @php($total += $coupon_discount)
+                                    @endif
                                     <dt class="col-sm-6">{{\App\CPU\translate('Total')}}</dt>
                                     <dd class="col-sm-6 title-color">
                                         <strong>{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($total+$shipping-$coupon_discount))}}</strong>
@@ -233,7 +242,7 @@
             <div class="col-lg-4 col-xxl-3 d-flex flex-column gap-3">
                 <div class="card">
                     <div class="card-body text-capitalize d-flex flex-column gap-4">
-                        <h4 class="mb-0 text-center">{{\App\CPU\translate('Order_&_Shipping_Info ')}}</h4>
+                        <h4 class="mb-0 text-center">{{\App\CPU\translate('Order_&_Shipping_Info')}}</h4>
 
                         <div>
                             <label class="font-weight-bold title-color fz-14">{{\App\CPU\translate('Order Status')}}</label>
@@ -311,9 +320,9 @@
                                     </option>
                                 </select>
                             </li>
-                            <li id="choose_delivery_man" class="mt-3">
+                            <li id="choose_delivery_man" class="mt-3 choose_delivery_man">
                                 <label for="" class="font-weight-bold title-color fz-14">
-                                    {{\App\CPU\translate('choose_delivery_man')}}
+                                    {{\App\CPU\translate('choose_delivery_man')}} ({{ session('currency_symbol') }})
                                 </label>
                                 <select class="form-control text-capitalize js-select2-custom" name="delivery_man_id" onchange="addDeliveryMan(this.value)">
                                     <option
@@ -326,8 +335,21 @@
                                     @endforeach
                                 </select>
                             </li>
+                            <li class="choose_delivery_man mt-3">
+                                <label class="font-weight-bold title-color fz-14">
+                                    {{\App\CPU\translate('deliveryman_will_get')}}
+                                </label>
+                                <input type="number" id="deliveryman_charge" onkeyup="amountDateUpdate(this, event)" value="{{ $order->deliveryman_charge }}" name="deliveryman_charge" class="form-control" placeholder="Ex: 20" required>
+                            </li>
+                            <li class="choose_delivery_man mt-3">
+                                <label class="font-weight-bold title-color fz-14">
+                                    {{\App\CPU\translate('expected_delivery_date')}}
+                                </label>
+                                <input type="date" onchange="amountDateUpdate(this, event)" value="{{ $order->expected_delivery_date }}" name="expected_delivery_date" id="expected_delivery_date" class="form-control" required>
+                            </li>
+
                             @endif
-                            <li class=" mt-2" id="by_third_party_delivery_service_info">
+                            <li class=" mt-3" id="by_third_party_delivery_service_info">
                                 <span>
                                     {{\App\CPU\translate('delivery_service_name')}} : {{$order->delivery_service_name}}
                                 </span>
@@ -368,8 +390,8 @@
                                         <strong>{{\App\Model\Order::where('customer_id',$order['customer_id'])->count()}} </strong>
                                         {{\App\CPU\translate('orders')}}
                                     </span>
-                                    <span class="title-color"><strong>{{$order->customer['phone']}}</strong></span>
-                                    <span class="title-color">{{$order->customer['email']}}</span>
+                                    <span class="title-color break-all"><strong>{{$order->customer['phone']}}</strong></span>
+                                    <span class="title-color break-all">{{$order->customer['email']}}</span>
                                 </div>
                             </div>
                         </div>
@@ -492,7 +514,7 @@
                     <div class="card-body">
                         <h4 class="mb-4 d-flex gap-2">
                             <img src="{{asset('/public/assets/back-end/img/shop-information.png')}}" alt="">
-                            {{\App\CPU\translate('Shop_Informatrion')}}
+                            {{\App\CPU\translate('Shop_Information')}}
                         </h4>
 
 
@@ -679,14 +701,14 @@
         let delivery_type = '{{$order->delivery_type}}';
 
         if(delivery_type === 'self_delivery'){
-            $('#choose_delivery_man').show();
+            $('.choose_delivery_man').show();
             $('#by_third_party_delivery_service_info').hide();
         }else if(delivery_type === 'third_party_delivery')
         {
-            $('#choose_delivery_man').hide();
+            $('.choose_delivery_man').hide();
             $('#by_third_party_delivery_service_info').show();
         }else{
-            $('#choose_delivery_man').hide();
+            $('.choose_delivery_man').hide();
             $('#by_third_party_delivery_service_info').hide();
         }
     });
@@ -697,14 +719,14 @@
 
         if(val==='self_delivery')
         {
-            $('#choose_delivery_man').show();
+            $('.choose_delivery_man').show();
             $('#by_third_party_delivery_service_info').hide();
         }else if(val==='third_party_delivery'){
-            $('#choose_delivery_man').hide();
+            $('.choose_delivery_man').hide();
             $('#by_third_party_delivery_service_info').show();
             $('#shipping_chose').modal("show");
         }else{
-            $('#choose_delivery_man').hide();
+            $('.choose_delivery_man').hide();
             $('#by_third_party_delivery_service_info').hide();
         }
 
@@ -752,6 +774,45 @@
             toastr.warning('{{\App\CPU\translate('waiting_for_location')}}', {
                 CloseButton: true,
                 ProgressBar: true
+            });
+        }
+
+        function amountDateUpdate(t, e){
+            let field_name = $(t).attr('name');
+            let field_val = $(t).val();
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                }
+            });
+            $.ajax({
+                url: "{{route('seller.orders.amount-date-update')}}",
+                method: 'POST',
+                data: {
+                    'order_id': '{{$order['id']}}',
+                    'field_name': field_name,
+                    'field_val': field_val
+                },
+                success: function (data) {
+                    if (data.status == true) {
+                        toastr.success('Deliveryman charge add successfully', {
+                            CloseButton: true,
+                            ProgressBar: true
+                        });
+                    } else {
+                        toastr.error('Failed to add deliveryman charge', {
+                            CloseButton: true,
+                            ProgressBar: true
+                        });
+                    }
+                },
+                error: function () {
+                    toastr.error('Add valid data', {
+                        CloseButton: true,
+                        ProgressBar: true
+                    });
+                }
             });
         }
     </script>

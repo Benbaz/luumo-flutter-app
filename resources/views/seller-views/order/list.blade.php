@@ -14,11 +14,13 @@
                 <img src="{{asset('/public/assets/back-end/img/all-orders.png')}}" class="mb-1 mr-1" alt="">
                 <span class="page-header-title">
                     @if($status =='processing')
-                        {{ ucwords(str_replace('_',' ','Packaging' )) }}
+                        {{\App\CPU\translate('packaging')}}
                     @elseif($status =='failed')
-                        {{ ucwords(str_replace('_',' ','Failed to Deliver' )) }}
+                        {{\App\CPU\translate('Failed_to_Deliver')}}
+                    @elseif($status == 'all')
+                        {{\App\CPU\translate('all')}}
                     @else
-                        {{ ucwords(str_replace('_',' ',$status )) }}
+                        {{\App\CPU\translate(str_replace('_',' ',$status))}}
                     @endif
                 </span>
                 {{\App\CPU\translate('Orders')}}
@@ -252,7 +254,13 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <div>{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($order->order_amount))}}</div>
+                                    <div>
+                                        @php($discount = 0)
+                                        @if($order->coupon_discount_bearer == 'inhouse' && !in_array($order['coupon_code'], [0, NULL]))
+                                            @php($discount = $order->discount_amount)
+                                        @endif
+                                        {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($order->order_amount+$discount))}}
+                                    </div>
 
                                     @if($order->payment_status=='paid')
                                         <span class="badge badge-soft-success">{{\App\CPU\translate('paid')}}</span>

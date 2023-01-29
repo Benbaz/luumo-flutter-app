@@ -57,16 +57,9 @@
                                 {!!$products->withQueryString()->links()!!}
                             </div>
                         </div>
-                        <!-- <div class="card-footer">
-                            <div class="row">
-                                <div class="col-12" style="overflow-x: scroll;">
-                                    {!!$products->withQueryString()->links()!!}
-                                </div>
-                            </div>
-                        </div> -->
                     </div>
 				</div>
-				<div class="col-lg-5">
+				<div class="col-lg-5 mb-5">
                     <div class="card billing-section-wrap">
                         <h5 class="p-3 m-0 bg-light">{{\App\CPU\translate('Billing_Section')}}</h5>
                         <div class="card-body">
@@ -79,22 +72,6 @@
                                     {{ \App\CPU\translate('customer')}}
                                 </button>
                             </div>
-                            <!-- <button class="btn btn-sm btn-white btn-outline-primary ml-1" type="button" title="Add Customer">
-                                <i class="tio-add-circle text-dark"></i>
-                            </button> -->
-
-                            <!-- <div class="row d-none">
-                                <div class="form-group">
-                                    <button class="w-100 d-inline-block btn btn-success rounded" id="add_new_customer" type="button" data-toggle="modal" data-target="#add-customer" title="Add Customer">
-                                        <i class="tio-add-circle-outlined"></i> {{ \App\CPU\translate('customer')}}
-                                    </button>
-                                </div>
-                                <div class="form-group">
-                                    <a class="d-inline-block btn btn-warning rounded" onclick="new_order()">
-                                        {{ \App\CPU\translate('new_order')}}
-                                    </a>
-                                </div>
-                            </div> -->
                             <div class="form-group">
                                 <label class="text-capitalize title-color d-flex align-items-center flex-wrap gap-1">
                                     {{\App\CPU\translate('current_customer')}} :
@@ -146,7 +123,7 @@
                     <div class="col-md-12">
                         <center>
                             <input id="print_invoice" type="button" class="btn btn--primary non-printable" onclick="printDiv('printableArea')"
-                                value="Proceed, If thermal printer is ready."/>
+                                value="{{\App\CPU\translate('proceed')}}, {{\App\CPU\translate('if_thermal_printer_is_ready')}}"/>
                             <a href="{{url()->previous()}}" class="btn btn-danger non-printable">{{\App\CPU\translate('Back')}}</a>
                         </center>
                         <hr class="non-printable">
@@ -195,7 +172,7 @@
                                     <div class="form-group">
                                         <label class="input-label" >{{\App\CPU\translate('email')}}<span
                                             class="input-label-secondary text-danger">*</span></label>
-                                        <input type="email" name="email" class="form-control" value="{{ old('email') }}"  placeholder="{{\App\CPU\translate('Ex_:_ex@example.com')}}" required>
+                                        <input type="email" name="email" class="form-control" value="{{ old('email') }}"  placeholder="{{\App\CPU\translate('Ex')}}: ex@example.com" required>
                                     </div>
                                 </div>
                                 <div class="col-12 col-lg-6">
@@ -679,17 +656,11 @@
             data: {
                 product_id: product_id
             },
-            dataType: 'json', // added data type
+            dataType: 'json',
             beforeSend: function () {
                 $('#loading').show();
             },
             success: function (data) {
-                // console.log("success...");
-                // console.log(data);
-
-                // $("#quick-view").removeClass('fade');
-                // $("#quick-view").addClass('show');
-
                 $('#quick-view').modal('show');
                 $('#quick-view-modal').empty().html(data.view);
             },

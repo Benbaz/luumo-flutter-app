@@ -17,7 +17,7 @@
             <div class=" d-flex align-items-center justify-content-center"
                  style="padding-{{Session::get('direction') === "rtl" ?'right:14px':'left:14px'}};padding-top:14px;">
                 <div class="flash-deals-background-image" style="background: {{$web_config['primary_color']}}10">
-                    <img style="height: 125px!important;width:125px!important;border-radius:5px;"
+                    <img class="__img-125px"
                      src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$product['thumbnail']}}"
                      onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"/>
                 </div>

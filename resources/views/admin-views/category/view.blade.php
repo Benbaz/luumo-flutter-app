@@ -141,7 +141,7 @@
                                     <th class="text-center">{{ \App\CPU\translate('Category')}} {{ \App\CPU\translate('Image')}}</th>
                                     <th>{{ \App\CPU\translate('name')}}</th>
                                     <th>{{\App\CPU\translate('Priority')}}</th>
-                                    <th class="text-center">{{ \App\CPU\translate('status')}}</th>
+                                    <th class="text-center">{{ \App\CPU\translate('home_category_status')}}</th>
                                     <th class="text-center">{{ \App\CPU\translate('action')}}</th>
                                 </tr>
                             </thead>

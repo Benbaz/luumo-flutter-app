@@ -60,7 +60,7 @@
                         </div>
 
                         <div class="justify-content-end d-flex">
-                            <button type="submit" class="btn btn--primary px-4">Publish</button>
+                            <button type="submit" class="btn btn--primary px-4">{{\App\CPU\translate('publish')}}</button>
                         </div>
                     </div>
                 </div>

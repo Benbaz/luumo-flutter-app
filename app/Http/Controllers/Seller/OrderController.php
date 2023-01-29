@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Seller;
 
+use App\CPU\BackEndHelper;
 use App\CPU\Helpers;
 use App\CPU\ImageManager;
 use App\CPU\OrderManager;
@@ -10,6 +11,8 @@ use App\Model\Admin;
 use App\Model\AdminWallet;
 use App\Model\BusinessSetting;
 use App\Model\DeliveryMan;
+use App\Model\DeliveryManTransaction;
+use App\Model\DeliverymanWallet;
 use App\Model\Order;
 use App\Model\Seller;
 use App\Model\OrderDetail;
@@ -17,10 +20,12 @@ use App\Model\Product;
 use App\Model\SellerWallet;
 use App\Model\ShippingAddress;
 use App\Model\ShippingMethod;
+use App\Traits\CommonTrait;
 use Barryvdh\DomPDF\Facade as PDF;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Ramsey\Uuid\Uuid;
 use function App\CPU\translate;
 use Rap2hpoutre\FastExcel\FastExcel;
 use App\CPU\CustomerManager;
@@ -28,6 +33,7 @@ use App\CPU\Convert;
 
 class OrderController extends Controller
 {
+    use CommonTrait;
     public function list(Request $request, $status)
     {
         $seller = auth('seller')->user();
@@ -42,8 +48,8 @@ class OrderController extends Controller
         $from = $request['from'];
         $to = $request['to'];
         $status = $request['status'];
-
         $key = $request['search'] ? explode(' ', $request['search']) : '';
+        $delivery_man_id = $request['delivery_man_id'];
 
         $orders = Order::with(['customer','shipping','shippingAddress','delivery_man','billingAddress'])
             ->where('seller_is','seller')
@@ -54,7 +60,6 @@ class OrderController extends Controller
             ->when($status !='all', function($q) use($status){
                 $q->where(function($query) use ($status){
                     $query->orWhere('order_status',$status);
-//                        ->orWhere('payment_status',$status);
                 });
             })
             ->when(!empty($from) && !empty($to),function($query) use($from,$to){
@@ -69,8 +74,12 @@ class OrderController extends Controller
                     }
                 });
             })
-            ->latest()->paginate(Helpers::pagination_limit())
-            ->appends(['search'=>$request['search'],'filter'=>$request['filter'],'from'=>$request['from'],'to'=>$request['to']]);
+            ->when($delivery_man_id, function ($q) use($delivery_man_id){
+                $q->where(['delivery_man_id'=> $delivery_man_id, 'seller_is'=>'seller']);
+            })
+            ->latest()
+            ->paginate(Helpers::pagination_limit())
+            ->appends(['search'=>$request['search'],'filter'=>$request['filter'],'from'=>$request['from'],'to'=>$request['to'],'delivery_man_id'=>$request['delivery_man_id']]);
 
         $pending_query = Order::where(['seller_is'=>'seller','order_status'=>'pending','seller_id'=>$sellerId]);
         $pending = $this->common_query_status_count($pending_query, $request);
@@ -174,7 +183,7 @@ class OrderController extends Controller
         }
     }
 
-    /*
+    /**
      *  Digital file upload after sell
      */
     public function digital_file_upload_after_sell(Request $request)
@@ -212,19 +221,25 @@ class OrderController extends Controller
         $order->third_party_delivery_tracking_id = null;
         $order->save();
 
-        $fcm_token = $order->delivery_man->fcm_token;
+        $fcm_token = isset($order->delivery_man) ? $order->delivery_man->fcm_token : null;
         $value = Helpers::order_status_update_message('del_assign');
-        try {
-            if ($value) {
-                $data = [
-                    'title' => translate('order'),
-                    'description' => $value,
-                    'order_id' => $order['id'],
-                    'image' => '',
-                ];
-                Helpers::send_push_notif_to_device($fcm_token, $data);
+        if(!empty($fcm_token)) {
+            try {
+                if ($value) {
+                    $data = [
+                        'title' => translate('order'),
+                        'description' => $value,
+                        'order_id' => $order['id'],
+                        'image' => '',
+                    ];
+                    if ($order->delivery_man_id) {
+                        self::add_deliveryman_push_notification($data, $order['delivery_man_id']);
+                    }
+                    Helpers::send_push_notif_to_device($fcm_token, $data);
+                }
+            } catch (\Exception $e) {
             }
-        } catch (\Exception $e) {}
+        }
 
         return response()->json(['status' => true], 200);
     }
@@ -249,7 +264,6 @@ class OrderController extends Controller
         $data["client_name"] = $order->customer !=null? $order->customer["f_name"] . ' ' . $order->customer["l_name"]:\App\CPU\translate('customer_not_found');
         $data["order"] = $order;
 
-//        return view('seller-views.order.invoice', compact('order', 'seller', 'company_phone', 'company_email', 'company_name', 'company_web_logo'));
 
       $mpdf_view = \View::make('seller-views.order.invoice', compact('order', 'seller', 'company_phone', 'company_email', 'company_name', 'company_web_logo'));
         Helpers::gen_mpdf($mpdf_view, 'order_invoice_', $order->id);
@@ -289,37 +303,40 @@ class OrderController extends Controller
 
             return response()->json(['payment_status'=>0],200);
         }
-        $fcm_token = $order->customer->cm_firebase_token;
+        $fcm_token = isset($order->customer) ? $order->customer->cm_firebase_token : null;
         $value = Helpers::order_status_update_message($request->order_status);
 
         if ($order->order_status == 'delivered') {
             return response()->json(['success' => 0, 'message' => 'order is already delivered.'], 200);
         }
-
-        try {
-            if ($value) {
-                $data = [
-                    'title' => translate('Order'),
-                    'description' => $value,
-                    'order_id' => $order['id'],
-                    'image' => '',
-                ];
-                Helpers::send_push_notif_to_device($fcm_token, $data);
+        if (!empty($fcm_token)) {
+            try {
+                if ($value) {
+                    $data = [
+                        'title' => translate('Order'),
+                        'description' => $value,
+                        'order_id' => $order['id'],
+                        'image' => '',
+                    ];
+                    Helpers::send_push_notif_to_device($fcm_token, $data);
+                }
+            } catch (\Exception $e) {
+                return response()->json([]);
             }
-        } catch (\Exception $e) {
-            return response()->json([]);
         }
-
 
         try {
             $fcm_token_delivery_man = $order->delivery_man->fcm_token;
-            if ($value != null) {
+            if ($request->order_status == 'canceled' && $value != null && !empty($fcm_token_delivery_man)) {
                 $data = [
                     'title' => translate('order'),
                     'description' => $value,
                     'order_id' => $order['id'],
                     'image' => '',
                 ];
+                if($order->delivery_man_id) {
+                    self::add_deliveryman_push_notification($data, $order['delivery_man_id']);
+                }
                 Helpers::send_push_notif_to_device($fcm_token_delivery_man, $data);
             }
         } catch (\Exception $e) {}
@@ -344,9 +361,88 @@ class OrderController extends Controller
             }
         }
 
+        if ($order->delivery_man_id && $request->order_status == 'delivered') {
+            $dm_wallet = DeliverymanWallet::where('delivery_man_id', $order->delivery_man_id)->first();
+            $cash_in_hand = $order->payment_method == 'cash_on_delivery' ? $order->order_amount : 0;
+
+            if (empty($dm_wallet)) {
+                DeliverymanWallet::create([
+                    'delivery_man_id' => $order->delivery_man_id,
+                    'current_balance' => BackEndHelper::currency_to_usd($order->deliveryman_charge) ?? 0,
+                    'cash_in_hand' => BackEndHelper::currency_to_usd($cash_in_hand),
+                    'pending_withdraw' => 0,
+                    'total_withdraw' => 0,
+                ]);
+            } else {
+                $dm_wallet->current_balance += BackEndHelper::currency_to_usd($order->deliveryman_charge) ?? 0;
+                $dm_wallet->cash_in_hand += BackEndHelper::currency_to_usd($cash_in_hand);
+                $dm_wallet->save();
+            }
+
+            if($order->deliveryman_charge && $request->order_status == 'delivered'){
+                DeliveryManTransaction::create([
+                    'delivery_man_id' => $order->delivery_man_id,
+                    'user_id' => auth('seller')->id(),
+                    'user_type' => 'seller',
+                    'credit' => BackEndHelper::currency_to_usd($order->deliveryman_charge) ?? 0,
+                    'transaction_id' => Uuid::uuid4(),
+                    'transaction_type' => 'deliveryman_charge'
+                ]);
+            }
+        }
+
+        CommonTrait::add_order_status_history($request->id, auth('seller')->id(), $request->order_status, 'seller');
+
         $data = $request->order_status;
         return response()->json($data);
     }
+
+    public function amount_date_update(Request $request){
+        $field_name = $request->field_name;
+        $field_val = $request->field_val;
+        $user_id = auth('seller')->id();
+
+        $order = Order::find($request->order_id);
+        $order->$field_name = $field_val;
+
+        try {
+            DB::beginTransaction();
+
+            if($field_name == 'expected_delivery_date'){
+                CommonTrait::add_expected_delivery_date_history($request->order_id, $user_id, $field_val, 'seller');
+            }
+            $order->save();
+
+            DB::commit();
+        }catch(\Exception $ex){
+            DB::rollback();
+            return response()->json(['status' => false], 403);
+        }
+
+        $fcm_token = isset($order->delivery_man) ? $order->delivery_man->fcm_token : null;
+        if($field_name == 'expected_delivery_date' && !empty($fcm_token)) {
+            $value = Helpers::order_status_update_message($field_name) . " ID: " . $order['id'];
+            try {
+                if ($value != null) {
+                    $data = [
+                        'title' => translate('order'),
+                        'description' => $value,
+                        'order_id' => $order['id'],
+                        'image' => '',
+                    ];
+
+                    if ($order->delivery_man_id) {
+                        self::add_deliveryman_push_notification($data, $order->delivery_man_id);
+                    }
+                    Helpers::send_push_notif_to_device($fcm_token, $data);
+                }
+            } catch (\Exception $e) {
+                return response()->json(['status' => false], 200);
+            }
+        }
+        return response()->json(['status' => true], 200);
+    }
+
     public function update_deliver_info(Request $request)
     {
         $order = Order::find($request->order_id);
@@ -354,6 +450,8 @@ class OrderController extends Controller
         $order->delivery_service_name = $request->delivery_service_name;
         $order->third_party_delivery_tracking_id = $request->third_party_delivery_tracking_id;
         $order->delivery_man_id = null;
+        $order->deliveryman_charge = 0;
+        $order->expected_delivery_date = null;
         $order->save();
 
         Toastr::success(\App\CPU\translate('updated_successfully!'));

@@ -13,7 +13,6 @@
         </div>
         <!-- End Page Title -->
 
-
         <div class="card card-body">
             <div class="row border-bottom pb-3 align-items-center mb-20">
                 <div class="col-sm-4 col-md-6 col-lg-8 mb-2 mb-sm-0">
@@ -181,13 +180,15 @@
                                         <div class="gap-1">
                                             <div>{{ $review->comment ? Str::limit($review->comment, 35) : 'No Comment Found' }}</div>
                                             <br>
-                                            @foreach (json_decode($review->attachment) as $img)
-                                                <a href="{{ asset('storage/app/public/review') }}/{{ $img }}"
-                                                    data-lightbox="mygallery">
-                                                    <img width="60" height="60" src="{{ asset('storage/app/public/review') }}/{{ $img }}"
-                                                        alt="Image">
-                                                </a>
-                                            @endforeach
+                                            @if($review->attachment)
+                                                @foreach (json_decode($review->attachment) as $img)
+                                                    <a href="{{ asset('storage/app/public/review') }}/{{ $img }}"
+                                                        data-lightbox="mygallery">
+                                                        <img width="60" height="60" src="{{ asset('storage/app/public/review') }}/{{ $img }}"
+                                                            alt="Image">
+                                                    </a>
+                                                @endforeach
+                                            @endif
                                         </div>
                                     </td>
                                     <td>{{ date('d M Y', strtotime($review->created_at)) }}</td>

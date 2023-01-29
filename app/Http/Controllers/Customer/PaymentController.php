@@ -30,18 +30,17 @@ class PaymentController extends Controller
         session()->put('address_id', $request['address_id']);
         session()->put('billing_address_id', $request['billing_address_id']);
         session()->put('coupon_code', $request['coupon_code']);
+        session()->put('coupon_discount', $request['coupon_discount']);
         session()->put('payment_mode', 'app');
 
-        $discount = Helpers::coupon_discount($request);
+//        $discount = Helpers::coupon_discount($request);
+        $discount = $request['coupon_discount'] ?? 0;
         if ($discount > 0) {
             session()->put('coupon_code', $request['coupon_code']);
             session()->put('coupon_discount', $discount);
         }
 
         $cart_group_ids = CartManager::get_cart_group_ids();
-        // if (CartShipping::whereIn('cart_group_id', $cart_group_ids)->count() != count($cart_group_ids)) {
-        //     return response()->json(['errors' => ['code' => 'shipping-method', 'message' => 'Data not found']], 403);
-        // }
         $shippingMethod = Helpers::get_business_settings('shipping_method');
         $carts = Cart::whereIn('cart_group_id', $cart_group_ids)->get();
         $physical_product = false;

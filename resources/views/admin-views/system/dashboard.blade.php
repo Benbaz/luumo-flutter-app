@@ -69,60 +69,6 @@
             </div>
             <!-- End Admin Wallet -->
 
-{{--            <div class="user-overview-wrap mb-2">--}}
-{{--                <div class="card">--}}
-{{--                    <div class="card-body">--}}
-{{--                        <div class="row g-2 align-items-center">--}}
-{{--                            <div class="col-md-5">--}}
-{{--                                <h4 class="d-flex align-items-center text-capitalize gap-10 mb-0">--}}
-{{--                                    <img src="{{asset('/public/assets/back-end/img/order_statictics.png')}}" alt="">--}}
-{{--                                    Order Statictics--}}
-{{--                                </h4>--}}
-{{--                            </div>--}}
-{{--                            <div class="col-md-7 d-flex justify-content-md-end">--}}
-{{--                                <ul class="option-select-btn">--}}
-{{--                                    <li>--}}
-{{--                                        <label>--}}
-{{--                                            <input type="radio" name="statistics" hidden="" checked="">--}}
-{{--                                            <span>This Year</span>--}}
-{{--                                        </label>--}}
-{{--                                    </li>--}}
-{{--                                    <li>--}}
-{{--                                        <label>--}}
-{{--                                            <input type="radio" name="statistics" hidden="">--}}
-{{--                                            <span>This Month</span>--}}
-{{--                                        </label>--}}
-{{--                                    </li>--}}
-{{--                                    <li>--}}
-{{--                                        <label>--}}
-{{--                                            <input type="radio" name="statistics" hidden="">--}}
-{{--                                            <span>This Week</span>--}}
-{{--                                        </label>--}}
-{{--                                    </li>--}}
-{{--                                </ul>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-
-{{--                        <!-- Bar Chart -->--}}
-{{--                        <div class="chartjs-custom mt-2">--}}
-{{--                            <canvas id="order_statictics" height="340"></canvas>--}}
-{{--                        </div>--}}
-{{--                        <!-- End Bar Chart -->--}}
-{{--                    </div>--}}
-{{--                </div>--}}
-{{--                <div class="card">--}}
-{{--                    <div class="card-header">--}}
-{{--                        <h4 class="card-header__title">User Overview</h4>--}}
-{{--                    </div>--}}
-{{--                    <div class="card-body">--}}
-{{--                        <div class="position-relative">--}}
-{{--                            <h3 class="amount-of-user">1.6M+ <span>User</span></h3>--}}
-{{--                            <canvas id="user_overview" height="300" width="300"></canvas>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-
             <div class="row g-1">
                 <div class="col-12">
                     <!-- Card -->
@@ -161,42 +107,6 @@
                                         </li>
                                     </ul>
                                 </div>
-
-                                <!-- <div class="col-12 mb-3 d-none border-bottom">
-                                    <h4 class="d-flex align-items-center text-capitalize gap-10 mb-0">
-                                        <img src="{{asset('/public/assets/back-end/img/order_statictics.png')}}" alt="">
-                                        {{\App\CPU\translate('earning_statistics_for_business_analytics')}}
-                                    </h4>
-
-                                    <h5 class="card-header-title float-right mb-2">{{\App\CPU\translate('this_year_earning')}}
-                                        <i class="tio-chart-bar-2 fz-30"></i>
-                                    </h5>
-                                </div> -->
-
-                                <!-- <div class="col-md-4 col-12 graph-border-1">
-                                    <div class="mt-2 center-div">
-                                    <span class="h6 mb-0">
-                                        <i class="legend-indicator bg-primary"></i>
-                                        {{\App\CPU\translate('in-house_earning')}} : {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency(array_sum($inhouse_data)))}}
-                                    </span>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 col-12 graph-border-1">
-                                    <div class="mt-2 center-div">
-                                        <span class="h6 mb-0">
-                                            <i class="legend-indicator bg-success"></i>
-                                            {{\App\CPU\translate('seller_earnings')}} : {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency(array_sum($seller_data)))}}
-                                    </span>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 col-12 graph-border-1">
-                                    <div class="mt-2 center-div">
-                                        <span class="h6 mb-0">
-                                            <i class="legend-indicator bg-danger"></i>
-                                        {{\App\CPU\translate('commission_earned')}} : {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency(array_sum($commission_data)))}}
-                                    </span>
-                                    </div>
-                                </div> -->
                             </div>
 
                             <!-- End Row -->
@@ -209,20 +119,20 @@
                                             "data": {
                                               "labels": ["Jan","Feb","Mar","April","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
                                               "datasets": [{
-                                                "label": "In-house ",
+                                                "label": "{{\App\CPU\translate('In-house')}}",
                                                 "data": [{{$inhouse_data[1]}},{{$inhouse_data[2]}},{{$inhouse_data[3]}},{{$inhouse_data[4]}},{{$inhouse_data[5]}},{{$inhouse_data[6]}},{{$inhouse_data[7]}},{{$inhouse_data[8]}},{{$inhouse_data[9]}},{{$inhouse_data[10]}},{{$inhouse_data[11]}},{{$inhouse_data[12]}}],
                                                 "backgroundColor": "#ACDBAB",
                                                 "hoverBackgroundColor": "#ACDBAB",
                                                 "borderColor": "#ACDBAB"
                                               },
                                               {
-                                                "label": "Seller",
+                                                "label": "{{\App\CPU\translate('Seller')}}",
                                                 "data": [{{$seller_data[1]}},{{$seller_data[2]}},{{$seller_data[3]}},{{$seller_data[4]}},{{$seller_data[5]}},{{$seller_data[6]}},{{$seller_data[7]}},{{$seller_data[8]}},{{$seller_data[9]}},{{$seller_data[10]}},{{$seller_data[11]}},{{$seller_data[12]}}],
                                                 "backgroundColor": "#0177CD",
                                                 "borderColor": "#0177CD"
                                               },
                                               {
-                                                "label": "Commission",
+                                                "label": "{{\App\CPU\translate('Commission')}}",
                                                 "data": [{{$commission_data[1]}},{{$commission_data[2]}},{{$commission_data[3]}},{{$commission_data[4]}},{{$commission_data[5]}},{{$commission_data[6]}},{{$commission_data[7]}},{{$commission_data[8]}},{{$commission_data[9]}},{{$commission_data[10]}},{{$commission_data[11]}},{{$commission_data[12]}}],
                                                 "backgroundColor": "#FFB36D",
                                                 "borderColor": "#FFB36D"
@@ -248,7 +158,6 @@
                                                     },
                                                     "ticks": {
                                                         "beginAtZero": true,
-                                                        "stepSize": 50000,
                                                         "fontSize": 12,
                                                         "fontColor": "#5B6777",
                                                         "padding": 10,
@@ -293,24 +202,6 @@
                     </div>
                     <!-- End Card -->
                 </div>
-
-                <!-- Total Business Overview -->
-                <!-- <div class="col-lg-6">
-                    <div class="card h-100">
-                        <div class="card-header">
-                            <h5 class="card-header-title">
-                                <i class="tio-company"></i> {{\App\CPU\translate('total_business_overview')}}
-                            </h5>
-                            <i class="tio-chart-pie-1 fz-45"></i>
-                        </div>
-
-                        <div class="card-body ltr" id="business-overview-board">
-                            <div class="chartjs-custom mx-auto">
-                                <canvas id="business-overview" class="mt-2"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
                 <!-- End Total Business Overview -->
 
                 <div class="col-md-6 col-xl-4">
@@ -349,6 +240,14 @@
                     <!-- Card -->
                     <div class="card h-100">
                         @include('admin-views.partials._top-selling-products',['top_sell'=>$data['top_sell']])
+                    </div>
+                    <!-- End Card -->
+                </div>
+
+                <div class="col-md-6 col-xl-4">
+                    <!-- Card -->
+                    <div class="card h-100">
+                        @include('admin-views.partials._top-delivery-man',['top_deliveryman'=>$data['top_deliveryman']])
                     </div>
                     <!-- End Card -->
                 </div>
@@ -400,9 +299,6 @@
 
                     var ctx = document.getElementById("updatingData").getContext("2d");
 
-                    // var oldChart = new Chart(ctx, {});
-                    // oldChart.destroy();
-
                     var options = {
                         responsive: true,
                         bezierCurve: false,
@@ -444,7 +340,7 @@
                             labels: [],
                             datasets: [
                                 {
-                                    label: "In-house",
+                                    label: "{{\App\CPU\translate('In-house')}}",
                                     data: [],
                                     backgroundColor: "#ACDBAB",
                                     hoverBackgroundColor: "#ACDBAB",
@@ -454,7 +350,7 @@
                                     radius: 0
                                 },
                                 {
-                                    label: "Seller",
+                                    label: "{{\App\CPU\translate('Seller')}}",
                                     data: [],
                                     backgroundColor: "#0177CD",
                                     hoverBackgroundColor: "#0177CD",
@@ -464,7 +360,7 @@
                                     radius: 0
                                 },
                                 {
-                                    label: "Commission",
+                                    label: "{{\App\CPU\translate('Commission')}}",
                                     data: [],
                                     backgroundColor: "#FFB36D",
                                     hoverBackgroundColor: "FFB36D",

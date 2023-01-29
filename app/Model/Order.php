@@ -60,4 +60,9 @@ class Order extends Model
     {
         return $this->belongsTo(DeliveryMan::class,'delivery_man_id');
     }
+
+    public function delivery_man_review()
+    {
+        return $this->hasOne(Review::class,'order_id');
+    }
 }

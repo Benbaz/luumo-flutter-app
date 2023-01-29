@@ -26,13 +26,13 @@
 
                     <p>2. {{\App\CPU\translate('You can download the example file to understand how the data must be filled.')}}</p>
 
-                    <p>3. {{\App\CPU\translate('Once you have downloaded and filled the format file, upload it in the form below and submit.')}}</p>
+                    <p>3. {{\App\CPU\translate('Once you have downloaded and filled the format file')}}, {{\App\CPU\translate('upload it in the form below and submit.')}}</p>
 
                     <p>4. {{\App\CPU\translate('After uploading products you need to edit them and set product images and choices.')}}</p>
 
-                    <p>5. {{\App\CPU\translate('You can get brand and category id from their list, please input the right ids.')}}</p>
+                    <p>5. {{\App\CPU\translate('You can get brand and category id from their list')}}, {{\App\CPU\translate('please input the right ids.')}}</p>
 
-                    <p>6. {{\App\CPU\translate('You can upload your product images in product folder from gallery, and copy image`s path.')}}</p>
+                    <p>6. {{\App\CPU\translate('You can upload your product images in product folder from gallery')}}, {{\App\CPU\translate('and copy image`s path.')}}</p>
                 </div>
             </div>
 

@@ -23,22 +23,22 @@ class ProductStockReportController extends Controller
 
         $query_param = ['search' => $search, 'sort' => $sort, 'seller_id' => $seller_id];
 
-        $products = Product::where(['product_type'=>'physical'])->when(empty($request['seller_id']) || $request['seller_id'] == 'all',function ($query){
-                                $query->whereIn('added_by', ['admin', 'seller']);
-                            })
-                            ->when($request['seller_id'] == 'in_house',function ($query){
-                                $query->where(['added_by' => 'admin']);
-                            })
-                            ->when($request['seller_id'] != 'in_house' && isset($request['seller_id']) && $request['seller_id'] != 'all',function ($query) use($request){
-                                $query->where(['added_by' => 'seller', 'user_id' => $request['seller_id']]);
-                            })
-                            ->when($search, function($q) use($search){
-                                $q->where('name','Like','%'.$search.'%');
-                            })
-                            ->orderBy('current_stock', $sort)
-                            ->paginate(Helpers::pagination_limit())->appends($query_param);
+        $products = Product::where(['product_type' => 'physical'])->when(empty($request['seller_id']) || $request['seller_id'] == 'all', function ($query) {
+            $query->whereIn('added_by', ['admin', 'seller']);
+        })
+            ->when($request['seller_id'] == 'in_house', function ($query) {
+                $query->where(['added_by' => 'admin']);
+            })
+            ->when($request['seller_id'] != 'in_house' && isset($request['seller_id']) && $request['seller_id'] != 'all', function ($query) use ($request) {
+                $query->where(['added_by' => 'seller', 'user_id' => $request['seller_id']]);
+            })
+            ->when($search, function ($q) use ($search) {
+                $q->where('name', 'Like', '%' . $search . '%');
+            })
+            ->orderBy('current_stock', $sort)
+            ->paginate(Helpers::pagination_limit())->appends($query_param);
 
-        return view('admin-views.report.product-stock', compact('products','seller_id', 'search', 'sort'));
+        return view('admin-views.report.product-stock', compact('products', 'seller_id', 'search', 'sort'));
     }
 
     /**
@@ -50,27 +50,28 @@ class ProductStockReportController extends Controller
      * @throws \Box\Spout\Common\Exception\UnsupportedTypeException
      * @throws \Box\Spout\Writer\Exception\WriterNotOpenedException
      */
-    public function export(Request $request){
+    public function export(Request $request)
+    {
 
         $sort = $request['sort'] ?? 'ASC';
 
-        $products = Product::where(['product_type'=>'physical'])->when(empty($request['seller_id']) || $request['seller_id'] == 'all',function ($query){
-                                $query->whereIn('added_by', ['admin', 'seller']);
-                            })
-                            ->when($request['seller_id'] == 'in_house',function ($query){
-                                $query->where(['added_by' => 'admin']);
-                            })
-                            ->when($request['seller_id'] != 'in_house' && isset($request['seller_id']) && $request['seller_id'] != 'all',function ($query) use($request){
-                                $query->where(['added_by' => 'seller', 'user_id' => $request['seller_id']]);
-                            })
-                            ->orderBy('current_stock', $sort)->get();
+        $products = Product::where(['product_type' => 'physical'])->when(empty($request['seller_id']) || $request['seller_id'] == 'all', function ($query) {
+            $query->whereIn('added_by', ['admin', 'seller']);
+        })
+            ->when($request['seller_id'] == 'in_house', function ($query) {
+                $query->where(['added_by' => 'admin']);
+            })
+            ->when($request['seller_id'] != 'in_house' && isset($request['seller_id']) && $request['seller_id'] != 'all', function ($query) use ($request) {
+                $query->where(['added_by' => 'seller', 'user_id' => $request['seller_id']]);
+            })
+            ->orderBy('current_stock', $sort)->get();
 
         $data = array();
-        foreach($products as $product){
+        foreach ($products as $product) {
             $data[] = array(
-                'Product Name'   => $product->name,
-                'Date'           => date('d M Y',strtotime($product->created_at)),
-                'Total Stock'    => $product->current_stock,
+                'Product Name' => $product->name,
+                'Date' => date('d M Y', strtotime($product->created_at)),
+                'Total Stock' => $product->current_stock,
             );
         }
 

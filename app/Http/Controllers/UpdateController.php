@@ -4,15 +4,20 @@ namespace App\Http\Controllers;
 
 use App\CPU\Helpers;
 use App\Model\AdminWallet;
+use App\Traits\ActivationClass;
 use App\User;
 use App\Model\BusinessSetting;
 use App\Model\Color;
+use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
+use Mockery\Exception;
 
 class UpdateController extends Controller
 {
+    use ActivationClass;
+
     public function update_software_index()
     {
         return view('update.update-software');
@@ -23,7 +28,7 @@ class UpdateController extends Controller
         Helpers::setEnvironmentValue('SOFTWARE_ID', 'MzE0NDg1OTc=');
         Helpers::setEnvironmentValue('BUYER_USERNAME', $request['username']);
         Helpers::setEnvironmentValue('PURCHASE_CODE', $request['purchase_key']);
-        Helpers::setEnvironmentValue('SOFTWARE_VERSION', '12.0');
+        Helpers::setEnvironmentValue('SOFTWARE_VERSION', '13.0');
         Helpers::setEnvironmentValue('APP_MODE', 'live');
         Helpers::setEnvironmentValue('APP_NAME', '6valley' . time());
         Helpers::setEnvironmentValue('SESSION_LIFETIME', '60');
@@ -173,6 +178,24 @@ class UpdateController extends Controller
                 'value' => ''
             ]);
         }*/
+        if (BusinessSetting::where(['type' => 'delivery_boy_expected_delivery_date_message'])->first() == false) {
+            BusinessSetting::insert([
+                'type' => 'delivery_boy_expected_delivery_date_message',
+                'value' => json_encode([
+                    'status' => 0,
+                    'message' => ''
+                ])
+            ]);
+        }
+        if (BusinessSetting::where(['type' => 'order_canceled'])->first() == false) {
+            BusinessSetting::insert([
+                'type' => 'order_canceled',
+                'value' => json_encode([
+                    'status' => 0,
+                    'message' => ''
+                ])
+            ]);
+        }
 
         if (BusinessSetting::where(['type' => 'seller_registration'])->first() == false) {
             DB::table('business_settings')->updateOrInsert(['type' => 'seller_registration'], [
@@ -597,6 +620,27 @@ class UpdateController extends Controller
         if (BusinessSetting::where(['type' => 'digital_product'])->first() == false) {
             DB::table('business_settings')->updateOrInsert(['type' => 'digital_product'], [
                 'value' => 1
+            ]);
+        }
+
+        if (BusinessSetting::where(['type' => 'refund-policy'])->first() == false) {
+            BusinessSetting::insert([
+                'type' => 'refund-policy',
+                'value' => ''
+            ]);
+        }
+
+        if (BusinessSetting::where(['type' => 'return-policy'])->first() == false) {
+            BusinessSetting::insert([
+                'type' => 'return-policy',
+                'value' => ''
+            ]);
+        }
+
+        if (BusinessSetting::where(['type' => 'cancellation-policy'])->first() == false) {
+            BusinessSetting::insert([
+                'type' => 'cancellation-policy',
+                'value' => ''
             ]);
         }
 

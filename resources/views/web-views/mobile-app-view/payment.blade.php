@@ -56,19 +56,19 @@
             <div class="col-md-6 mb-4" style="cursor: pointer">
                 <div class="card">
                     <div class="card-body" style="height: 100px">
-                        
+
                             <button class="btn btn-block click-if-alone" type="submit"
                             data-toggle="modal" data-target="#wallet_submit_button">
-                            
+
                                 <img width="150" style="margin-top: -10px"
                                         src="{{asset('public/assets/front-end/img/wallet.png')}}"/>
                             </button>
-                        
+
                     </div>
                 </div>
             </div>
         @endif
-        
+
         @php($user=\App\CPU\Helpers::get_customer())
         @php($config=\App\CPU\Helpers::get_business_settings('ssl_commerz_payment'))
         @if($config['status'])
@@ -400,7 +400,7 @@
                         <input class="form-control" type="text" value="{{\App\CPU\Helpers::currency_converter($customer_balance)}}" readonly>
                     </div>
                 </div>
-                
+
                 <div class="form-row">
                     <div class="form-group col-12">
                         <label for="">{{\App\CPU\translate('order_amount')}}</label>
@@ -416,11 +416,11 @@
                         @endif
                     </div>
                 </div>
-            
+
             </div>
             <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">{{\App\CPU\translate('close')}}</button>
-            <button type="submit" class="btn btn--primary" {{$remain_balance>0? '':'disabled'}}>{{\App\CPU\translate('submit')}}</button>
+            <button type="submit" class="btn btn-primary" {{$remain_balance>0? '':'disabled'}}>{{\App\CPU\translate('submit')}}</button>
             </div>
         </form>
       </div>

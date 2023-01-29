@@ -31,7 +31,7 @@
                                         {{round($item['ratings_average'],2)}}
                                     </span>
                                     <span class="d-flex align-items-center gap-10">
-                                        ({{$item['total']}} Reviews)
+                                        ({{$item['total']}} {{\App\CPU\translate('Reviews')}})
                                     </span>
                                 </div>
                             </div>

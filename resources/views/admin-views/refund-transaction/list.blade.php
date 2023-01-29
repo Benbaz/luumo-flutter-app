@@ -25,8 +25,8 @@
                             </div>
                         </div>
                         <input id="datatableSearch_" type="search" name="search" class="form-control"
-                                placeholder="{{ \App\CPU\translate('Search by orders id _or_refund_id')}}" aria-label="Search orders"
-                                value="{{ $search }}">
+                               placeholder="{{ \App\CPU\translate('Search by orders id _or_refund_id')}}" aria-label="Search orders"
+                               value="{{ $search }}">
                         <button type="submit" class="btn btn--primary">{{ \App\CPU\translate('search')}}</button>
                     </div>
                     <!-- End Search -->
@@ -35,8 +35,8 @@
 
             <div class="table-responsive">
                 <table id="datatable"
-                        style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};"
-                        class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table w-100">
+                       style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};"
+                       class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table w-100">
                     <thead class="thead-light thead-50 text-capitalize">
                     <tr>
                         <th>{{\App\CPU\translate('SL')}}</th>
@@ -49,46 +49,46 @@
                     </tr>
                     </thead>
                     <tbody>
-                        @foreach ($refund_transactions as $key=>$refund_transaction)
-                            <tr class="text-capitalize">
-                                <td>
-                                    {{$refund_transactions->firstItem()+$key}}
-                                </td>
-                                <td>
-                                    @if ($refund_transaction->refund_id)
+                    @foreach ($refund_transactions as $key=>$refund_transaction)
+                        <tr class="text-capitalize">
+                            <td>
+                                {{$refund_transactions->firstItem()+$key}}
+                            </td>
+                            <td>
+                                @if ($refund_transaction->refund_id)
                                     <a href="{{route('admin.refund-section.refund.details',['id'=>$refund_transaction['refund_id']])}}" class="title-color hover-c1">
                                         {{$refund_transaction->refund_id}}
                                     </a>
-                                    @else
-                                        <span>{{\App\CPU\translate('not_found')}}</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    <a href="{{route('admin.orders.details',['id'=>$refund_transaction->order_id])}}" class="title-color hover-c1">
-                                        {{$refund_transaction->order_id}}
-                                    </a>
-                                </td>
+                                @else
+                                    <span>{{\App\CPU\translate('not_found')}}</span>
+                                @endif
+                            </td>
+                            <td>
+                                <a href="{{route('admin.orders.details',['id'=>$refund_transaction->order_id])}}" class="title-color hover-c1">
+                                    {{$refund_transaction->order_id}}
+                                </a>
+                            </td>
 
-                                <td>
-                                    {{str_replace('_',' ',$refund_transaction->payment_method)}}
-                                </td>
-                                <td>
-                                    {{$refund_transaction->payment_status}}
-                                </td>
-                                <td>
-                                    {{\App\CPU\Helpers::currency_converter($refund_transaction->amount)}}
-                                </td>
-                                <td class="text-center">
-                                    {{$refund_transaction->transaction_type}}
-                                </td>
-                            </tr>
-                        @endforeach
+                            <td>
+                                {{\App\CPU\translate(str_replace('_',' ',$refund_transaction->payment_method))}}
+                            </td>
+                            <td>
+                                {{\App\CPU\translate(str_replace('_',' ',$refund_transaction->payment_status))}}
+                            </td>
+                            <td>
+                                {{\App\CPU\Helpers::currency_converter($refund_transaction->amount)}}
+                            </td>
+                            <td class="text-center">
+                                {{\App\CPU\translate(str_replace('_',' ',$refund_transaction->transaction_type))}}
+                            </td>
+                        </tr>
+                    @endforeach
                     </tbody>
                 </table>
                 @if(count($refund_transactions)==0)
                     <div class="text-center p-4">
                         <img class="mb-3 w-160" src="{{asset('public/assets/back-end')}}/svg/illustrations/sorry.svg"
-                                alt="Image Description">
+                             alt="Image Description">
                         <p class="mb-0">{{ \App\CPU\translate('No_data_to_show')}}</p>
                     </div>
                 @endif

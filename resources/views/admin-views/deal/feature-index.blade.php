@@ -123,7 +123,7 @@
                                     <td>{{date('d-M-y',strtotime($deal['start_date']))}}</td>
                                     <td>{{date('d-M-y',strtotime($deal['end_date']))}}</td>
                                     <td>
-                                        @if(\Carbon\Carbon::parse($deal['end_date'])->isPast())
+                                        @if(\Carbon\Carbon::parse($deal['end_date'])->endOfDay()->isPast())
                                         <span class="badge badge-soft-danger"> {{ \App\CPU\translate('expired')}} </span>
                                         @else
                                         <span class="badge badge-soft-success"> {{ \App\CPU\translate('active')}} </span>
@@ -142,7 +142,7 @@
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 9 9" fill="none" class="svg replaced-svg">
                                                     <path d="M9 3.9375H5.0625V0H3.9375V3.9375H0V5.0625H3.9375V9H5.0625V5.0625H9V3.9375Z" fill="#00A3AD"></path>
                                                 </svg>
-                                                Add Product
+                                                {{\App\CPU\translate('Add_Product')}}
                                             </a>
 
                                             <a title="{{ trans ('Edit')}}" href="{{route('admin.deal.edit',[$deal['id']])}}" class="btn btn-outline--primary btn-sm edit">

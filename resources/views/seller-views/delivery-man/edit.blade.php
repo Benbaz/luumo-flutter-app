@@ -21,6 +21,10 @@
             @csrf
             <div class="card mb-3">
                 <div class="card-body">
+                    <h5 class="mb-0 page-header-title d-flex align-items-center gap-2 border-bottom pb-3 mb-3">
+                        <i class="tio-user"></i>
+                        {{\App\CPU\translate('General_Information')}}
+                    </h5>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
@@ -38,10 +42,20 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="title-color">{{\App\CPU\translate('phone')}}</label>
-                                <input type="text" name="phone" value="{{$delivery_man['phone']}}" class="form-control"
-                                        placeholder="{{\App\CPU\translate('Ex : 017********')}}"
-                                        required>
+                                <label class="title-color d-flex" for="exampleFormControlInput1">{{\App\CPU\translate('phone')}}</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <select class=" form-control js-example-basic-multiple js-states js-example-responsive"
+                                                name="country_code" id="colors-selector" required>
+                                            @foreach($telephone_codes as $code)
+                                                <option value="{{ $code['code'] }}" {{ $delivery_man['country_code'] == $code['code'] ? 'selected' : ''}}>
+                                                    {{ $code['name'] }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <input type="text" name="phone" value="{{$delivery_man['phone']}}" class="form-control" placeholder="{{\App\CPU\translate('Ex : 017********')}}"
+                                           required>
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -72,42 +86,53 @@
                                         placeholder="{{\App\CPU\translate('Ex : DH-23434-LS')}}"
                                         required>
                             </div>
+
+                            <div class="form-group">
+                                <label class="title-color d-flex">{{\App\CPU\translate('address')}}</label>
+                                <textarea name="address" class="form-control" id="address" rows="1" placeholder="Address">{{$delivery_man['address']}}</textarea>
+                            </div>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-lg-6">
-                            <center class="mb-4">
-                                <img class="upload-img-view" id="viewer"
-                                        src="{{asset('public\assets\back-end\img\400x400\img2.jpg')}}" alt="delivery-man image"/>
-                            </center>
-                            <center class="mb-4">
-                                <img class="upload-img-view"
-                                     src="{{asset('storage/app/public/delivery-man').'/'.$delivery_man['image']}}" alt="delivery-man image"/>
-                            </center>
                             <div class="form-group">
-                                <label class="title-color">{{\App\CPU\translate('deliveryman')}} {{\App\CPU\translate('image')}}</label>
-                                <span class="text-info">* ( {{\App\CPU\translate('ratio')}} 1:1 )</span>
-                                <div class="custom-file">
-                                    <input type="file" name="image" id="customFileEg1" class="custom-file-input"
-                                            accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
-                                    <label class="custom-file-label title-color" for="customFileEg1">{{\App\CPU\translate('choose')}} {{\App\CPU\translate('file')}}</label>
+                                <div class="d-flex mb-2 gap-2 align-items-center">
+                                    <label
+                                        class="title-color mb-0">{{\App\CPU\translate('deliveryman')}} {{\App\CPU\translate('image')}}</label>
+                                    <span class="text-info">* ( {{\App\CPU\translate('ratio')}} 1:1 )</span>
                                 </div>
+                                <div class="form-group">
+                                    <div class="custom-file">
+                                        <input type="file" name="image" id="customFileEg1"
+                                               class="custom-file-input"
+                                               accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
+                                        <label class="custom-file-label"
+                                               for="customFileEg1">{{\App\CPU\translate('choose')}} {{\App\CPU\translate('file')}}</label>
+                                    </div>
+                                </div>
+                                <center>
+                                    <img class="upload-img-view" id="viewer"
+                                         src="{{asset('storage/app/public/delivery-man').'/'.$delivery_man['image']}}"
+                                         alt="delivery-man image"/>
+                                </center>
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group">
                                 <label class="title-color">{{\App\CPU\translate('identity')}} {{\App\CPU\translate('image')}}</label>
+
                                 <div>
-                                    <div class="row" id="coba"></div>
+                                    <div class="row" id="coba">
+                                        @foreach(json_decode($delivery_man['identity_image'],true) as $img)
+                                            <div class="col-md-4 mb-3">
+                                                <img height="150"
+                                                     src="{{asset('storage/app/public/delivery-man').'/'.$img}}">
+                                            </div>
+                                        @endforeach
+                                    </div>
                                 </div>
                             </div>
-
-                            @foreach(json_decode($delivery_man['identity_image'],true) as $img)
-                                <div class="mt-2">
-                                    <img height="150" src="{{asset('storage/app/public/delivery-man').'/'.$img}}">
-                                </div>
-                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -115,7 +140,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-lg-6">
+                        <div class="col-lg-4">
                             <div class="form-group">
                                 <label class="title-color">{{\App\CPU\translate('email')}}</label>
                                 <input type="email" value="{{$delivery_man['email']}}" name="email" class="form-control"
@@ -123,10 +148,16 @@
                                         required>
                             </div>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="col-lg-4">
                             <div class="form-group">
                                 <label class="title-color">{{\App\CPU\translate('password')}}</label>
                                 <input type="text" name="password" class="form-control" placeholder="{{\App\CPU\translate('Ex : password')}}">
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="title-color">{{\App\CPU\translate('confirm_password')}}</label>
+                                <input type="text" name="confirm_password" class="form-control" placeholder="{{\App\CPU\translate('Ex : password')}}">
                             </div>
                         </div>
                     </div>
@@ -144,6 +175,11 @@
 @endsection
 
 @push('script_2')
+    <script>
+        $(".js-example-responsive").select2({
+            width: 'resolve'
+        });
+    </script>
     <script>
         function readURL(input) {
             if (input.files && input.files[0]) {

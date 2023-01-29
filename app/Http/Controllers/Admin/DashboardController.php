@@ -43,6 +43,9 @@ class DashboardController extends Controller
 
 
         $top_store_by_earning = SellerWallet::select('seller_id', DB::raw('SUM(total_earning) as count'))
+            ->whereHas('seller', function ($query){
+                return $query;
+            })
             ->groupBy('seller_id')
             ->orderBy("count", 'desc')
             ->take(6)
@@ -58,9 +61,21 @@ class DashboardController extends Controller
             ->take(6)
             ->get();
 
-        $top_store_by_order_received = Order::where('seller_is', 'seller')
+        $top_store_by_order_received = Order::whereHas('seller', function ($query){
+                return $query;
+            })
+            ->where('seller_is', 'seller')
             ->select('seller_id', DB::raw('COUNT(id) as count'))
             ->groupBy('seller_id')
+            ->orderBy("count", 'desc')
+            ->take(6)
+            ->get();
+
+        $top_deliveryman = Order::with(['delivery_man'])
+            ->select('delivery_man_id', DB::raw('COUNT(delivery_man_id) as count'))
+            ->where(['seller_is'=> 'admin','order_status'=>'delivered'])
+            ->whereNotNull('delivery_man_id')
+            ->groupBy('delivery_man_id')
             ->orderBy("count", 'desc')
             ->take(6)
             ->get();
@@ -127,6 +142,7 @@ class DashboardController extends Controller
         $data['top_store_by_earning'] = $top_store_by_earning;
         $data['top_customer'] = $top_customer;
         $data['top_store_by_order_received'] = $top_store_by_order_received;
+        $data['top_deliveryman'] = $top_deliveryman;
 
         $admin_wallet = AdminWallet::where('admin_id', 1)->first();
         $data['inhouse_earning'] = $admin_wallet!=null?$admin_wallet->inhouse_earning:0;
@@ -187,7 +203,9 @@ class DashboardController extends Controller
         $customer_query = new User();
         $customer = self::common_query_order_stats($customer_query);
 
-        $store_query = new Shop();
+        $store_query = Shop::whereHas('seller', function($query){
+            return $query;
+        });
         $store = self::common_query_order_stats($store_query);
 
         $data = [

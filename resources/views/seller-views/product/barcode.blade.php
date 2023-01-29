@@ -2,12 +2,6 @@
 @section('title', $product->name . ' barcode ' . date('Y/m/d'))
 @push('css_or_js')
     <link rel="stylesheet" href="{{ asset('public/assets/back-end') }}/css/barcode.css" />
-    <style>
-        .barcode_image {
-            display: flex;
-            justify-content: center;
-        }
-    </style>
 @endpush
 @section('content')
     <div class="row m-2 show-div">
@@ -40,11 +34,11 @@
                                                 </span>
 
                                             @else
-                                                
+
                                                 <a href="{{route('seller.product.edit',[$product['id']])}}">
                                                     {{ \App\CPU\translate('update_your_product_code') }}
                                                 </a>
-                                                
+
                                             @endif
                                         </th>
                                         <th>{{ Str::limit($product->name, 20) }}</th>
@@ -96,7 +90,7 @@
             </div>
 
             @if ($product->code !== null)
-                <div class="barcode_image">{!! DNS1D::getBarcodeHTML($product->code, 'CODABAR') !!}</div>
+                <div class="barcode_image d-flex justify-content-center">{!! DNS1D::getBarcodeHTML($product->code, 'C128') !!}</div>
                 <div class="barcode_code text-capitalize">{{ \App\CPU\translate('code') }} : {{ $product->code }}</div>
             @else
                 <p class="text-danger">{{ \App\CPU\translate('please_update_product_code') }}</p>

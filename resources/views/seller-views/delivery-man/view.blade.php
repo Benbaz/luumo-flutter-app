@@ -186,7 +186,7 @@
                                 </a>
                             </td>
                             <td>
-                                <div class="text-wrap" style="width: 18rem;">
+                                <div class="text-wrap __w-18rem">
                                     <div class="d-flex mb-2">
                                         <label class="badge badge-soft-info">
                                             {{$review->rating}} <i class="tio-star"></i>

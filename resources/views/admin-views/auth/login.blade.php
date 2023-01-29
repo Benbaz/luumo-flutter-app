@@ -28,8 +28,8 @@
 
 <!-- ========== MAIN CONTENT ========== -->
 <main id="content" role="main" class="main">
-    <div class="position-fixed top-0 right-0 left-0 bg-img-hero"
-         style="height: 32rem; background-image: url({{asset('public/assets/admin')}}/svg/components/abstract-bg-4.svg);">
+    <div class="position-fixed top-0 right-0 left-0 bg-img-hero __inline-1"
+         style="background-image: url({{asset('public/assets/admin')}}/svg/components/abstract-bg-4.svg);">
         <!-- SVG Bottom Shape -->
         <figure class="position-absolute right-0 bottom-0 left-0">
             <svg preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 1921 273">
@@ -41,7 +41,7 @@
 
     <!-- Content -->
     <div class="container py-5 py-sm-7">
-        <label class="badge badge-soft-success float-right" style="z-index: 9;position: absolute;right: 0.5rem;top: 0.5rem;">{{\App\CPU\translate('Software version')}} : {{ env('SOFTWARE_VERSION') }}</label>
+        <label class="badge badge-soft-success float-right __inline-2">{{\App\CPU\translate('Software version')}} : {{ env('SOFTWARE_VERSION') }}</label>
         @php($e_commerce_logo=\App\Model\BusinessSetting::where(['type'=>'company_web_logo'])->first()->value)
         <a class="d-flex justify-content-center mb-5" href="javascript:">
             <img class="z-index-2" height="40" src="{{asset("storage/app/public/company/".$e_commerce_logo)}}" alt="Logo"

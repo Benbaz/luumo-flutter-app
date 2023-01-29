@@ -80,15 +80,6 @@
             </div>
         </div>
         @endif
-        <!-- Nav -->
-            <!-- <ul class="nav nav-tabs page-header-tabs">
-                <li class="nav-item">
-                    <a class="nav-link active" href="javascript:">
-                        {{\App\CPU\translate('Product reviews')}}
-                    </a>
-                </li>
-            </ul> -->
-        <!-- End Nav -->
 
         <!-- Card -->
         <div class="card">
@@ -242,9 +233,9 @@
                                             @foreach (json_decode($product->colors) as $key => $color)
                                                 <li>
 
-                                                    <label class="mb-0" style="background: {{ $color }};"
+                                                    <label class="d-block p-2" style="background: {{ $color }};"
                                                         for="{{ $product->id }}-color-{{ $key }}"
-                                                        data-toggle="tooltip"></label>
+                                                        ></label>
                                                 </li>
                                             @endforeach
                                         </ul>
@@ -333,7 +324,7 @@
                                 </div>
                             </td>
                             <td>
-                                {{date('d M Y H:i:s',strtotime($review['created_at']))}}
+                                {{date('d M Y H:i:s',strtotime($review['updated_at']))}}
                             </td>
                         </tr>
                         @endif

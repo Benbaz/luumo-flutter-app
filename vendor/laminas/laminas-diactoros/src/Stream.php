@@ -7,7 +7,6 @@ namespace Laminas\Diactoros;
 use GdImage;
 use Psr\Http\Message\StreamInterface;
 use RuntimeException;
-use Stringable;
 use Throwable;
 
 use function array_key_exists;
@@ -35,7 +34,7 @@ use const SEEK_SET;
 /**
  * Implementation of PSR HTTP streams
  */
-class Stream implements StreamInterface, Stringable
+class Stream implements StreamInterface
 {
     /**
      * A list of allowed stream resource types that are allowed to instantiate a Stream
@@ -73,7 +72,7 @@ class Stream implements StreamInterface, Stringable
             }
 
             return $this->getContents();
-        } catch (RuntimeException) {
+        } catch (RuntimeException $e) {
             return '';
         }
     }
@@ -353,7 +352,7 @@ class Stream implements StreamInterface, Stringable
      * @param mixed $resource Stream resource.
      * @psalm-assert-if-true resource $resource
      */
-    private function isValidStreamResourceType(mixed $resource): bool
+    private function isValidStreamResourceType($resource): bool
     {
         if (is_resource($resource)) {
             return in_array(get_resource_type($resource), self::ALLOWED_STREAM_RESOURCE_TYPES, true);

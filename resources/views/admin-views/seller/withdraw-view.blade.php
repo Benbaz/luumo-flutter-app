@@ -9,14 +9,6 @@
 
 @section('content')
     <div class="content container-fluid">
-        <!-- <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">{{\App\CPU\translate('Dashboard')}}</a>
-                </li>
-                <li class="breadcrumb-item"
-                    aria-current="page">{{\App\CPU\translate('Withdraw')}}</li>
-            </ol>
-        </nav> -->
 
         <!-- Page Title -->
         <div class="mb-3">

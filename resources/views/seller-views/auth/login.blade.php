@@ -24,9 +24,9 @@
 
 <body>
 <!-- ========== MAIN CONTENT ========== -->
-<main id="content" role="main" class="main" style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">
-    <div class="position-fixed top-0 right-0 left-0 bg-img-hero"
-         style="height: 32rem; background-image: url({{asset('public/assets/admin')}}/svg/components/abstract-bg-4.svg);">
+<main id="content" role="main" class="main">
+    <div class="position-fixed top-0 right-0 left-0 bg-img-hero __h-32rem"
+         style="background-image: url({{asset('public/assets/admin')}}/svg/components/abstract-bg-4.svg);">
         <!-- SVG Bottom Shape -->
         <figure class="position-absolute right-0 bottom-0 left-0">
             <svg preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 1921 273">
@@ -59,7 +59,7 @@
                                     <center><h1 class="h4 text-gray-900 mb-4">{{\App\CPU\translate('welcome_back_to_seller_login')}}</h1>
                                     </center>
                                 </div>
-                                
+
                             </div>
 
                             <!-- Form Group -->
@@ -67,7 +67,6 @@
                                 <label class="input-label" for="signinSrEmail">{{\App\CPU\translate('your_email')}}</label>
 
                                 <input type="email" class="form-control form-control-lg" name="email" id="signinSrEmail"
-                                       style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};"
                                        tabindex="1" placeholder="email@address.com" aria-label="email@address.com"
                                        required data-msg="Please enter a valid email address.">
                             </div>
@@ -76,7 +75,7 @@
                             <!-- Form Group -->
                             <div class="js-form-message form-group">
                                 <label class="input-label" for="signupSrPassword" tabindex="0">
-                                    <span class="d-flex justify-content-between align-items-center" style="direction: {{Session::get('direction')}}">
+                                    <span class="d-flex justify-content-between align-items-center">
                                       {{\App\CPU\translate('password')}}
                                             <a href="{{route('seller.auth.forgot-password')}}">
                                                 {{\App\CPU\translate('forgot_password')}}
@@ -86,7 +85,6 @@
 
                                 <div class="input-group input-group-merge">
                                     <input type="password" class="js-toggle-password form-control form-control-lg"
-                                           style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};"
                                            name="password" id="signupSrPassword" placeholder="8+ characters required"
                                            aria-label="8+ characters required" required
                                            data-msg="Your password is invalid. Please try again."
@@ -122,15 +120,15 @@
                                 <div id="recaptcha_element" class="w-100" data-type="image"></div>
                                 <br/>
                             @else
-                                <div class="row p-2">
+                                <div class="row py-2">
                                     <div class="col-6 pr-0">
-                                        <input type="text" class="form-control form-control-lg" name="default_captcha_value" value=""
+                                        <input type="text" class="form-control __h-40" name="default_captcha_value" value=""
                                             placeholder="{{\App\CPU\translate('Enter captcha value')}}" class="border-0" autocomplete="off">
                                     </div>
-                                    <div class="col-6 input-icons" class="bg-white rounded">
-                                        <a onclick="javascript:re_captcha();">
-                                            <img src="{{ URL('/seller/auth/code/captcha/1') }}" class="input-field w-90 h-75" id="default_recaptcha_id">
-                                            <i class="tio-refresh icon"></i>
+                                <div class="col-6 input-icons mb-2 w-100 rounded bg-white">
+                                        <a onclick="javascript:re_captcha();"  class="d-flex align-items-center align-items-center">
+                                            <img src="{{ URL('/seller/auth/code/captcha/1') }}" class="rounded __h-40" id="default_recaptcha_id">
+                                        <i class="tio-refresh position-relative cursor-pointer p-2"></i>
                                         </a>
                                     </div>
                                 </div>

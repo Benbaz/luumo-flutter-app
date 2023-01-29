@@ -46,19 +46,19 @@
                                     @php($priority=request()->has('priority')?request()->input('priority'):'')
                                     <select class="form-control border-color-c1 w-160"
                                             onchange="filter_tickets('priority',this.value)">
-                                        <option value="all">All Priority</option>
-                                        <option value="low" {{$priority=='low'?'selected':''}}>Low</option>
-                                        <option value="medium" {{$priority=='medium'?'selected':''}}>Medium</option>
-                                        <option value="high" {{$priority=='high'?'selected':''}}>High</option>
-                                        <option value="urgent" {{$priority=='urgent'?'selected':''}}>Urgent</option>
+                                        <option value="all">{{\App\CPU\translate('All_Priority')}}</option>
+                                        <option value="low" {{$priority=='low'?'selected':''}}>{{\App\CPU\translate('Low')}}</option>
+                                        <option value="medium" {{$priority=='medium'?'selected':''}}>{{\App\CPU\translate('Medium')}}</option>
+                                        <option value="high" {{$priority=='high'?'selected':''}}>{{\App\CPU\translate('High')}}</option>
+                                        <option value="urgent" {{$priority=='urgent'?'selected':''}}>{{\App\CPU\translate('Urgent')}}</option>
                                     </select>
 
                                     @php($status=request()->has('status')?request()->input('status'):'')
                                     <select class="form-control border-color-c1 w-160"
                                             onchange="filter_tickets('status',this.value)">
-                                        <option value="all">All Status</option>
-                                        <option value="open" {{$status=='open'?'selected':''}}>Open</option>
-                                        <option value="close" {{$status=='close'?'selected':''}}>Close</option>
+                                        <option value="all">{{\App\CPU\translate('All_Status')}}</option>
+                                        <option value="open" {{$status=='open'?'selected':''}}>{{\App\CPU\translate('Open')}}</option>
+                                        <option value="close" {{$status=='close'?'selected':''}}>{{\App\CPU\translate('Close')}}</option>
                                     </select>
                                 </div>
                             </div>
@@ -79,10 +79,10 @@
                                             <div class="mb-2 fz-12 {{Session::get('direction') === "rtl" ? 'text-right' : 'text-left'}}">{{$ticket->customer->email??""}}</div>
                                             <div class="d-flex flex-wrap gap-2 align-items-center">
                                                 <span
-                                                    class="badge-soft-danger fz-12 font-weight-bold px-2 radius-50">{{$ticket->priority}}</span>
+                                                    class="badge-soft-danger fz-12 font-weight-bold px-2 radius-50">{{\App\CPU\translate(str_replace('_',' ',$ticket->priority))}}</span>
                                                 <span
-                                                    class="badge-soft-info fz-12 font-weight-bold px-2 radius-50">{{$ticket->status}}</span>
-                                                <h6 class="mb-0">{{$ticket->type}}</h6>
+                                                    class="badge-soft-info fz-12 font-weight-bold px-2 radius-50">{{\App\CPU\translate(str_replace('_',' ',$ticket->status))}}</span>
+                                                <h6 class="mb-0">{{\App\CPU\translate(str_replace('_',' ',$ticket->type))}}</h6>
                                                 <div class="text-nowrap {{Session::get('direction') === "rtl" ? 'pr-9' : 'pl-9'}}">
                                                     {{date('d/M/Y H:i a',strtotime($ticket->created_at))}}
                                                 </div>

@@ -68,6 +68,29 @@ Route::group(['namespace' => 'Seller', 'prefix' => 'seller', 'as' => 'seller.'],
             Route::post('bulk-import', 'ProductController@bulk_import_data');
             Route::get('bulk-export', 'ProductController@bulk_export_data')->name('bulk-export');
         });
+
+        Route::group(['prefix' => 'report', 'as' => 'report.'], function () {
+            Route::get('all-product', 'ReportController@all_product')->name('all-product');
+            Route::get('stock-product-report', 'ReportController@stock_product_report')->name('stock-product-report');
+            Route::get('order-report', 'ReportController@order_report')->name('order-report');
+            Route::any('set-date', 'ReportController@set_date')->name('set-date');
+        });
+
+        Route::group(['prefix' => 'coupon', 'as' => 'coupon.'], function () {
+            Route::get('add-new', 'CouponController@add_new')->name('add-new')->middleware('actch');
+            Route::post('store-coupon', 'CouponController@store')->name('store-coupon');
+            Route::get('update/{id}', 'CouponController@edit')->name('update')->middleware('actch');
+            Route::post('update/{id}', 'CouponController@update');
+            Route::get('quick-view-details', 'CouponController@quick_view_details')->name('quick-view-details');
+            Route::get('status/{id}/{status}', 'CouponController@status_update')->name('status');
+            Route::delete('delete/{id}', 'CouponController@delete')->name('delete');
+
+        });
+        Route::group(['prefix' => 'transaction', 'as' => 'transaction.'], function () {
+            Route::get('order-list', 'TransactionController@order_list')->name('order-list');
+            Route::get('transaction-export', 'TransactionController@export')->name('transaction-export');
+            Route::get('expense-list', 'TransactionController@expense_list')->name('expense-list');
+        });
         //refund request
         Route::group(['prefix' => 'refund', 'as' => 'refund.'], function () {
             Route::get('list/{status}', 'RefundController@list')->name('list');
@@ -81,6 +104,7 @@ Route::group(['namespace' => 'Seller', 'prefix' => 'seller', 'as' => 'seller.'],
             Route::get('details/{id}', 'OrderController@details')->name('details');
             Route::get('generate-invoice/{id}', 'OrderController@generate_invoice')->name('generate-invoice');
             Route::post('status', 'OrderController@status')->name('status');
+            Route::post('amount-date-update', 'OrderController@amount_date_update')->name('amount-date-update');
             Route::post('productStatus', 'OrderController@productStatus')->name('productStatus');
             Route::post('payment-status', 'OrderController@payment_status')->name('payment-status');
             Route::post('digital-file-upload-after-sell', 'OrderController@digital_file_upload_after_sell')->name('digital-file-upload-after-sell');
@@ -132,9 +156,9 @@ Route::group(['namespace' => 'Seller', 'prefix' => 'seller', 'as' => 'seller.'],
 
         // Messaging
         Route::group(['prefix' => 'messages', 'as' => 'messages.'], function () {
-            Route::get('/chat', 'ChattingController@chat')->name('chat');
-            Route::get('/message-by-user', 'ChattingController@message_by_user')->name('message_by_user');
-            Route::post('/seller-message-store', 'ChattingController@seller_message_store')->name('seller_message_store');
+            Route::get('/chat/{type}', 'ChattingController@chat')->name('chat');
+            Route::get('/ajax-message-by-user', 'ChattingController@ajax_message_by_user')->name('ajax-message-by-user');
+            Route::post('/ajax-seller-message-store', 'ChattingController@ajax_seller_message_store')->name('ajax-seller-message-store');
         });
         // profile
 
@@ -195,6 +219,27 @@ Route::group(['namespace' => 'Seller', 'prefix' => 'seller', 'as' => 'seller.'],
             Route::delete('delete/{id}', 'DeliveryManController@delete')->name('delete');
             Route::post('search', 'DeliveryManController@search')->name('search');
             Route::post('status-update', 'DeliveryManController@status')->name('status-update');
+            Route::get('earning-statement/{id}', 'DeliveryManController@earning_statement')->name('earning-statement');
+            Route::get('collect-cash/{id}', 'DeliveryManCashCollectController@collect_cash')->name('collect-cash');
+            Route::post('cash-receive/{id}', 'DeliveryManCashCollectController@cash_receive')->name('cash-receive');
+            Route::get('withdraw-list', 'DeliverymanWithdrawController@withdraw')->name('withdraw-list');
+            Route::get('withdraw-list-export', 'DeliverymanWithdrawController@export')->name('withdraw-list-export');
+            Route::post('status-filter', 'DeliverymanWithdrawController@status_filter')->name('status-filter');
+            Route::get('withdraw-view/{withdraw_id}', 'DeliverymanWithdrawController@withdraw_view')->name('withdraw-view');
+            Route::post('withdraw-status/{id}', 'DeliverymanWithdrawController@withdrawStatus')->name('withdraw_status');
+
+            Route::get('order-history-log/{id}', 'DeliveryManController@order_history_log')->name('order-history-log');
+            Route::get('order-wise-earning/{id}', 'DeliveryManController@order_wise_earning')->name('order-wise-earning');
+            Route::get('ajax-order-status-history/{order}', 'DeliveryManController@ajax_order_status_history')->name('ajax-order-status-history');
+
+            Route::group(['prefix' => 'emergency-contact', 'as' => 'emergency-contact.'], function (){
+                Route::get('/', 'EmergencyContactController@emergency_contact')->name('index');
+                Route::post('add', 'EmergencyContactController@add')->name('add');
+                Route::post('ajax-status-change', 'EmergencyContactController@ajax_status_change')->name('ajax-status-change');
+                Route::delete('destroy', 'EmergencyContactController@destroy')->name('destroy');
+            });
+
+            Route::get('rating/{id}', 'DeliveryManController@rating')->name('rating');
         });
     });
 

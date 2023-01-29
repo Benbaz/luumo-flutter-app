@@ -67,7 +67,7 @@ class ProductController extends BaseController
     public function view($id)
     {
         $product = Product::with(['reviews'])->where(['id' => $id])->first();
-        $reviews = Review::where(['product_id' => $id])->paginate(Helpers::pagination_limit());
+        $reviews = Review::where(['product_id' => $id])->whereNull('delivery_man_id')->paginate(Helpers::pagination_limit());
         return view('admin-views.product.view', compact('product', 'reviews'));
     }
 
@@ -515,7 +515,7 @@ class ProductController extends BaseController
     public function get_categories(Request $request)
     {
         $cat = Category::where(['parent_id' => $request->parent_id])->get();
-        $res = '<option value="' . 0 . '" disabled selected>---Select---</option>';
+        $res = '<option value="' . 0 . '" disabled selected>---'.translate("Select").'---</option>';
         foreach ($cat as $row) {
             if ($row->id == $request->sub_category) {
                 $res .= '<option value="' . $row->id . '" selected >' . $row->name . '</option>';

@@ -99,7 +99,7 @@
                                             </td>
                                             <td>
                                                 <label class="mx-auto switcher">
-                                                    <input type="checkbox" class="switcher_input" name="multiplyQTY[]"
+                                                    <input type="checkbox" class="status switcher_input" name="multiplyQTY[]"
                                                         id="" value="{{$item->id}}" {{$item->multiply_qty == 1?'checked':''}}>
                                                     <span class="switcher_control"></span>
                                                 </label>
@@ -157,7 +157,7 @@
                                         <div class="col-md-12">
                                             <label class="title-color" for="cost">{{\App\CPU\translate('cost')}}</label>
                                             <input type="number" min="0" max="1000000" name="cost" class="form-control"
-                                                placeholder="{{\App\CPU\translate('Ex')}} : {{\App\CPU\translate('10')}} ">
+                                                placeholder="{{\App\CPU\translate('Ex')}} :">
                                         </div>
                                     </div>
                                 </div>
@@ -211,7 +211,7 @@
 
                                         <td>
                                             <label class="switcher mx-auto">
-                                                <input type="checkbox" class="switcher_input"
+                                                <input type="checkbox" class="status switcher_input"
                                                     id="{{$method['id']}}" {{$method->status == 1?'checked':''}}>
                                                 <span class="switcher_control"></span>
                                             </label>
@@ -377,7 +377,7 @@
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: '{{\App\CPU\translate('Yes, delete it')}}!',
+            confirmButtonText: '{{\App\CPU\translate('Yes')}}, {{\App\CPU\translate('delete it')}}!',
             type: 'warning',
             reverseButtons: true
         }).then((result) => {

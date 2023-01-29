@@ -729,32 +729,24 @@
             <div class="col-md-6">
                 <div class="card h-100">
                     <div class="card-body">
-                        <div class="d-flex flex-wrap gap-2 justify-content-between mb-3">
-                            <h5 class="text-uppercase">{{\App\CPU\translate('mercadopago')}}</h5>
-
-                            <label class="switcher show-status-text">
-                                <input class="switcher_input" type="checkbox" checked="checked">
-                                <span class="switcher_control"></span>
-                            </label>
-                        </div>
-
                         @php($config=\App\CPU\Helpers::get_business_settings('mercadopago'))
                         <form
                             action="{{env('APP_MODE')!='demo'?route('admin.business-settings.payment-method.update',['mercadopago']):'javascript:'}}"
                             method="post">
-                        @csrf
+                            @csrf
+                            <div class="d-flex flex-wrap gap-2 justify-content-between mb-3">
+                                <h5 class="text-uppercase">{{\App\CPU\translate('mercadopago')}}</h5>
+
+                                <label class="switcher show-status-text">
+                                    <input class="switcher_input" type="checkbox"
+                                           name="status" value="1" {{$config['status']==1?'checked':''}}>
+                                    <span class="switcher_control"></span>
+                                </label>
+                            </div>
+
                         @if(isset($config))
                                 @php($config['environment'] = $config['environment']??'sandbox')
-                                <!-- <div class="d-flex flex-wrap gap-2 justify-content-between mb-3">
-                                    <h5 class="text-uppercase">{{\App\CPU\translate('fawry_pay')}}</h5>
-
-                                    <label class="switcher show-status-text">
-                                        <input class="switcher_input" type="checkbox"
-                                               name="status" value="1" {{$config['status']==1?'checked':''}}>
-                                        <span class="switcher_control"></span>
-                                    </label>
-                                </div> -->
-
+                            
                                 <center class="mb-3">
                                     <img height="60" src="{{asset('/public/assets/back-end/img/mercado.svg')}}" alt="">
                                 </center>

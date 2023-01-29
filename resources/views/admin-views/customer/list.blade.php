@@ -45,7 +45,7 @@
                         <div class="d-flex justify-content-sm-end">
                             <button type="button" class="btn btn-outline--primary" data-toggle="dropdown">
                                 <i class="tio-download-to"></i>
-                                Export
+                                {{\App\CPU\translate('export')}}
                                 <i class="tio-chevron-down"></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-right">
@@ -92,9 +92,11 @@
                             </td>
                             <td>
                                 <div class="mb-1">
-                                    <strong>{{$customer->email}}</strong>
+                                    <strong><a class="title-color hover-c1" href="mailto:{{$customer->email}}">{{$customer->email}}</a></strong>
+
                                 </div>
-                                {{$customer['phone']}}
+                                <a class="title-color hover-c1" href="tel:{{$customer->phone}}">{{$customer->phone}}</a>
+
                             </td>
                             <td>
                                 <label class="btn text-info bg-soft-info font-weight-bold px-3 py-1 mb-0 fz-12">

@@ -27,7 +27,7 @@
                 <div class="row">
                     <div class="col-12">
                         <center>
-                            <h2 style="color: rgba(96,96,96,0.68)">
+                            <h2 class="__color-8a8a8a">
                                 <i class="tio-shopping-cart-outlined"></i> You have new order, Check Please.
                             </h2>
                             <hr>

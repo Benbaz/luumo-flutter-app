@@ -22,7 +22,7 @@
         <h1 class="h3 mb-0 text-black-50">{{\App\CPU\translate('Seller')}} : {{$seller['f_name'].' '.$seller['l_name']}} , {{\App\CPU\translate('ID')}} : {{$seller['id']}}</h1>
     </div>
 
-    <div class="row" style="margin-top: 20px">
+    <div class="row __mt-20">
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
@@ -40,7 +40,7 @@
                                     <th>{{\App\CPU\translate('Status')}} </th>
                                     <th>{{\App\CPU\translate('Payment')}}</th>
 
-                                    <th style="width: 30px">{{\App\CPU\translate('Action')}}</th>
+                                    <th class="__w-30px">{{\App\CPU\translate('Action')}}</th>
                                 </tr>
                                 </thead>
                             <tbody>

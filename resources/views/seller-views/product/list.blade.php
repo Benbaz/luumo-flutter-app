@@ -44,11 +44,11 @@
                                 <div>
                                     <button type="button" class="btn btn-outline--primary" data-toggle="dropdown">
                                         <i class="tio-download-to"></i>
-                                        Export
+                                        {{\App\CPU\translate('export')}}
                                         <i class="tio-chevron-down"></i>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-right">
-                                        <li><a class="dropdown-item" href="{{ route('seller.product.bulk-export') }}">Excel</a></li>
+                                        <li><a class="dropdown-item" href="{{ route('seller.product.bulk-export') }}">{{\App\CPU\translate('excel')}}</a></li>
                                         <div class="dropdown-divider"></div>
                                     </ul>
                                 </div>
@@ -76,7 +76,7 @@
                                 <th>{{\App\CPU\translate('selling_price')}}</th>
                                 <th>{{\App\CPU\translate('verify_status')}}</th>
                                 <th>{{\App\CPU\translate('Active')}} {{\App\CPU\translate('status')}}</th>
-                                <th style="width: 5px" class="text-center">{{\App\CPU\translate('Action')}}</th>
+                                <th class="text-center __w-5px">{{\App\CPU\translate('Action')}}</th>
                             </tr>
                             </thead>
                             <tbody>

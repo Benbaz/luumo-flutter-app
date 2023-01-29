@@ -23,7 +23,7 @@
                     <!-- Avatar -->
                     <div class="avatar avatar-xl avatar-4by3">
                         <img class="avatar-img" src="{{asset('public/assets/back-end')}}/svg/illustrations/earnings.png"
-                            alt="Image Description">
+                             alt="Image Description">
                     </div>
                     <!-- End Avatar -->
 
@@ -78,13 +78,13 @@
                                 <div class="col-sm-6 col-lg-4">
                                     <div class="mb-3">
                                         <input type="date" name="from" value="{{date('Y-m-d',strtotime($from))}}" id="from_date"
-                                            class="form-control" required>
+                                               class="form-control" required>
                                     </div>
                                 </div>
                                 <div class="col-sm-6 col-lg-4">
                                     <div class="mb-3">
                                         <input type="date" value="{{date('Y-m-d',strtotime($to))}}" name="to" id="to_date"
-                                            class="form-control" required>
+                                               class="form-control" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -99,9 +99,9 @@
             </div>
 
             @php
-               $total_tax=\App\Model\OrderTransaction::where(['status'=>'disburse'])
-               ->whereBetween('created_at', [$from, $to])
-               ->sum('tax');
+                $total_tax=\App\Model\OrderTransaction::where(['status'=>'disburse'])
+                ->whereBetween('created_at', [$from, $to])
+                ->sum('tax');
             @endphp
             @php
                 $total_earning =\App\Model\OrderTransaction::where(['status'=>'disburse'])
@@ -284,73 +284,73 @@
             </div>
             <!-- End Header -->
 
-        @php
-            $sold=[];
+            @php
+                $sold=[];
 
-            $from = \Carbon\Carbon::now()->startOfYear()->format('Y-m-d');
-            $to = \Carbon\Carbon::now()->endOfYear()->format('Y-m-d');
+                $from = \Carbon\Carbon::now()->startOfYear()->format('Y-m-d');
+                $to = \Carbon\Carbon::now()->endOfYear()->format('Y-m-d');
 
-            $data=\App\Model\OrderTransaction::where(['status'=>'disburse'])->select(
-            \Illuminate\Support\Facades\DB::raw('SUM(order_amount) as sum'),
-            \Illuminate\Support\Facades\DB::raw('YEAR(created_at) year, MONTH(created_at) month')
-            )->whereBetween('created_at', [$from, $to])->groupby('year', 'month')->get()->toArray();
+                $data=\App\Model\OrderTransaction::where(['status'=>'disburse'])->select(
+                \Illuminate\Support\Facades\DB::raw('SUM(order_amount) as sum'),
+                \Illuminate\Support\Facades\DB::raw('YEAR(created_at) year, MONTH(created_at) month')
+                )->whereBetween('created_at', [$from, $to])->groupby('year', 'month')->get()->toArray();
 
-            for ($inc = 1; $inc <= 12; $inc++) {
-            $sold[$inc] = 0;
-            foreach ($data as $match) {
-                if ($match['month'] == $inc) {
-                    $sold[$inc] = $match['sum'];
+                for ($inc = 1; $inc <= 12; $inc++) {
+                $sold[$inc] = 0;
+                foreach ($data as $match) {
+                    if ($match['month'] == $inc) {
+                        $sold[$inc] = $match['sum'];
+                    }
                 }
             }
-        }
-        @endphp
+            @endphp
 
-        @php
-            $tax=[];
+            @php
+                $tax=[];
 
-            $from = \Carbon\Carbon::now()->startOfYear()->format('Y-m-d');
-            $to = \Carbon\Carbon::now()->endOfYear()->format('Y-m-d');
+                $from = \Carbon\Carbon::now()->startOfYear()->format('Y-m-d');
+                $to = \Carbon\Carbon::now()->endOfYear()->format('Y-m-d');
 
-            $data=\App\Model\OrderTransaction::where(['status'=>'disburse'])->select(
-            \Illuminate\Support\Facades\DB::raw('SUM(tax) as sum'),
-            \Illuminate\Support\Facades\DB::raw('YEAR(created_at) year, MONTH(created_at) month')
-            )->whereBetween('created_at', [$from, $to])->groupby('year', 'month')->get()->toArray();
+                $data=\App\Model\OrderTransaction::where(['status'=>'disburse'])->select(
+                \Illuminate\Support\Facades\DB::raw('SUM(tax) as sum'),
+                \Illuminate\Support\Facades\DB::raw('YEAR(created_at) year, MONTH(created_at) month')
+                )->whereBetween('created_at', [$from, $to])->groupby('year', 'month')->get()->toArray();
 
-            for ($inc = 1; $inc <= 12; $inc++) {
-            $tax[$inc] = 0;
-            foreach ($data as $match) {
-                if ($match['month'] == $inc) {
-                    $tax[$inc] = $match['sum'];
+                for ($inc = 1; $inc <= 12; $inc++) {
+                $tax[$inc] = 0;
+                foreach ($data as $match) {
+                    if ($match['month'] == $inc) {
+                        $tax[$inc] = $match['sum'];
+                    }
                 }
             }
-        }
-        @endphp
-        @php
-            $commission=[];
+            @endphp
+            @php
+                $commission=[];
 
-            $from = \Carbon\Carbon::now()->startOfYear()->format('Y-m-d');
-            $to = \Carbon\Carbon::now()->endOfYear()->format('Y-m-d');
+                $from = \Carbon\Carbon::now()->startOfYear()->format('Y-m-d');
+                $to = \Carbon\Carbon::now()->endOfYear()->format('Y-m-d');
 
-            $data=\App\Model\OrderTransaction::where(['status'=>'disburse'])->select(
-            \Illuminate\Support\Facades\DB::raw('SUM(admin_commission) as sum'),
-            \Illuminate\Support\Facades\DB::raw('YEAR(created_at) year, MONTH(created_at) month')
-            )->whereBetween('created_at', [$from, $to])->groupby('year', 'month')->get()->toArray();
+                $data=\App\Model\OrderTransaction::where(['status'=>'disburse'])->select(
+                \Illuminate\Support\Facades\DB::raw('SUM(admin_commission) as sum'),
+                \Illuminate\Support\Facades\DB::raw('YEAR(created_at) year, MONTH(created_at) month')
+                )->whereBetween('created_at', [$from, $to])->groupby('year', 'month')->get()->toArray();
 
-            for ($inc = 1; $inc <= 12; $inc++) {
-            $commission[$inc] = 0;
-            foreach ($data as $match) {
-                if ($match['month'] == $inc) {
-                    $commission[$inc] = $match['sum'];
+                for ($inc = 1; $inc <= 12; $inc++) {
+                $commission[$inc] = 0;
+                foreach ($data as $match) {
+                    if ($match['month'] == $inc) {
+                        $commission[$inc] = $match['sum'];
+                    }
                 }
             }
-        }
-        @endphp
+            @endphp
 
 
-        <!-- Body -->
+                <!-- Body -->
             <div class="card-body">
                 <!-- Bar Chart -->
-                <div class="chartjs-custom" style="height: 18rem;">
+                <div class="chartjs-custom __h-18rem">
                     <canvas class="js-chart"
                             data-hs-chartjs-options='{
                         "type": "line",
@@ -666,3 +666,4 @@
         })
     </script>
 @endpush
+

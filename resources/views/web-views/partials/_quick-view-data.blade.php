@@ -122,7 +122,7 @@
 </div>
 
 <div class="modal-body rtl">
-    <div class="row ">
+    <div class="row g-3">
         <div class="col-lg-6 col-md-6">
             <div class="cz-product-gallery">
                 <div class="cz-preview">
@@ -137,50 +137,46 @@
                         @endforeach
                     @endif
                 </div>
-                <div class="row">
-                    <div class="table-responsive" style="max-height: 515px; padding: 0px;">
-                        <div class="d-flex">
-                            @if($product->images!=null && json_decode($product->images)>0)
-                                @foreach (json_decode($product->images) as $key => $photo)
-                                    <div class="cz-thumblist">
-                                        <a href="javascript:" class=" cz-thumblist-item d-flex align-items-center justify-content-center">
-                                            <img class="click-img" src="{{asset("storage/app/public/product/$photo")}}"
-                                                 onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
-                                                 alt="Product thumb">
-                                        </a>
-                                    </div>
-                                @endforeach
-                            @endif
-                        </div>
+                <div class="table-responsive" style="max-height: 515px;">
+                    <div class="d-flex">
+                        @if($product->images!=null && json_decode($product->images)>0)
+                            @foreach (json_decode($product->images) as $key => $photo)
+                                <div class="cz-thumblist">
+                                    <a href="javascript:" class=" cz-thumblist-item d-flex align-items-center justify-content-center">
+                                        <img class="click-img" src="{{asset("storage/app/public/product/$photo")}}"
+                                                onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
+                                                alt="Product thumb">
+                                    </a>
+                                </div>
+                            @endforeach
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
         <!-- Product details-->
-        <div class="col-lg-6 col-md-6 mt-md-0 mt-sm-3">
-            <div class="details" style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">
+        <div class="col-lg-6 col-md-6">
+            <div class="details __h-100">
                 <a href="{{route('product',$product->slug)}}" class="h3 mb-2 product-title">{{$product->name}}</a>
-                <div class="d-flex align-items-center mb-2 pro">
-                    <span
-                        class="d-inline-block font-size-sm text-body align-middle mt-1 {{Session::get('direction') === "rtl" ? 'ml-2 pl-2' : 'mr-2 pr-2'}}">{{$overallRating[0]}}</span>
-                    <div class="star-rating">
-                        @for($inc=0;$inc<5;$inc++)
-                            @if($inc<$overallRating[0])
-                                <i class="sr-star czi-star-filled active"></i>
-                            @else
-                                <i class="sr-star czi-star"></i>
-                            @endif
-                        @endfor
-                    </div>
-                    <div>
-                        <span
-                        class="d-inline-block font-size-sm text-body align-middle mt-1 {{Session::get('direction') === "rtl" ? 'ml-2 mr-1' : 'ml-1 mr-2'}} pl-2 pr-2">{{$overallRating[1]}} {{\App\CPU\translate('reviews')}}</span>
+                <div class="d-flex flex-wrap align-items-center mb-2 pro">
+                    <div class="d-flex flex-wrap align-items-center">
+                        <span class="d-inline-block font-size-sm text-body align-middle mt-1 {{Session::get('direction') === "rtl" ? 'ml-2 pl-2' : 'mr-2 pr-2'}}">{{$overallRating[0]}}</span>
+                        <div class="star-rating">
+                            @for($inc=0;$inc<5;$inc++)
+                                @if($inc<$overallRating[0])
+                                    <i class="sr-star czi-star-filled active"></i>
+                                @else
+                                    <i class="sr-star czi-star"></i>
+                                @endif
+                            @endfor
+                        </div>
+                        <span class="d-inline-block font-size-sm text-body align-middle mt-1 {{Session::get('direction') === "rtl" ? 'ml-2 mr-1' : 'ml-1 mr-2'}} pl-2 pr-2">{{$overallRating[1]}} {{\App\CPU\translate('reviews')}}</span>
                         <span style="width: 0px;height: 10px;border: 0.5px solid #707070; margin-top: 6px"></span>
                         <span
                             class="d-inline-block font-size-sm text-body align-middle mt-1 {{Session::get('direction') === "rtl" ? 'ml-2 mr-1' : 'ml-1 mr-2'}} pl-2 pr-2">{{$countOrder}} {{\App\CPU\translate('orders')}}  </span>
                         <span style="width: 0px;height: 10px;border: 0.5px solid #707070; margin-top: 6px">    </span>
                         <span
-                            class="d-inline-block font-size-sm text-body align-middle mt-1 {{Session::get('direction') === "rtl" ? 'ml-2 mr-1' : 'ml-1 mr-2'}} pl-2 pr-2">  {{$countWishlist}}  {{\App\CPU\translate('wish')}}</span>
+                            class="d-inline-block font-size-sm text-body align-middle mt-1 {{Session::get('direction') === "rtl" ? 'ml-2 mr-1' : 'ml-1 mr-2'}} pl-2 pr-2">  {{$countWishlist}}  {{\App\CPU\translate('wishlist')}}</span>
 
                     </div>
                 </div>
@@ -214,11 +210,11 @@
                     <div class="position-relative {{Session::get('direction') === "rtl" ? 'ml-n4' : 'mr-n4'}} mb-3">
                         @if (count(json_decode($product->colors)) > 0)
                             <div class="flex-start">
-                                <div class="product-description-label mt-2">
+                                <div class="product-description-label mt-1">
                                     {{\App\CPU\translate('color')}}:
                                 </div>
-                                <div class="">
-                                    <ul class="flex-start checkbox-color mb-1" style="list-style: none;">
+                                <div class="__pl-15">
+                                    <ul class="flex-start checkbox-color mb-0 p-0" style="list-style: none;">
                                         @foreach (json_decode($product->colors) as $key => $color)
                                             <li>
                                                 <input type="radio"
@@ -227,7 +223,9 @@
                                                        @if($key == 0) checked @endif>
                                                 <label style="background: {{ $color }};"
                                                        for="{{ $product->id }}-color-{{ $key }}"
-                                                       data-toggle="tooltip"></label>
+                                                       data-toggle="tooltip">
+                                                       <span class="outline" style="border-color: {{ $color }}"></span>
+                                                    </label>
                                             </li>
                                         @endforeach
                                     </ul>
@@ -244,7 +242,7 @@
                     </div>
                     @foreach (json_decode($product->choice_options) as $key => $choice)
                         <div class="flex-start">
-                            <div class="product-description-label mt-2 ">
+                            <div class="product-description-label mt-1">
                                 {{ $choice->title }}:
                             </div>
                             <div>
@@ -264,40 +262,36 @@
                     @endforeach
 
                 <!-- Quantity + Add to cart -->
-                    <div class="row no-gutters">
-                        <div class="col-2">
-                            <div class="product-description-label mt-2">{{\App\CPU\translate('Quantity')}}:</div>
-                        </div>
-                        <div class="col-10">
-                            <div class="product-quantity d-flex align-items-center">
-                                <div class="input-group input-group--style-2 pr-3"
-                                     style="width: 160px;">
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-number" type="button"
-                                                data-type="minus" data-field="quantity"
-                                                disabled="disabled" style="padding: 10px">
-                                            -
-                                        </button>
-                                    </span>
-                                    <input type="text" name="quantity"
-                                           class="form-control input-number text-center cart-qty-field"
-                                           placeholder="1" value="{{ $product->minimum_order_qty ?? 1 }}" product-type="{{ $product->product_type }}" min="{{ $product->minimum_order_qty ?? 1 }}" max="100">
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-number" product-type="{{ $product->product_type }}" type="button" data-type="plus"
-                                                data-field="quantity" style="padding: 10px">
-                                           +
-                                        </button>
-                                    </span>
-                                </div>
+                    <div class="d-flex __gap-6 mt-0">
+                        <div class="product-description-label mt-2 mr-2">{{\App\CPU\translate('Quantity')}}:</div>
+                        <div class="product-quantity d-flex align-items-center">
+                            <div class="input-group input-group--style-2 pr-3"
+                                    style="width: 160px;">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-number" type="button"
+                                            data-type="minus" data-field="quantity"
+                                            disabled="disabled" style="padding: 10px">
+                                        -
+                                    </button>
+                                </span>
+                                <input type="text" name="quantity"
+                                        class="form-control input-number text-center cart-qty-field"
+                                        placeholder="1" value="{{ $product->minimum_order_qty ?? 1 }}" product-type="{{ $product->product_type }}" min="{{ $product->minimum_order_qty ?? 1 }}" max="100">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-number" product-type="{{ $product->product_type }}" type="button" data-type="plus"
+                                            data-field="quantity" style="padding: 10px">
+                                        +
+                                    </button>
+                                </span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="row no-gutters d-none mt-2" id="chosen_price_div">
-                        <div class="col-2">
+                    <div class="d-flex flex-wrap mt-3 __gap-15" id="chosen_price_div">
+                        <div>
                             <div class="product-description-label">{{\App\CPU\translate('Total Price')}}:</div>
                         </div>
-                        <div class="col-10">
+                        <div>
                             <div class="product-price">
                                 <strong id="chosen_price"></strong>
                             </div>
@@ -309,22 +303,15 @@
                         </div>
                     </div>
                     {{--to do--}}
-                    <div class="d-flex justify-content-between mt-2">
-                        <button class="btn btn-secondary" onclick="buy_now()"
-                                type="button"
-                                style="width:37%; height: 45px">
+                    <div class="__btn-grp mt-2">
+                        <button class="btn btn-secondary" onclick="buy_now()" type="button">
                             {{\App\CPU\translate('buy_now')}}
                         </button>
-                        <button class="btn btn--primary string-limit"
-                                onclick="addToCart()"
-                                type="button"
-                                style="width:37%; height: 45px">
+                        <button class="btn btn--primary string-limit" onclick="addToCart()" type="button">
                             {{\App\CPU\translate('add_to_cart')}}
                         </button>
-                        <button type="button" onclick="addWishlist('{{$product['id']}}')"
-                                class="btn btn-dark for-hover-bg string-limit"
-                                style="">
-                            <i class="fa fa-heart-o {{Session::get('direction') === "rtl" ? 'ml-2' : 'mr-2'}}"
+                        <button type="button" onclick="addWishlist('{{$product['id']}}')" class="text-danger btn string-limit">
+                            <i class="fa fa-heart-o mr-2"
                                aria-hidden="true"></i>
                             <span class="countWishlist-{{$product['id']}}">{{$countWishlist}}</span>
                         </button>
@@ -335,7 +322,6 @@
         </div>
     </div>
 </div>
-
 <script type="text/javascript">
     cartQuantityInitialize();
     getVariantPrice();

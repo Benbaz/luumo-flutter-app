@@ -88,7 +88,7 @@
                             <div class="col-md-4" id="digital_product_type_show">
                                 <label for="digital_product_type" class="title-color">{{ \App\CPU\translate("digital_product_type") }}</label>
                                 <select name="digital_product_type" id="digital_product_type" class="form-control" required>
-                                    <option value="{{ old('category_id') }}" selected disabled>---Select---</option>
+                                    <option value="{{ old('category_id') }}" selected disabled>---{{ \App\CPU\translate('Select') }}---</option>
                                     <option value="ready_after_sell">{{ \App\CPU\translate("Ready After Sell") }}</option>
                                     <option value="ready_product">{{ \App\CPU\translate("Ready Product") }}</option>
                                 </select>
@@ -108,8 +108,7 @@
                                 <select class="js-example-basic-multiple form-control" name="category_id"
                                     onchange="getRequest('{{ url('/') }}/admin/product/get-categories?parent_id='+this.value,'sub-category-select','select')"
                                     required>
-                                    <option value="{{ old('category_id') }}" selected disabled>---Select---
-                                    </option>
+                                    <option value="{{ old('category_id') }}" selected disabled>---{{ \App\CPU\translate('Select') }}---</option>
                                     @foreach ($cat as $c)
                                         <option value="{{ $c['id'] }}"
                                             {{ old('name') == $c['id'] ? 'selected' : '' }}>
@@ -141,8 +140,7 @@
                                     <label class="title-color"
                                         for="exampleFormControlInput1">{{ \App\CPU\translate('product_code_sku') }}
                                         <span class="text-danger">*</span>
-                                        <a class="style-one-pro" style="cursor: pointer;"
-                                            onclick="document.getElementById('generate_number').value = getRndInteger()">{{ \App\CPU\translate('generate') }}
+                                        <a class="style-one-pro cursor-pointer" onclick="document.getElementById('generate_number').value = getRndInteger()">{{ \App\CPU\translate('generate') }}
                                             {{ \App\CPU\translate('code') }}</a></label>
                                     <input type="text" minlength="6" id="generate_number" name="code"
                                         class="form-control" value="{{ old('code') }}"

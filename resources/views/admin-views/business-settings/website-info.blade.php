@@ -43,7 +43,7 @@
                         </label>
                     </div>
                 </div>
-                <p>*By turning on maintaince mode, all your app and customer side website will be off. Only admin panel and seller panel will be functional</p>
+                <p>*{{\App\CPU\translate('By_turning_on_maintaince_mode,_all_your_app_and_customer_side_website_will_be_off._Only_admin_panel_and_seller_panel_will_be_functional')}}</p>
             </div>
         </div>
 
@@ -919,7 +919,7 @@
                             @php($decimal_point=\App\Model\BusinessSetting::where('type','decimal_point_settings')->first())
                             <div class="form-group">
                                 <label
-                                    class="input-label text-capitalize">{{\App\CPU\translate('digit_after_decimal_point ')}}({{\App\CPU\translate(' ex: 0.00')}})</label>
+                                    class="input-label text-capitalize">{{\App\CPU\translate('digit_after_decimal_point')}}({{\App\CPU\translate(' ex: 0.00')}})</label>
                                 <input type="number" value="{{$decimal_point->value}}"
                                        name="decimal_point_settings" class="form-control" min="0" placeholder="{{\App\CPU\translate('4')}}">
                             </div>
@@ -1006,7 +1006,7 @@
                                 <img src="{{asset('/public/assets/back-end/img/footer-logo.png')}}" alt="">
                                 {{\App\CPU\translate('Website_Footer_Logo')}}
                             </h5>
-                            <span class="badge badge-soft-info">( {{\App\CPU\translate('250x60 px ')}})</span>
+                            <span class="badge badge-soft-info">( {{\App\CPU\translate('250x60 px')}})</span>
                         </div>
                         <div class="card-body d-flex flex-column justify-content-around">
                             <center>
@@ -1099,98 +1099,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- <div class="col-md-4 mb-3">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="mb-0 d-flex gap-2 flex-wrap">
-                                <i class="tio-shop"></i>
-                                {{\App\CPU\translate('Admin Shop Banner')}}
-                                <span class="text-info font-weight-normal">
-                                    {{\App\CPU\translate('Ratio')}}
-                                    ( {{\App\CPU\translate('6:1')}} )
-                                </span>
-                            </h5>
-                            <div><i class="tio-panorama-image"></i></div>
-                        </div>
-                        <div class="card-body">
-                            <center>
-                                <img id="viewerShop"
-                                        onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
-                                        src="{{asset('storage/app/public/shop')}}/{{\App\CPU\Helpers::get_business_settings('shop_banner')}}">
-                            </center>
-                            <div class="position-relative mt-4">
-                                <input type="file" name="shop_banner" id="customFileUploadShop"
-                                        class="custom-file-input"
-                                        accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
-                                <label class="custom-file-label" for="customFileUploadShop">
-                                    {{\App\CPU\translate('choose')}} {{\App\CPU\translate('file')}}
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <div class="card h-100">
-                        <div class="card-header">
-                            <h5 class="mb-0">{{\App\CPU\translate('loader_gif')}} </h5>
-                            <span class="badge badge-soft-info">( {{\App\CPU\translate('ratio 1:1 ')}}  )</span>
-                        </div>
-                        <div class="card-body">
-                            <center>
-                                <img height="60" id="viewerLoader"
-                                        onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
-                                        src="{{asset('storage/app/public/company')}}/{{\App\CPU\Helpers::get_business_settings('loader_gif')}}">
-                            </center>
-                            <div class="position-relative mt-4">
-                                <input type="file" name="loader_gif" id="customFileUploadLoader"
-                                        class="custom-file-input"
-                                        accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
-                                <label class="custom-file-label"
-                                        for="customFileUploadLoader">{{\App\CPU\translate('choose')}} {{\App\CPU\translate('file')}}</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                @php($announcement=\App\CPU\Helpers::get_business_settings('announcement'))
-                @if (isset($announcement))
-                <div class="col-md-4 mb-3">
-                    <div class="card h-100">
-                        <div class="card-header">
-                            <h5 class="mb-0">{{\App\CPU\translate('announcement_setup')}}</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="d-flex gap-10 align-items-center mb-2">
-                                <input type="radio" name="announcement_status"
-                                        value="1" {{$announcement['status']==1?'checked':''}}>
-                                <label class="title-color mb-0">{{\App\CPU\translate('Active')}}</label>
-                            </div>
-                            <div class="d-flex gap-10 align-items-center mb-4">
-                                <input type="radio" name="announcement_status"
-                                        value="0" {{$announcement['status']==0?'checked':''}}>
-                                <label class="title-color mb-0">{{\App\CPU\translate('Inactive')}}</label>
-                            </div>
-                            <div class="form-group">
-                                <label class="title-color">{{\App\CPU\translate('background_color')}}</label>
-                                <input type="color" name="announcement_color"
-                                        value="{{ $announcement['color'] }}"
-                                        class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <label class="title-color">{{\App\CPU\translate('text_color')}}</label>
-                                <input type="color" name="text_color" value="{{ $announcement['text_color'] }}"
-                                        class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <label class="title-color">{{\App\CPU\translate('text')}}</label>
-                                <input class="form-control" type="text" name="announcement"
-                                        value="{{ $announcement['announcement'] }}">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @endif -->
             </div>
             <div class="d-flex justify-content-end">
                 <button type="submit" class="btn btn--primary px-4">{{\App\CPU\translate('Submit')}}</button>

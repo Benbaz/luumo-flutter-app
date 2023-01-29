@@ -11,11 +11,7 @@ use Madnest\Madzipper\Facades\Madzipper;
 
 class FileManagerController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index($folder_path = "cHVibGlj")
     {
         $file = Storage::files(base64_decode($folder_path));
@@ -23,8 +19,8 @@ class FileManagerController extends Controller
 
         $folders = FileManagerLogic::format_file_and_folders($directories, 'folder');
         $files = FileManagerLogic::format_file_and_folders($file, 'file');
-        // dd($files);
         $data = array_merge($folders, $files);
+
         return view('admin-views.file-manager.index', compact('data', 'folder_path'));
     }
 

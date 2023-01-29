@@ -157,14 +157,16 @@
                                                 <p class="text-wrap mb-1">
                                                     {{$review->comment?$review->comment:"No Comment Found"}}
                                                 </p>
-                                                @foreach (json_decode($review->attachment) as $img)
-                                                    <a href="{{asset('storage/app/public/review')}}/{{$img}}"
-                                                       data-lightbox="mygallery">
-                                                        <img class="p-1" width="60" height="60"
-                                                             src="{{asset('storage/app/public/review')}}/{{$img}}"
-                                                             alt="">
-                                                    </a>
-                                                @endforeach
+                                                @if($review->attachment)
+                                                    @foreach (json_decode($review->attachment) as $img)
+                                                        <a href="{{asset('storage/app/public/review')}}/{{$img}}"
+                                                           data-lightbox="mygallery">
+                                                            <img class="p-1" width="60" height="60"
+                                                                 src="{{asset('storage/app/public/review')}}/{{$img}}"
+                                                                 alt="">
+                                                        </a>
+                                                    @endforeach
+                                                @endif
                                             </td>
                                             <td>
                                                 <label class="mb-0 badge badge-soft-info">

@@ -22,13 +22,13 @@
                 <div class="media align-items-center gap-3">
                     <div class="avatar avatar-xl">
                         <img class="avatar-img" src="{{asset('public/assets/back-end')}}/svg/illustrations/order.png"
-                            alt="Image Description">
+                             alt="Image Description">
                     </div>
 
                     <div class="media-body">
                         <div class="row align-items-center">
                             <div class="col-md mb-1 mb-md-0 d-block"
-                                style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">
+                                 style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">
                                 <div>
                                     <h1 class="page-header-title">{{\App\CPU\translate('Order')}} {{\App\CPU\translate('Report')}}  {{\App\CPU\translate('Overview')}}</h1>
                                 </div>
@@ -74,19 +74,19 @@
                                 <div class="col-12">
                                     <div class="mb-2 d-flex">
                                         <label for="exampleInputEmail1"
-                                            class="title-color">{{\App\CPU\translate('Show data by date range')}}</label>
+                                               class="title-color">{{\App\CPU\translate('Show data by date range')}}</label>
                                     </div>
                                 </div>
                                 <div class="col-sm-6 col-lg-4">
                                     <div class="mb-3">
                                         <input type="date" value="{{date('Y-m-d',strtotime(session('from_date')))}}" name="from" id="from_date"
-                                            class="form-control" required>
+                                               class="form-control" required>
                                     </div>
                                 </div>
                                 <div class="col-sm-6 col-lg-4">
                                     <div class="mb-3">
                                         <input type="date" name="to" value="{{date('Y-m-d',strtotime(session('to_date')))}}" id="to_date"
-                                            class="form-control" required>
+                                               class="form-control" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -113,7 +113,7 @@
                 @php
                     $delivered=\App\Model\Order::where('order_type','default_type')->where(['order_status'=>'delivered'])->whereBetween('created_at', [$from, $to])->count()
                 @endphp
-                <!-- Card -->
+                    <!-- Card -->
                 <div class="card card-sm">
                     <div class="card-body">
                         <div class="row">
@@ -162,7 +162,7 @@
                 @php
                     $returned=\App\Model\Order::where('order_type','default_type')->where(['order_status'=>'returned'])->whereBetween('created_at', [$from, $to])->count()
                 @endphp
-                <!-- Card -->
+                    <!-- Card -->
                 <div class="card card-sm">
                     <div class="card-body">
                         <div class="row">
@@ -211,7 +211,7 @@
                 @php
                     $failed=\App\Model\Order::where('order_type','default_type')->where(['order_status'=>'failed'])->whereBetween('created_at', [$from, $to])->count()
                 @endphp
-                <!-- Card -->
+                    <!-- Card -->
                 <div class="card card-sm">
                     <div class="card-body">
                         <div class="row">
@@ -260,7 +260,7 @@
                 @php
                     $canceled=\App\Model\Order::where('order_type','default_type')->where(['order_status'=>'processing'])->whereBetween('created_at', [$from, $to])->count()
                 @endphp
-                <!-- Card -->
+                    <!-- Card -->
                 <div class="card card-sm">
                     <div class="card-body">
                         <div class="row">
@@ -423,10 +423,10 @@
             $max_order=\App\CPU\BackEndHelper::max_orders();
             @endphp
 
-            <!-- Body -->
+                <!-- Body -->
             <div class="card-body">
                 <!-- Bar Chart -->
-                <div class="chartjs-custom" style="height: 18rem;">
+                <div class="chartjs-custom __h-18rem">
                     <canvas class="js-chart"
                             data-hs-chartjs-options='{
                         "type": "line",

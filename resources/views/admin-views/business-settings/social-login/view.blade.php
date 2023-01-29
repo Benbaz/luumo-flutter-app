@@ -27,54 +27,54 @@
         ?>
         <div class="row gy-3">
             @if (isset($socialLoginServices))
-            @foreach ($socialLoginServices as $socialLoginService)
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-body text-{{Session::get('direction') === "rtl" ? 'right' : 'left'}}">
-                        <form
-                            action="{{route('admin.social-login.update',[$socialLoginService['login_medium']])}}"
-                            method="post">
-                            @csrf
-                            <label class="switcher position-absolute right-3 top-3">
-                                <input class="switcher_input" type="checkbox" {{$socialLoginService['status']==1?'checked':''}} value="1" name="status">
-                                <span class="switcher_control"></span>
-                            </label>
+                @foreach ($socialLoginServices as $socialLoginService)
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-body text-{{Session::get('direction') === "rtl" ? 'right' : 'left'}}">
+                                <form
+                                    action="{{route('admin.social-login.update',[$socialLoginService['login_medium']])}}"
+                                    method="post">
+                                    @csrf
+                                    <label class="switcher position-absolute right-3 top-3">
+                                        <input class="switcher_input" type="checkbox" {{$socialLoginService['status']==1?'checked':''}} value="1" name="status">
+                                        <span class="switcher_control"></span>
+                                    </label>
 
-                            <div class="d-flex flex-column align-items-center gap-2 mb-3">
-                                <h4 class="text-center">{{\App\CPU\translate(''.$socialLoginService['login_medium'])}}</h4>
-                            </div>
+                                    <div class="d-flex flex-column align-items-center gap-2 mb-3">
+                                        <h4 class="text-center">{{\App\CPU\translate($socialLoginService['login_medium'])}}</h4>
+                                    </div>
 
-                            <div class="form-group">
-                                <label class="title-color font-weight-bold text-capitalize">{{\App\CPU\translate('Callback_URI')}}</label>
-                                <div class="form-control d-flex align-items-center justify-content-between py-1 pl-3 pr-2">
-                                    <span class="form-ellipsis" id="id_{{$socialLoginService['login_medium']}}">{{ url('/') }}/customer/auth/login/{{$socialLoginService['login_medium']}}/callback</span>
-                                    <span class="btn btn--primary text-nowrap btn-xs" onclick="copyToClipboard('#id_{{$socialLoginService['login_medium']}}')">
+                                    <div class="form-group">
+                                        <label class="title-color font-weight-bold text-capitalize">{{\App\CPU\translate('Callback_URI')}}</label>
+                                        <div class="form-control d-flex align-items-center justify-content-between py-1 pl-3 pr-2">
+                                            <span class="form-ellipsis" id="id_{{$socialLoginService['login_medium']}}">{{ url('/') }}/customer/auth/login/{{$socialLoginService['login_medium']}}/callback</span>
+                                            <span class="btn btn--primary text-nowrap btn-xs" onclick="copyToClipboard('#id_{{$socialLoginService['login_medium']}}')">
                                         <i class="tio-copy"></i>
                                         {{\App\CPU\translate('Copy URI')}}
                                     </span>
-                                </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="title-color font-weight-bold text-capitalize">{{\App\CPU\translate('Store_Client_ID')}}</label><br>
+                                        <input type="text" class="form-control form-ellipsis" name="client_id"
+                                               value="{{ $socialLoginService['client_id'] }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="title-color font-weight-bold text-capitalize">{{\App\CPU\translate('Store_Client_Secret_Key')}}</label>
+                                        <input type="text" class="form-control form-ellipsis" name="client_secret"
+                                               value="{{ $socialLoginService['client_secret'] }}">
+                                    </div>
+                                    <div class="d-flex justify-content-between flex-wrap gap-2">
+                                        <button class="btn btn-outline--primary" type="button" data-toggle="modal" data-target="#{{$socialLoginService['login_medium']}}-modal">
+                                            {{\App\CPU\translate('See_Credential_Setup_Instructions')}}
+                                        </button>
+                                        <button type="{{env('APP_MODE')!='demo'?'submit':'button'}}" class="btn btn--primary px-4">{{\App\CPU\translate('save')}}</button>
+                                    </div>
+                                </form>
                             </div>
-                            <div class="form-group">
-                                <label class="title-color font-weight-bold text-capitalize">{{\App\CPU\translate('Store_Client_ID')}}</label><br>
-                                <input type="text" class="form-control form-ellipsis" name="client_id"
-                                        value="{{ $socialLoginService['client_id'] }}">
-                            </div>
-                            <div class="form-group">
-                                <label class="title-color font-weight-bold text-capitalize">{{\App\CPU\translate('Store_Client_Secret_Key')}}</label>
-                                <input type="text" class="form-control form-ellipsis" name="client_secret"
-                                        value="{{ $socialLoginService['client_secret'] }}">
-                            </div>
-                            <div class="d-flex justify-content-between flex-wrap gap-2">
-                                <button class="btn btn-outline--primary" type="button" data-toggle="modal" data-target="#{{$socialLoginService['login_medium']}}-modal">
-                                    {{\App\CPU\translate('See_Credential_Setup_Instructions')}}
-                                </button>
-                                <button type="{{env('APP_MODE')!='demo'?'submit':'button'}}" class="btn btn--primary px-4">{{\App\CPU\translate('save')}}</button>
-                            </div>
-                        </form>
+                        </div>
                     </div>
-                </div>
-            </div>
-            @endforeach
+                @endforeach
             @endif
         </div>
 

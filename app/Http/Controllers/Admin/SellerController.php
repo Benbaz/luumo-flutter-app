@@ -56,7 +56,7 @@ class SellerController extends Controller
         if ($tab == 'order') {
             $id = $seller->id;
             $orders = Order::where(['seller_is'=>'seller'])->where(['seller_id'=>$id])->where('order_type','default_type')->latest()->paginate(Helpers::pagination_limit());
-            
+
             return view('admin-views.seller.view.order', compact('seller', 'orders'));
         } else if ($tab == 'product') {
             $products = Product::where('added_by', 'seller')->where('user_id', $seller->id)->latest()->paginate(Helpers::pagination_limit());
@@ -93,13 +93,13 @@ class SellerController extends Controller
                 }
             }
             if ($request->has('seller_pos')) {
-                
+
                     $seller = Seller::find($id);
                     $seller->pos_status = $request->seller_pos;
                     $seller->save();
 
                     Toastr::success('Seller pos permission updated.');
-                
+
             }
 
             //return back();
@@ -185,9 +185,10 @@ class SellerController extends Controller
 
     public function order_list($seller_id)
     {
-        $orders = Order::where('seller_id', $seller_id)->where('seller_is', 'seller');
+        $orders = Order::where(['seller_id'=> $seller_id, 'seller_is'=> 'seller'])
+                ->latest()
+                ->paginate(Helpers::pagination_limit());
 
-        $orders = $orders->where('order_type','default_type')->latest()->paginate(Helpers::pagination_limit());
         $seller = Seller::findOrFail($seller_id);
         return view('admin-views.seller.order-list', compact('orders', 'seller'));
     }

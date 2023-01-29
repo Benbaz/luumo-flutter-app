@@ -56,8 +56,8 @@
 <span class="d-none" id="placeholderImg" data-img="{{asset('public/assets/back-end/img/400x400/img3.png')}}"></span>
 {{--loader--}}
 <div class="row">
-    <div class="col-12 position-fixed z-9999 mt-10rem d--none">
-        <div id="loading">
+    <div class="col-12 position-fixed z-9999 mt-10rem">
+        <div id="loading" class="d--none">
            <center>
             <img width="200"
                  src="{{asset('storage/app/public/company')}}/{{\App\CPU\Helpers::get_business_settings('loader_gif')}}"
@@ -406,9 +406,9 @@
 
 <!-- ck editor -->
 
-<script>
+<!-- <script>
     initSample();
-</script>
+</script> -->
 
 <script>
 

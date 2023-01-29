@@ -68,13 +68,13 @@
                                         (<a href="https://www.google.com/recaptcha/admin/create"
                                             target="_blank">{{\App\CPU\translate('Click_here')}}</a>)
                                     </li>
-                                    <li>{{\App\CPU\translate('Add a Label (Ex: abc company)')}}</li>
-                                    <li>{{\App\CPU\translate('Select reCAPTCHA v2  as  ReCAPTCHA Type')}}</li>
-                                    <li>{{\App\CPU\translate('Select Sub type: Im not a robot Checkbox ')}}</li>
-                                    <li>{{\App\CPU\translate('Add Domain (For ex: demo.6amtech.com)')}}</li>
-                                    <li>{{\App\CPU\translate('Check in “Accept the reCAPTCHA Terms of Service”')}}</li>
-                                    <li>{{\App\CPU\translate('Press Submit')}}</li>
-                                    <li>{{\App\CPU\translate('Copy Site Key and Secret Key, Paste in the input filed below and Save.')}}</li>
+                                    <li>{{\App\CPU\translate('Add_a _abel_(Ex:_abc_company)')}}</li>
+                                    <li>{{\App\CPU\translate('Select_reCAPTCHA_v2_as_ReCAPTCHA_Type')}}</li>
+                                    <li>{{\App\CPU\translate('select_sub_type')}}: {{\App\CPU\translate('im_not_a_robot_checkbox ')}}</li>
+                                    <li>{{\App\CPU\translate('Add_Domain_(For_ex:_demo.6amtech.com)')}}</li>
+                                    <li>{{\App\CPU\translate('Check_in_“Accept_the_reCAPTCHA_Terms_of_Service”')}}</li>
+                                    <li>{{\App\CPU\translate('Press_Submit')}}</li>
+                                    <li>{{\App\CPU\translate('Copy_Site_Key_and_Secret_Key,_Paste_in_the_input_filed_below_and_Save.')}}</li>
                                 </ol>
 
                                 <div class="d-flex justify-content-end">

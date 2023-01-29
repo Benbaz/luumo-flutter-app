@@ -62,7 +62,10 @@ class CartController extends Controller
     {
         $cart = CartManager::add_to_cart($request);
         session()->forget('coupon_code');
+        session()->forget('coupon_type');
+        session()->forget('coupon_bearer');
         session()->forget('coupon_discount');
+        session()->forget('coupon_seller_id');
         return response()->json($cart);
     }
 
@@ -95,7 +98,10 @@ class CartController extends Controller
         }
 
         session()->forget('coupon_code');
+        session()->forget('coupon_type');
+        session()->forget('coupon_bearer');
         session()->forget('coupon_discount');
+        session()->forget('coupon_seller_id');
         session()->forget('shipping_method_id');
         session()->forget('order_note');
 
@@ -108,7 +114,10 @@ class CartController extends Controller
         $response = CartManager::update_cart_qty($request);
 
         session()->forget('coupon_code');
+        session()->forget('coupon_type');
+        session()->forget('coupon_bearer');
         session()->forget('coupon_discount');
+        session()->forget('coupon_seller_id');
 
         if ($response['status'] == 0) {
             return response()->json($response);

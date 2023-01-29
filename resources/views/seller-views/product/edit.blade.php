@@ -421,8 +421,20 @@
                                         <label for="name" class="title-color mb-0">{{\App\CPU\translate('Upload thumbnail')}}</label>
                                         <small class="text-info">* ( {{\App\CPU\translate('ratio')}} 1:1 )</small>
                                     </div>
-                                    <div class="max-w-200">
-                                        <div class="row" id="thumbnail"></div>
+                                    <div class="row" id="meta_img">
+                                        <div class="col-6">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <img class="w-100" height="auto"
+                                                         onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
+                                                         src="{{asset("storage/app/public/product/thumbnail")}}/{{$product['thumbnail']}}"
+                                                         alt="Product image">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="row" id="thumbnail"></div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-12 d-flex justify-content-end mt-3">
@@ -488,10 +500,10 @@
                 fieldName: 'image',
                 maxCount: 1,
                 rowHeight: 'auto',
-                groupClassName: 'col-12',
+                groupClassName: 'col-10',
                 maxFileSize: '',
                 placeholderImage: {
-                    image: thumbnail,
+                    image: '{{asset('public/assets/back-end/img/400x400/img2.jpg')}}',
                     width: '100%',
                 },
                 dropFileLabel: "Drop Here",

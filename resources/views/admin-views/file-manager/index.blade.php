@@ -33,7 +33,7 @@
                             $pwd = explode('/',base64_decode($folder_path));
                         @endphp
                         <h5 class="mb-0 text-capitalize d-flex align-items-center gap-2">
-                            {{end($pwd)}}
+                            {{\App\CPU\translate(end($pwd))}}
                             <span class="badge badge-soft-dark radius-50" id="itemCount">{{count($data)}}</span>
                         </h5>
                         <a class="btn btn--primary" href="{{url()->previous()}}">
@@ -158,7 +158,7 @@
                 if (input.files && input.files[i]) {
                     var reader = new FileReader();
                     reader.onload = function (e) {
-                        $('#files').append('<div class="col-md-2 col-sm-4 m-1"><img style="width: 100%;border: 1px solid; border-radius: 10px; max-height:200px;" id="viewer" src="' + e.target.result + '"/></div>');
+                        $('#files').append('<div class="col-md-2 col-sm-4 m-1"><img class="__empty-img" id="viewer" src="' + e.target.result + '"/></div>');
                     }
                     reader.readAsDataURL(input.files[i]);
                 }

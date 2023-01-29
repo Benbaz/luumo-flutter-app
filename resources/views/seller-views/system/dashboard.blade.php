@@ -113,60 +113,6 @@
             </div>
         </div>
 
-        {{--        <div class="user-overview-wrap mb-2">--}}
-        {{--            <div class="card">--}}
-        {{--                <div class="card-body">--}}
-        {{--                    <div class="row g-2 align-items-center">--}}
-        {{--                        <div class="col-md-5">--}}
-        {{--                            <h4 class="d-flex align-items-center gap-10 mb-0">--}}
-        {{--                                <img src="{{asset('/public/assets/back-end/img/order_statictics.png')}}" alt="">--}}
-        {{--                                Order Statictics--}}
-        {{--                            </h4>--}}
-        {{--                        </div>--}}
-        {{--                        <div class="col-md-7 d-flex justify-content-md-end">--}}
-        {{--                            <ul class="option-select-btn">--}}
-        {{--                                <li>--}}
-        {{--                                    <label>--}}
-        {{--                                        <input type="radio" name="statistics" hidden="" checked="">--}}
-        {{--                                        <span>This Year</span>--}}
-        {{--                                    </label>--}}
-        {{--                                </li>--}}
-        {{--                                <li>--}}
-        {{--                                    <label>--}}
-        {{--                                        <input type="radio" name="statistics" hidden="">--}}
-        {{--                                        <span>This Month</span>--}}
-        {{--                                    </label>--}}
-        {{--                                </li>--}}
-        {{--                                <li>--}}
-        {{--                                    <label>--}}
-        {{--                                        <input type="radio" name="statistics" hidden="">--}}
-        {{--                                        <span>This Week</span>--}}
-        {{--                                    </label>--}}
-        {{--                                </li>--}}
-        {{--                            </ul>--}}
-        {{--                        </div>--}}
-        {{--                    </div>--}}
-
-        {{--                    <!-- Bar Chart -->--}}
-        {{--                    <div class="chartjs-custom mt-2">--}}
-        {{--                        <canvas id="order_statictics" height="340"></canvas>--}}
-        {{--                    </div>--}}
-        {{--                    <!-- End Bar Chart -->--}}
-        {{--                </div>--}}
-        {{--            </div>--}}
-        {{--            <div class="card">--}}
-        {{--                <div class="card-header">--}}
-        {{--                    <h4 class="card-header__title">User Overview</h4>--}}
-        {{--                </div>--}}
-        {{--                <div class="card-body">--}}
-        {{--                    <div class="position-relative">--}}
-        {{--                        <h3 class="amount-of-user">1.6M+ <span>User</span></h3>--}}
-        {{--                        <canvas id="user_overview" height="300" width="300"></canvas>--}}
-        {{--                    </div>--}}
-        {{--                </div>--}}
-        {{--            </div>--}}
-        {{--        </div>--}}
-
         <div class="row g-2">
             <div class="col-lg-12">
                 <!-- Card -->
@@ -206,27 +152,6 @@
                                 </ul>
                             </div>
                         </div>
-{{--                        <div class="row mb-4">--}}
-{{--                            <div class="col-6 graph-border-1">--}}
-{{--                                <div class="mt-2 center-div">--}}
-{{--                                      <span class="h6 mb-0">--}}
-{{--                                          <i class="legend-indicator bg-success"--}}
-{{--                                             style="background-color: #B6C867!important;"></i>--}}
-{{--                                         {{\App\CPU\translate('Your Earnings')}} : {{\App\CPU\BackEndHelper::usd_to_currency(array_sum($seller_data))." ".\App\CPU\BackEndHelper::currency_symbol()}}--}}
-{{--                                    </span>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                            <div class="col-6 graph-border-1">--}}
-{{--                                <div class="mt-2 center-div">--}}
-{{--                                      <span class="h6 mb-0">--}}
-{{--                                          <i class="legend-indicator bg-danger"--}}
-{{--                                             style="background-color: #01937C!important;"></i>--}}
-{{--                                        {{\App\CPU\translate('Commission Given')}} : {{\App\CPU\BackEndHelper::usd_to_currency(array_sum($commission_data))." ".\App\CPU\BackEndHelper::currency_symbol()}}--}}
-{{--                                    </span>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-                        <!-- End Row -->
 
                         <!-- Bar Chart -->
                         <div class="chartjs-custom mt-2" id="set-new-graph">
@@ -236,7 +161,7 @@
                             "data": {
                               "labels": ["Jan","Feb","Mar","April","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
                               "datasets": [{
-                                "label": "Seller",
+                                "label": "{{ \App\CPU\translate('seller')}}",
                                 "data": [
                                     @php($i = 0)
                                     @php($array_count = count($seller_data))
@@ -248,7 +173,7 @@
                                         "borderColor": "#0177CD"
                                       },
                                       {
-                                        "label": "Commission",
+                                        "label": "{{ \App\CPU\translate('commission')}}",
                                         "data": [
                                     @php($i = 0)
                                     @php($array_count = count($commission_data))
@@ -282,7 +207,6 @@
                                           },
                                           "ticks": {
                                             "beginAtZero": true,
-                                            "stepSize": 50000,
                                             "fontSize": 12,
                                             "fontColor": "#97a4af",
                                             "fontFamily": "Open Sans, sans-serif",
@@ -328,7 +252,7 @@
                 <!-- End Card -->
             </div>
 
-            <div class="col-lg-6">
+            <div class="col-lg-4">
                 <!-- Card -->
                 <div class="card h-100">
                     @include('seller-views.partials._top-selling-products',['top_sell'=>$data['top_sell']])
@@ -336,10 +260,18 @@
                 <!-- End Card -->
             </div>
 
-            <div class="col-lg-6">
+            <div class="col-lg-4">
                 <!-- Card -->
                 <div class="card h-100">
                     @include('seller-views.partials._most-rated-products',['most_rated_products'=>$data['most_rated_products']])
+                </div>
+                <!-- End Card -->
+            </div>
+
+            <div class="col-lg-4">
+                <!-- Card -->
+                <div class="card h-100">
+                    @include('seller-views.partials._top-delivery-man',['top_deliveryman'=>$data['top_deliveryman']])
                 </div>
                 <!-- End Card -->
             </div>
@@ -417,19 +349,19 @@
                             labels: [],
                             datasets: [
                                 {
-                                    label: "In-house",
+                                    label: "{{ \App\CPU\translate('seller')}}",
                                     data: [],
-                                    backgroundColor: "#FFB36D",
-                                    borderColor: "#FFB36D",
+                                    backgroundColor: "#0177CD",
+                                    borderColor: "#0177CD",
                                     fill: false,
                                     lineTension: 0.3,
                                     radius: 0
                                 },
                                 {
-                                    label: "Seller",
+                                    label: "{{ \App\CPU\translate('In-house')}}",
                                     data: [],
-                                    backgroundColor: "#0177CD",
-                                    borderColor: "#0177CD",
+                                    backgroundColor: "#FFB36D",
+                                    borderColor: "#FFB36D",
                                     fill: false,
                                     lineTension: 0.3,
                                     radius: 0

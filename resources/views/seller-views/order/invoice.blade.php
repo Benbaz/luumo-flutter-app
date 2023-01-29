@@ -297,8 +297,6 @@
                 </td>
             </tr>
         </table>
-
-
     </section>
 </div>
 
@@ -458,7 +456,7 @@
 
 <div class="row">
     <section>
-        <table class="">
+        <table>
             <tr>
                 <th class="fz-12 font-normal pb-3">
                     {{\App\CPU\translate('If_you_require_any_assistance_or_have_feedback_or_suggestions_about_our_site,_you')}} <br /> {{\App\CPU\translate('can_email_us_at')}} <a href="mail::to({{ $company_email }})">{{ $company_email }}</a>

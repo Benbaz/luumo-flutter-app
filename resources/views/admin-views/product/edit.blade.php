@@ -163,8 +163,7 @@
                                         <label class="title-color"
                                                for="exampleFormControlInput1">{{ \App\CPU\translate('product_code_sku') }}
                                             <span class="text-danger">*</span>
-                                            <a class="style-one-pro" style="cursor: pointer;"
-                                               onclick="document.getElementById('generate_number').value = getRndInteger()">{{ \App\CPU\translate('generate') }}
+                                            <a class="style-one-pro cursor-pointer" onclick="document.getElementById('generate_number').value = getRndInteger()">{{ \App\CPU\translate('generate') }}
                                                 {{ \App\CPU\translate('code') }}</a></label>
                                         <input type="text" id="generate_number" name="code"
                                                class="form-control"  value="{{ $product->code  }}" required>

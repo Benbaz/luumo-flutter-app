@@ -178,15 +178,18 @@
                                             {{ $review->comment ? Str::limit($review->comment, 35) : 'No Comment Found' }}
                                         </div>
                                         <div class="gap-1">
-                                        @foreach (json_decode($review->attachment) as $img)
-                                            <a class=""
-                                                href="{{ asset('storage/app/public/review') }}/{{ $img }}"
-                                                data-lightbox="mygallery">
-                                                <img classs="p-2" width="60" height="60"
-                                                    src="{{ asset('storage/app/public/review') }}/{{ $img }}"
-                                                    alt="Image">
-                                            </a>
-                                        @endforeach
+                                        @if($review->attachment)
+                                            @foreach (json_decode($review->attachment) as $img)
+                                                <a class=""
+                                                    href="{{ asset('storage/app/public/review') }}/{{ $img }}"
+                                                    data-lightbox="mygallery">
+                                                    <img clsss="p-2" width="60" height="60"
+                                                        onerror="this.src='{{asset('public/assets/back-end/img/160x160/img2.jpg')}}'"
+                                                        src="{{ asset('storage/app/public/review') }}/{{ $img }}"
+                                                        alt="Image">
+                                                </a>
+                                            @endforeach
+                                        @endif
                                         </div>
                                     </td>
                                     <td>{{ date('d M Y', strtotime($review->created_at)) }}</td>

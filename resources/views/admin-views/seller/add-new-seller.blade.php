@@ -31,15 +31,15 @@
                     <div class="col-lg-6 mb-4 mb-lg-0">
                         <div class="form-group">
                             <label for="exampleFirstName" class="title-color d-flex gap-1 align-items-center">{{\App\CPU\translate('first_name')}}</label>
-                            <input type="text" class="form-control form-control-user" id="exampleFirstName" name="f_name" value="{{old('f_name')}}" placeholder="{{\App\CPU\translate('Ex: Jhone')}}" required>
+                            <input type="text" class="form-control form-control-user" id="exampleFirstName" name="f_name" value="{{old('f_name')}}" placeholder="{{\App\CPU\translate('Ex')}}: Jhone" required>
                         </div>
                         <div class="form-group">
                             <label for="exampleLastName" class="title-color d-flex gap-1 align-items-center">{{\App\CPU\translate('last_name')}}</label>
-                            <input type="text" class="form-control form-control-user" id="exampleLastName" name="l_name" value="{{old('l_name')}}" placeholder="{{\App\CPU\translate('Ex: Doe')}}" required>
+                            <input type="text" class="form-control form-control-user" id="exampleLastName" name="l_name" value="{{old('l_name')}}" placeholder="{{\App\CPU\translate('Ex')}}: Doe" required>
                         </div>
                         <div class="form-group">
                             <label for="exampleInputPhone" class="title-color d-flex gap-1 align-items-center">{{\App\CPU\translate('phone')}}</label>
-                            <input type="number" class="form-control form-control-user" id="exampleInputPhone" name="phone" value="{{old('phone')}}" placeholder="{{\App\CPU\translate('Ex: +09587498')}}" required>
+                            <input type="number" class="form-control form-control-user" id="exampleInputPhone" name="phone" value="{{old('phone')}}" placeholder="{{\App\CPU\translate('Ex')}}: +09587498" required>
                         </div>
                     </div>
                     <div class="col-lg-6">
@@ -51,7 +51,7 @@
                         </div>
 
                         <div class="form-group">
-                            <div class="title-color mb-2 d-flex gap-1 align-items-center">Seller Image <span class="text-info">(Ratio 1:1)</span></div>
+                            <div class="title-color mb-2 d-flex gap-1 align-items-center">{{\App\CPU\translate('Seller_Image')}} <span class="text-info">({{\App\CPU\translate('ratio')}} {{\App\CPU\translate('1')}}:{{\App\CPU\translate('1')}})</span></div>
                             <div class="custom-file text-left">
                                 <input type="file" name="image" id="customFileUpload" class="custom-file-input"
                                     accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
@@ -73,7 +73,7 @@
                 <div class="row">
                     <div class="col-lg-4 form-group">
                         <label for="exampleInputEmail" class="title-color d-flex gap-1 align-items-center">{{\App\CPU\translate('email')}}</label>
-                        <input type="email" class="form-control form-control-user" id="exampleInputEmail" name="email" value="{{old('email')}}" placeholder="{{\App\CPU\translate('Ex: Jhone@company.com')}}" required>
+                        <input type="email" class="form-control form-control-user" id="exampleInputEmail" name="email" value="{{old('email')}}" placeholder="{{\App\CPU\translate('Ex')}}: Jhone@company.com" required>
                     </div>
                     <div class="col-lg-4 form-group">
                         <label for="exampleInputPassword" class="title-color d-flex gap-1 align-items-center">{{\App\CPU\translate('password')}}</label>
@@ -98,11 +98,11 @@
                 <div class="row">
                     <div class="col-lg-6 form-group">
                         <label for="shop_name" class="title-color d-flex gap-1 align-items-center">{{\App\CPU\translate('shop_name')}}</label>
-                        <input type="text" class="form-control form-control-user" id="shop_name" name="shop_name" placeholder="{{\App\CPU\translate('Ex: Jhone')}}" value="{{old('shop_name')}}"required>
+                        <input type="text" class="form-control form-control-user" id="shop_name" name="shop_name" placeholder="{{\App\CPU\translate('Ex')}}: Jhon" value="{{old('shop_name')}}"required>
                     </div>
                     <div class="col-lg-6 form-group">
                         <label for="shop_address" class="title-color d-flex gap-1 align-items-center">{{\App\CPU\translate('shop_address')}}</label>
-                        <textarea name="shop_address" class="form-control" id="shop_address"rows="1" placeholder="{{\App\CPU\translate('Ex: Doe')}}">{{old('shop_address')}}</textarea>
+                        <textarea name="shop_address" class="form-control" id="shop_address"rows="1" placeholder="{{\App\CPU\translate('Ex')}}: Doe">{{old('shop_address')}}</textarea>
                     </div>
                     <div class="col-lg-6 form-group">
                         <center>
@@ -113,7 +113,7 @@
                         <div class="mt-4">
                             <div class="d-flex gap-1 align-items-center title-color mb-2">
                                 {{\App\CPU\translate('shop_logo')}}
-                                <span class="text-info">(Ratio 1 :1)</span>
+                                <span class="text-info">({{\App\CPU\translate('ratio')}} {{\App\CPU\translate('1')}}:{{\App\CPU\translate('1')}})</span>
                             </div>
 
                             <div class="custom-file">
@@ -132,7 +132,7 @@
                         <div class="mt-4">
                             <div class="d-flex gap-1 align-items-center title-color mb-2">
                                 {{\App\CPU\translate('shop_banner')}}
-                                <span class="text-info">(Ratio 3:1)</span>
+                                <span class="text-info">({{\App\CPU\translate('ratio')}} {{\App\CPU\translate('3')}}:{{\App\CPU\translate('1')}})</span>
                             </div>
 
                             <div class="custom-file">

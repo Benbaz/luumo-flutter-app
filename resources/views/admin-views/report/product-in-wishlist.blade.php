@@ -33,7 +33,7 @@
                                             </div>
                                         </div>
                                         <input id="datatableSearch_" type="search" name="search" class="form-control"
-                                                placeholder="{{\App\CPU\translate('Search Product Name')}}" aria-label="Search orders" value="{{ $search }}">
+                                               placeholder="{{\App\CPU\translate('Search Product Name')}}" aria-label="Search orders" value="{{ $search }}">
                                         <button type="submit" class="btn btn--primary">{{\App\CPU\translate('search')}}</button>
                                     </div>
                                     <!-- End Search -->

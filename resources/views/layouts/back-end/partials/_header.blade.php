@@ -176,13 +176,13 @@
 
                                 <a class="dropdown-item"
                                    href="{{route('admin.profile.update',auth('admin')->user()->id)}}">
-                                    <span class="text-truncate pr-2" title="Settings">Settings</span>
+                                    <span class="text-truncate pr-2" title="Settings">{{ \App\CPU\translate('settings')}}</span>
                                 </a>
 
                                 <div class="dropdown-divider"></div>
 
                                 <a class="dropdown-item" href="javascript:" onclick="Swal.fire({
-                                    title: 'Do you want to logout?',
+                                    title: '{{\App\CPU\translate('Do_you_want_to_logout')}}?',
                                     showDenyButton: true,
                                     showCancelButton: true,
                                     confirmButtonColor: '#377dff',
@@ -196,7 +196,7 @@
                                     Swal.fire('Canceled', '', 'info')
                                     }
                                     })">
-                                    <span class="text-truncate pr-2" title="Sign out">Sign out</span>
+                                    <span class="text-truncate pr-2" title="Sign out">{{ \App\CPU\translate('sign_out')}}</span>
                                 </a>
                             </div>
                         </div>

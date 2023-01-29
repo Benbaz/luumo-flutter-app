@@ -32,7 +32,7 @@
                                 <div class="col-md-6 form-group">
                                     <label for="name" class="title-color">{{\App\CPU\translate('Name')}}</label>
                                     <input type="text" name="name" value="{{$e['name']}}" class="form-control" id="name"
-                                           placeholder="{{\App\CPU\translate('Ex')}} : {{\App\CPU\translate('Md. Al Imrun')}}">
+                                           placeholder="{{\App\CPU\translate('Ex')}} : Jhon Doe">
                                 </div>
                                 <div class="col-md-6 form-group">
                                     <label for="phone" class="title-color">{{\App\CPU\translate('Phone')}}</label>

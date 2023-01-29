@@ -16,11 +16,13 @@
                     <img src="{{asset('/public/assets/back-end/img/all-orders.png')}}" class="mb-1 mr-1" alt="">
                     <span class="page-header-title">
                         @if($status =='processing')
-                            {{ ucwords(str_replace('_',' ','Packaging' )) }}
+                            {{\App\CPU\translate('packaging')}}
                         @elseif($status =='failed')
-                            {{ ucwords(str_replace('_',' ','Failed to Deliver' )) }}
+                            {{\App\CPU\translate('Failed_to_Deliver')}}
+                        @elseif($status == 'all')
+                            {{\App\CPU\translate('all')}}
                         @else
-                            {{ ucwords(str_replace('_',' ',$status )) }}
+                            {{\App\CPU\translate(str_replace('_',' ',$status))}}
                         @endif
                     </span>
                     {{\App\CPU\translate('Orders')}}
@@ -40,9 +42,9 @@
                                 </div>
                                 <div class="col-sm-6 col-md-3">
                                     <select name="filter" class="form-control">
-                                        <option value="all" {{ $filter == 'all' ? 'selected' : '' }}>All</option>
-                                        <option value="admin" {{ $filter == 'admin' ? 'selected' : '' }}>In House</option>
-                                        <option value="seller" {{ $filter == 'seller' ? 'selected' : '' }}>Seller</option>
+                                        <option value="all" {{ $filter == 'all' ? 'selected' : '' }}>{{\App\CPU\translate('all')}}</option>
+                                        <option value="admin" {{ $filter == 'admin' ? 'selected' : '' }}>{{\App\CPU\translate('In_House')}}</option>
+                                        <option value="seller" {{ $filter == 'seller' ? 'selected' : '' }}>{{\App\CPU\translate('Seller')}}</option>
                                         @if($status == 'all' || $status == 'delivered')
                                         <option value="POS" {{ $filter == 'POS' ? 'selected' : '' }}>POS</option>
                                         @endif
@@ -52,14 +54,14 @@
                                     <div class="form-floating">
                                         <input type="date" name="from" value="{{$from}}" id="from_date"
                                             class="form-control">
-                                        <label>Start Date</label>
+                                        <label>{{\App\CPU\translate('Start_Date')}}</label>
                                     </div>
                                 </div>
                                 <div class="col-sm-6 col-md-3 mt-2 mt-sm-0">
                                     <div class="form-floating">
                                         <input type="date" value="{{$to}}" name="to" id="to_date"
                                             class="form-control">
-                                        <label>End Date</label>
+                                        <label>{{\App\CPU\translate('End_Date')}}</label>
                                     </div>
                                 </div>
                                 <div class="col-sm-6 col-md-3 mt-2 mt-sm-0  ">
@@ -257,11 +259,11 @@
                                     </td>
                                     <td>
                                         <div>{{date('d M Y',strtotime($order['created_at']))}},</div>
-                                        <div>{{ date("H:i A",strtotime($order['created_at'])) }}</div>
+                                        <div>{{ date("h:i A",strtotime($order['created_at'])) }}</div>
                                     </td>
                                     <td>
                                         @if($order->customer_id == 0)
-                                            <strong class="title-name">Walking customer</strong>
+                                            <strong class="title-name">{{\App\CPU\translate('walking_customer')}}</strong>
                                         @else
                                             @if($order->customer)
                                                 <a class="text-body text-capitalize" href="{{route('admin.orders.details',['id'=>$order['id']])}}">
@@ -276,14 +278,20 @@
                                     <td>
                                         <span class="store-name font-weight-medium">
                                             @if($order->seller_is == 'seller')
-                                                {{ isset($order->seller->shop) ? $order->seller->shop->name : '' }}
+                                                {{ isset($order->seller->shop) ? $order->seller->shop->name : 'Store not found' }}
                                             @elseif($order->seller_is == 'admin')
                                                 {{\App\CPU\translate('In-House')}}
                                             @endif
                                         </span>
                                     </td>
                                     <td class="text-right">
-                                        <div>{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($order->order_amount))}}</div>
+                                        <div>
+                                            @php($discount = 0)
+                                            @if($order->coupon_discount_bearer == 'inhouse' && !in_array($order['coupon_code'], [0, NULL]))
+                                                @php($discount = $order->discount_amount)
+                                            @endif
+                                            {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($order->order_amount+$discount))}}
+                                        </div>
 
                                         @if($order->payment_status=='paid')
                                             <span class="badge text-success fz-12 px-0">
@@ -298,28 +306,28 @@
                                     <td class="text-center text-capitalize">
                                         @if($order['order_status']=='pending')
                                             <span class="badge badge-soft-info fz-12">
-                                                    {{$order['order_status']}}
+                                                {{\App\CPU\translate($order['order_status'])}}
                                             </span>
 
                                         @elseif($order['order_status']=='processing' || $order['order_status']=='out_for_delivery')
                                             <span class="badge badge-soft-warning fz-12">
-                                                {{str_replace('_',' ',$order['order_status'] == 'processing' ? 'packaging':$order['order_status'])}}
+                                                {{str_replace('_',' ',$order['order_status'] == 'processing' ? \App\CPU\translate($order['packaging']):\App\CPU\translate($order['order_status']))}}
                                             </span>
                                         @elseif($order['order_status']=='confirmed')
                                             <span class="badge badge-soft-success fz-12">
-                                                {{$order['order_status']}}
+                                                {{\App\CPU\translate($order['order_status'])}}
                                             </span>
                                         @elseif($order['order_status']=='failed')
                                             <span class="badge badge-danger fz-12">
-                                                {{$order['order_status'] == 'failed' ? 'Failed To Deliver' : ''}}
+                                                {{\App\CPU\translate('failed_to_deliver')}}
                                             </span>
                                         @elseif($order['order_status']=='delivered')
                                             <span class="badge badge-soft-success fz-12">
-                                                {{$order['order_status']}}
+                                                {{\App\CPU\translate($order['order_status'])}}
                                             </span>
                                         @else
                                             <span class="badge badge-soft-danger fz-12">
-                                                {{$order['order_status']}}
+                                                {{\App\CPU\translate($order['order_status'])}}
                                             </span>
                                         @endif
                                     </td>

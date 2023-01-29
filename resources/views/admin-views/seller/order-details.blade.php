@@ -9,7 +9,7 @@
 @section('content')
     <div class="content container-fluid">
         <!-- Page Header -->
-        <div class="page-header d-print-none p-3" style="background: white">
+        <div class="page-header d-print-none p-3 bg-white">
             <div class="row align-items-center">
                 <div class="col-sm mb-2 mb-sm-0">
                     <nav aria-label="breadcrumb">
@@ -139,7 +139,7 @@
                 <!-- Card -->
                 <div class="card mb-3  mb-lg-5" style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">
                     <!-- Header -->
-                    <div class="card-header" style="display: block!important;">
+                    <div class="card-header d-block">
                         <div class="row">
                             <div class="col-12 pb-2 border-bottom">
                                 <h4 class="card-header-title">{{\App\CPU\translate('Order details')}}
@@ -147,16 +147,16 @@
                                 </h4>
                             </div>
                             <div class="col-12 pt-2">
-                                <h6 style="color: #8a8a8a;"></h6>
+                                <h6 class="__color-8a8a8a"></h6>
                             </div>
                             <div class="col-12 text-right">
                                 <div>
-                                    <h6 class="text-capitalize" style="display: inline; color: #8a8a8a; ">{{\App\CPU\translate('payment')}} {{\App\CPU\translate('method')}} :</h6>
-                                    <h6 class="mx-1" style="display: inline; color: #8a8a8a;">{{str_replace('_',' ',$order['payment_method'])}}</h6>
+                                    <h6 class="text-capitalize __color-8a8a8a d-inline">{{\App\CPU\translate('payment')}} {{\App\CPU\translate('method')}} :</h6>
+                                    <h6 class="mx-1 __color-8a8a8a d-inline">{{str_replace('_',' ',$order['payment_method'])}}</h6>
                                 </div>
                                 <div>
-                                    <h6 style="display: inline; color: #8a8a8a;">{{\App\CPU\translate('Payment')}} {{\App\CPU\translate('reference')}} :</h6>
-                                    <h6 class="mx-1" style="display: inline; color: #8a8a8a;">{{str_replace('_',' ',$order['transaction_ref'])}}</h6>
+                                    <h6 class="__color-8a8a8a d-inline">{{\App\CPU\translate('Payment')}} {{\App\CPU\translate('reference')}} :</h6>
+                                    <h6 class="mx-1 __color-8a8a8a d-inline">{{str_replace('_',' ',$order['transaction_ref'])}}</h6>
                                 </div>
                             </div>
                         </div>
@@ -278,6 +278,13 @@
                                     <dd class="col-sm-6 border-bottom">
                                         <strong>- {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($coupon_discount))}}</strong>
                                     </dd>
+                                    @if($order['coupon_discount_bearer'] == 'inhouse' && !in_array($order['coupon_code'], [0, NULL]))
+                                        <dt class="col-sm-6">{{\App\CPU\translate('coupon_discount')}} ({{\App\CPU\translate('admin_bearer')}})</dt>
+                                        <dd class="col-sm-6 border-bottom">
+                                            <strong>+ {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($coupon_discount))}}</strong>
+                                        </dd>
+                                        @php($total += $coupon_discount)
+                                    @endif
 
                                     <dt class="col-sm-6">{{\App\CPU\translate('Total')}}</dt>
                                     <dd class="col-sm-6">
@@ -303,14 +310,14 @@
                     <div class="card-body text-capitalize">
                         <ul class="list-unstyled list-unstyled-py-2">
                             <li>
-                                <h6 class="" style="color: #8a8a8a;">
+                                <h6 class="__color-8a8a8a">
                                     {{\App\CPU\translate('shipping_type')}}
                                     : {{str_replace('_',' ',$order->shipping_type)}}
                                 </h6>
                             </li>
                             @if ($order->shipping_type == 'order_wise')
                             <li>
-                                <h6 class="" style="color: #8a8a8a;">
+                                <h6 class="__color-8a8a8a">
                                     {{\App\CPU\translate('shipping')}} {{\App\CPU\translate('method')}}
                                     : {{$order->shipping ? $order->shipping->title :'No shipping method selected'}}
                                 </h6>
@@ -349,7 +356,7 @@
                                 <span>
                                     {{\App\CPU\translate('delivery_service_name')}} : {{$order->delivery_service_name}}
                                 </span>
-                                <span style="float: right;">
+                                <span class="float-right">
                                     <a href="javascript:" onclick="choose_delivery_type('third_party_delivery')">
                                         <i class="tio-edit"></i>
                                     </a>
@@ -394,14 +401,13 @@
                             <hr>
 
                             <div class="media align-items-center" href="javascript:">
-                                <div class="icon icon-soft-info icon-circle {{Session::get('direction') === "rtl" ? 'ml-3' : 'mr-3'}}">
+                                <div class="icon icon-soft-info icon-circle p-0 {{Session::get('direction') === "rtl" ? 'ml-3' : 'mr-3'}}">
                                     <i class="tio-shopping-basket-outlined"></i>
                                 </div>
                                 <div class="media-body">
                                     <span class="text-body text-hover-primary"> {{\App\Model\Order::where('customer_id',$order['customer_id'])->count()}} orders</span>
                                 </div>
                                 <div class="media-body text-right">
-                                    {{--<i class="tio-chevron-right text-body"></i>--}}
                                 </div>
                             </div>
 

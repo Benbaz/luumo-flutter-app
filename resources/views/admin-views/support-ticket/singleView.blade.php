@@ -36,10 +36,10 @@
                     </div>
                 </div>
                 <div class="d-flex align-items-center flex-wrap gap-3">
-                    <div class="type font-weight-bold bg-soft--primary c1 px-2 rounded">{{ $ticket['type'] }}</div>
+                    <div class="type font-weight-bold bg-soft--primary c1 px-2 rounded">{{\App\CPU\translate(str_replace('_',' ',$ticket['type']))}}</div>
                     <div class="priority d-flex flex-wrap align-items-center gap-3">
-                        <span class="title-color">{{\App\CPU\translate('Priority  :')}}</span>
-                        <span class="font-weight-bold badge-soft-info rounded px-2">{{ $ticket['priority'] }}</span>
+                        <span class="title-color">{{\App\CPU\translate('Priority')}}:</span>
+                        <span class="font-weight-bold badge-soft-info rounded px-2">{{\App\CPU\translate(str_replace('_',' ',$ticket['priority']))}}</span>
                     </div>
                 </div>
             </div>
@@ -67,7 +67,7 @@
 
                 @endforeach
                 <!-- Leave message-->
-                <h5 class="pt-4 pb-1 d-flex">{{\App\CPU\translate('Leave a Message')}}</h5>
+                <h5 class="pt-4 pb-1 d-flex">{{\App\CPU\translate('Leave_a_Message')}}</h5>
                 @foreach($supportTicket as $reply)
                     <form class="needs-validation" href="{{route('admin.support-ticket.replay',$reply['id'])}}" method="post"
                         >
@@ -75,7 +75,7 @@
                         <input type="hidden" name="id" value="{{$reply['id']}}">
                         <input type="hidden" name="adminId" value="1">
                         <div class="form-group">
-                        <textarea class="form-control" name="replay" rows="8" placeholder="Write your message here..."
+                        <textarea class="form-control" name="replay" rows="8" placeholder="{{\App\CPU\translate('Write_your_message_here')}}..."
                                 required></textarea>
                             <div class="invalid-tooltip">{{\App\CPU\translate('Please write the message')}}!</div>
                         </div>

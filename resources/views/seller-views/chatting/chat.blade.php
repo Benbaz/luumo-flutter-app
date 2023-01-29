@@ -20,7 +20,6 @@
                     <div class="card card-body px-0 h-100">
                         <div class="media align-items-center px-3 gap-3 mb-4">
                             <div class="avatar avatar-sm avatar-circle">
-{{--                                @dd($shop)--}}
                                 <img class="avatar-img" onerror="this.src='{{ asset('public/assets/front-end/img/image-place-holder.png') }}'" src="{{asset('storage/app/public/seller/')}}/{{auth('seller')->user()->image}}" alt="Image Description">
                                 <span class="avatar-status avatar-sm-status avatar-status-success"></span>
                             </div>
@@ -37,33 +36,46 @@
                                     <input
                                         class=""
                                         id="myInput" type="text"
-                                        placeholder="{{\App\CPU\translate('Search_customers...')}}"
+                                        @if(Request::is('seller/messages/chat/customer'))
+                                            placeholder="{{\App\CPU\translate('Search_customers...')}}"
+                                        @elseif(Request::is('seller/messages/chat/delivery-man'))
+                                            placeholder="{{\App\CPU\translate('Search_delivery_men...')}}"
+                                        @endif
                                         aria-label="Search customers...">
                                 </div>
                             </form>
 
                             <div class="inbox_chat d-flex flex-column mt-1">
                                 @foreach($chattings_user as $key => $chatting)
-                                    <div class="chat_list p-3 d-flex gap-2 user_{{$chatting->user_id}} seller-list @if ($key == 0) active @endif"
-                                         id="{{$chatting->user_id}}" data-name="{{$chatting->f_name}} {{$chatting->l_name}}" data-phone="{{ $chatting->phone }}">
-                                        <div class="chat_people media gap-10" id="chat_people">
-                                            <div class="chat_img avatar avatar-sm avatar-circle">
-                                                <img src="{{ asset('storage/app/public/profile/'.$chatting->image) }}" id="{{$chatting->user_id}}" onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'" class="avatar-img avatar-circle">
-                                                <span class="avatar-status avatar-sm-status avatar-status-success"></span>
+                                    <div class="list_filter">
+                                        <div class="chat_list p-3 d-flex gap-2 user_{{$chatting->user_id? $chatting->user_id : $chatting->delivery_man_id}} seller-list @if ($key == 0) active @endif"
+                                             id="{{$chatting->user_id? $chatting->user_id : $chatting->delivery_man_id}}" data-name="{{$chatting->f_name}} {{$chatting->l_name}}" data-phone="{{ $chatting->phone }}">
+                                            <div class="chat_people media gap-10" id="chat_people">
+                                                <div class="chat_img avatar avatar-sm avatar-circle">
+                                                    <img
+                                                        @if (Request::is('seller/messages/chat/customer'))
+                                                            src="{{ asset('storage/app/public/profile/'.$chatting->image) }}"
+                                                        @else
+                                                            src="{{ asset('storage/app/public/delivery-man/'.$chatting->image) }}"
+                                                        @endif
+                                                        id="{{$chatting->user_id? $chatting->user_id : $chatting->delivery_man_id}}" onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'" class="avatar-img avatar-circle">
+                                                    <span class="avatar-satatus avatar-sm-status avatar-status-success"></span>
+                                                </div>
+                                                <div class="chat_ib media-body">
+                                                    <h5 class="mb-1 seller @if($chatting->seen_by_seller)active-text @endif"
+                                                        id="{{$chatting->user_id? $chatting->user_id : $chatting->delivery_man_id}}" data-name="{{$chatting->f_name}} {{$chatting->l_name}}" data-phone="{{ $chatting->phone }}">
+                                                        {{$chatting->f_name}} {{$chatting->l_name}}
+                                                        <br><span class="mt-2 font-weight-normal text-muted" id="{{$chatting->user_id? $chatting->user_id: $chatting->delivery_man_id}}" data-name="{{$chatting->f_name}} {{$chatting->l_name}}" data-phone="{{ $chatting->phone }}">{{ $chatting->phone }}</span>
+                                                    </h5>
+                                                </div>
                                             </div>
-                                            <div class="chat_ib media-body">
-                                                <h5 class="mb-1 seller @if($chatting->seen_by_seller)active-text @endif"
-                                                    id="{{$chatting->user_id}}" data-name="{{$chatting->f_name}} {{$chatting->l_name}}" data-phone="{{ $chatting->phone }}">
-                                                    {{$chatting->f_name}} {{$chatting->l_name}}
-                                                    <br><span class="mt-2 font-weight-normal text-muted" id="{{$chatting->user_id}}" data-name="{{$chatting->f_name}} {{$chatting->l_name}}" data-phone="{{ $chatting->phone }}">{{ $chatting->phone }}</span>
-                                                </h5>
-                                            </div>
+                                            @if($chatting->seen_by_seller == false)
+                                                <div class="message-status bg-danger" id="notif-alert-{{ $chatting->user_id? $chatting->user_id: $chatting->delivery_man_id }}"></div>
+                                            @endif
                                         </div>
-                                        @if($chatting->seen_by_seller == false)
-                                        <div class="message-status bg-danger" id="notif-alert-{{ $chatting->user_id }}"></div>
-                                        @endif
+
                                     </div>
-                                @endForeach
+                                @endforeach
                             </div>
                         </div>
                     </div>
@@ -76,7 +88,13 @@
                             <!-- Profile -->
                             <div class="media align-items-center gap-3">
                                 <div class="avatar avatar-sm avatar-circle">
-                                    <img class="avatar-img" id="profile_image" src="{{ asset('storage/app/public/profile/'.$chattings_user[0]->image) }}" onerror="this.src='{{ asset('public/assets/front-end/img/image-place-holder.png') }}'" alt="Image Description">
+                                    <img class="avatar-img" id="profile_image"
+                                         @if (Request::is('seller/messages/chat/customer'))
+                                         src="{{ asset('storage/app/public/profile/'.$chattings_user[0]->image) }}"
+                                         @else
+                                         src="{{ asset('storage/app/public/delivery-man/'.$chattings_user[0]->image) }}"
+                                         @endif
+                                         onerror="this.src='{{ asset('public/assets/front-end/img/image-place-holder.png') }}'" alt="Image Description">
                                     <span class="avatar-status avatar-sm-status avatar-status-success"></span>
                                 </div>
                                 <div class="media-body">
@@ -86,13 +104,6 @@
                             </div>
                             <!-- End Profile -->
 
-{{--                            <div class="d-flex flex-wrap gap-3 justify-content-end">--}}
-{{--                                <div class="badge badge-soft--primary font-weight-bold">Website Problem</div>--}}
-{{--                                <div class="d-flex gap-2">--}}
-{{--                                    <span class="fz-12">Priority  :</span>--}}
-{{--                                    <span class="badge badge-soft-info font-weight-bold">Medium</span>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
                         </div>
                         <!-- End Inbox Message Header -->
 
@@ -100,28 +111,28 @@
                             <div class="inbox_msg">
                                 <!-- Message Body -->
                                 <div class="mesgs">
-                                    <div class="msg_history" id="show_msg">
+                                    <div class="msg_history d-flex flex-column-reverse" id="show_msg">
                                         @foreach($chattings as $key => $message)
-                                            @if ($message->sent_by_customer)
-                                                <div class="incoming_msg">
-                                                    <div class="received_msg">
-                                                        <div class="received_withd_msg">
-                                                            <p class="bg-chat rounded px-3 py-2 mb-1">
-                                                                {{$message->message}}
-                                                            </p>
-                                                            <span class="time_date fz-12"> {{$message->created_at->format('h:i A')}}    |    {{$message->created_at->format('M d')}} </span>
+                                                @if ( $message->sent_by_customer? $message->sent_by_customer: $message->sent_by_delivery_man)
+                                                    <div class="incoming_msg">
+                                                        <div class="received_msg">
+                                                            <div class="received_withd_msg">
+                                                                <p class="bg-chat rounded px-3 py-2 mb-1">
+                                                                    {{$message->message}}
+                                                                </p>
+                                                                <span class="time_date fz-12"> {{$message->created_at->format('h:i A')}}    |    {{$message->created_at->format('M d')}} </span>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            @else
-                                                <div class="outgoing_msg">
-                                                    <div class="sent_msg">
-                                                        <p class="bg-c1 text-white rounded px-3 py-2 mb-1">
-                                                            {{$message->message}}
-                                                        </p>
-                                                        <span class="time_date fz-12 d-flex justify-content-end"> {{$message->created_at->format('h:i A')}}    |    {{$message->created_at->format('M d')}} </span>
+                                                @else
+                                                    <div class="outgoing_msg">
+                                                        <div class="sent_msg">
+                                                            <p class="bg-c1 text-white rounded px-3 py-2 mb-1">
+                                                                {{$message->message}}
+                                                            </p>
+                                                            <span class="time_date fz-12 d-flex justify-content-end"> {{$message->created_at->format('h:i A')}}    |    {{$message->created_at->format('M d')}} </span>
+                                                        </div>
                                                     </div>
-                                                </div>
                                             @endif
                                         @endForeach
                                     </div>
@@ -129,15 +140,16 @@
                                         <div class="input_msg_write">
                                             <form class="mt-4" id="myForm">
                                                 @csrf
-                                                <input type="text" id="hidden_value" hidden
-                                                       value="{{$last_chat->user_id}}" name="">
+                                                    <input type="text" id="hidden_value" hidden
+                                                           value="{{$last_chat->user_id? $last_chat->user_id : $last_chat->delivery_man_id}}" name="">
+
                                                 <textarea
                                                     class="form-control h-120"
                                                     id="msgInputValue"
                                                     type="text" placeholder="{{\App\CPU\translate('Send a message')}}"
                                                     aria-label="Search"></textarea>
                                                 <div class="mt-3 d-flex justify-content-end">
-                                                    <button class="aSend btn btn--primary" type="submit" id="msgSendBtn">{{\App\CPU\translate('Reply')}}</button>
+                                                    <button class="aSend btn btn--primary" type="submit" id="msgSendBtn">{{\App\CPU\translate('Send_Reply')}}</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -151,7 +163,7 @@
                 </section>
 
             @else
-                <div class="offset-md-1 col-md-10" style="display:flex; justify-content: center; align-items: center;">
+                <div class="offset-md-1 col-md-10 d-flex justify-content-center align-items-center">
                     <p>{{\App\CPU\translate('No conversation found')}}</p>
                 </div>
             @endif
@@ -183,13 +195,23 @@
             $(`.user_${user_id} h5`).css('color', '#377dff');
             // $('.inbox_chat').find('h5.active-text').removeClass(".active-text");
 
+            let url;
+
+            if ("{{ Request::is('seller/messages/chat/customer') }}" == true){
+                url = "{{ route('seller.messages.ajax-message-by-user') }}" +"?user_id=" + user_id;
+            }
+            else if("{{ Request::is('seller/messages/chat/delivery-man') }}" == true) {
+                url = "{{ route('seller.messages.ajax-message-by-user') }}" +"?delivery_man_id=" + user_id;
+            }
+
             $.ajax({
                 type: "get",
-                url: "message-by-user?user_id=" + user_id,
+                url: url,
+
                 success: function (data) {
                     $('.msg_history').html('');
                     $('.chat_ib').find('#' + user_id).removeClass('active-text');
-                    $(".msg_history").stop().animate({scrollTop: $(".msg_history")[0].scrollHeight}, 1000);
+                    //$(".msg_history").stop().animate({scrollTop: $(".msg_history")[0].scrollHeight}, 1000);
 
                     if (data.length != 0) {
                         data.map((element, index) => {
@@ -200,7 +222,7 @@
                             let date = month[dateTime.getMonth().toString()] + " " + dateTime.getDate().toString();
 
                             if (element.sent_by_seller) {
-                                $(".msg_history").append(`
+                                $(".msg_history").prepend(`
                                       <div class="outgoing_msg" id="outgoing_msg">
                                         <div class='sent_msg'>
                                           <p class="bg-c1 text-white rounded px-3 py-2 mb-1">${element.message}</p>
@@ -210,7 +232,7 @@
                                 )
 
                             } else {
-                                $(".msg_history").append(`
+                                $(".msg_history").prepend(`
                                       <div class="incoming_msg" id="incoming_msg">
                                         <div class="received_msg">
                                           <div class="received_withd_msg">
@@ -223,7 +245,7 @@
 
                             $('#hidden_value').attr("value", user_id);
                             $('#notif-alert-'+user_id).hide();
-                        });
+                        })
                     } else {
                         $(".msg_history").html(`<p> {{\App\CPU\translate('No Message available')}} </p>`);
                         data = [];
@@ -233,12 +255,12 @@
             });
 
             $('.type_msg').css('display', 'block');
-
         }
+
         $(document).ready(function () {
             var user_id;
 
-            $(".msg_history").stop().animate({scrollTop: $(".msg_history")[0].scrollHeight}, 1000);
+            //$(".msg_history").stop().animate({scrollTop: $(".msg_history")[0].scrollHeight}, 1000);
 
             $(".seller").click(function (e) {
                 messageGet(e);
@@ -249,7 +271,7 @@
 
             $("#myInput").on("keyup", function (e) {
                 var value = $(this).val().toLowerCase();
-                $(".chat_list").filter(function () {
+                $(".list_filter").filter(function () {
                     $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
                 });
             });
@@ -264,6 +286,14 @@
                 // get all the inputs into an array.
                 var user_id = $('#hidden_value').val();
                 var inputs = $('#myForm').find('#msgInputValue').val();
+                let post_url;
+
+                if ("{{ Request::is('seller/messages/chat/customer') }}" == true){
+                    post_url = "{{ route('seller.messages.ajax-seller-message-store') }}" +"?user_id=" + user_id;
+                }
+                else if("{{ Request::is('seller/messages/chat/delivery-man') }}" == true) {
+                    post_url = "{{ route('seller.messages.ajax-seller-message-store') }}" +"?delivery_man_id=" + user_id;
+                }
 
                 let data = {
                     message: inputs,
@@ -278,7 +308,7 @@
 
                 $.ajax({
                     type: "post",
-                    url: '{{route('seller.messages.seller_message_store')}}',
+                    url: post_url,
                     data: data,
                     success: function (respons) {
 
@@ -288,18 +318,21 @@
                         let time = dateTime.toLocaleTimeString().toLowerCase();
                         let date = month[dateTime.getMonth().toString()] + " " + dateTime.getDate().toString();
 
-                        $(".msg_history").append(`
+                        $(".msg_history").prepend(`
                                   <div class="outgoing_msg" id="outgoing_msg">
                                     <div class='sent_msg'>
                                       <p class="bg-c1 text-white rounded px-3 py-2 mb-1"">${respons.message}</p>
                                       <span class='time_date'> now </span>
                                     </div>
                                   </div>`
-                                )
-                            }
-                        });
+                        )
+                    },
+                    error: function (error) {
+                        toastr.warning(error.responseText);
+                    }
+                });
                 //scrolling
-                $(".msg_history").stop().animate({scrollTop: $(".msg_history")[0].scrollHeight}, 200);
+                //$(".msg_history").stop().animate({scrollTop: $(".msg_history")[0].scrollHeight}, 200);
                 //remove value from input box
                 $('#myForm').find('#msgInputValue').val('');
             });

@@ -20,20 +20,37 @@ class DashboardController extends Controller
 {
     public function dashboard()
     {
-        $top_sell = OrderDetail::with(['product'])->where(['seller_id'=>auth('seller')->id()])
+        $top_sell = OrderDetail::with(['product'])
+            ->whereHas('product', function ($query){
+                $query->where(['added_by'=>'seller']);
+            })
+            ->where(['seller_id'=>auth('seller')->id()])
             ->select('product_id', DB::raw('SUM(qty) as count'))
             ->groupBy('product_id')
             ->orderBy("count", 'desc')
             ->take(6)
             ->get();
 
-        $most_rated_products = Product::where(['user_id'=>auth('seller')->id()])->rightJoin('reviews', 'reviews.product_id', '=', 'products.id')
+        $most_rated_products = Product::where(['user_id'=>auth('seller')->id(), 'added_by'=>'seller'])
+            ->rightJoin('reviews', 'reviews.product_id', '=', 'products.id')
             ->groupBy('product_id')
             ->select(['product_id',
                 DB::raw('AVG(reviews.rating) as ratings_average'),
                 DB::raw('count(*) as total')
             ])
             ->orderBy('total', 'desc')
+            ->take(6)
+            ->get();
+
+        $top_deliveryman = Order::with(['delivery_man'])
+            ->select('delivery_man_id', DB::raw('COUNT(delivery_man_id) as count'))
+            ->whereHas('delivery_man', function($query){
+                $query->where(['seller_id'=>auth('seller')->id()]);
+            })
+            ->where(['order_status'=>'delivered'])
+            ->whereNotNull('delivery_man_id')
+            ->groupBy('delivery_man_id')
+            ->orderBy("count", 'desc')
             ->take(6)
             ->get();
 
@@ -86,6 +103,7 @@ class DashboardController extends Controller
 
         $data['top_sell'] = $top_sell;
         $data['most_rated_products'] = $most_rated_products;
+        $data['top_deliveryman'] = $top_deliveryman;
 
         $admin_wallet = SellerWallet::where('seller_id', auth('seller')->id())->first();
         $data['total_earning'] = $admin_wallet->total_earning ?? 0;

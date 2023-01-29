@@ -164,7 +164,7 @@
                                             ?'info'
                                             :'success'))
                                     }}">
-                                    {{\App\CPU\translate(''.$wt->transaction_type)}}
+                                    {{\App\CPU\translate($wt->transaction_type)}}
                                 </span>
                             </td>
                             <td>{{$wt->reference}}</td>

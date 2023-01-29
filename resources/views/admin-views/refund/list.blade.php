@@ -15,42 +15,6 @@
     <!-- End Page Title -->
 
     <!-- Card -->
-{{--    <div class="card mb-3">--}}
-{{--        <div class="card-body">--}}
-{{--            <form action="#" id="form-data" method="GET">--}}
-{{--                <div class="row gy-3 gx-2">--}}
-{{--                    <div class="col-12 pb-0">--}}
-{{--                        <h4>Search Data</h4>--}}
-{{--                    </div>--}}
-{{--                    <div class="col-sm-6 col-md-3">--}}
-{{--                        <select name="filter" class="form-control">--}}
-{{--                            <option value="all">All</option>--}}
-{{--                        </select>--}}
-{{--                    </div>--}}
-{{--                    <div class="col-sm-6 col-md-3">--}}
-{{--                        <div class="form-floating">--}}
-{{--                            <input type="date" name="from" value="" id="from_date" class="form-control">--}}
-{{--                            <label>Start Date</label>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                    <div class="col-sm-6 col-md-3 mt-2 mt-sm-0">--}}
-{{--                        <div class="form-floating">--}}
-{{--                            <input type="date" value="" name="to" id="to_date" class="form-control">--}}
-{{--                            <label>End Date</label>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                    <div class="col-sm-6 col-md-3 mt-2 mt-sm-0  ">--}}
-{{--                        <button type="submit" class="btn btn--primary btn-block">--}}
-{{--                            Show Data--}}
-{{--                        </button>--}}
-{{--                    </div>--}}
-{{--                </div>--}}
-{{--            </form>--}}
-{{--        </div>--}}
-{{--    </div>--}}
-    <!-- End Card -->
-
-    <!-- Card -->
     <div class="card">
         <!-- Header -->
         <div class="p-3">

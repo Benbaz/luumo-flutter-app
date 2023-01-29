@@ -127,7 +127,7 @@
                             <div class="media">
                                 <div class="mr-3">
                                     <img
-                                        class="avatar rounded-circle avatar-70" style="width: 75px;height: 42px"
+                                        class="avatar rounded-circle avatar-70 __inline-4"
                                         onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
                                         src="{{asset('storage/app/public/profile/'.$customer->image??'')}}"
                                         alt="Image">

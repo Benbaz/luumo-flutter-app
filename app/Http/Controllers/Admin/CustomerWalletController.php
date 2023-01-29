@@ -19,7 +19,7 @@ class CustomerWalletController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'customer_id'=>'exists:users,id',
-            'amount'=>'numeric|min:.01',
+            'amount'=>'numeric|min:.01|max:10000000',
         ]);
 
         if ($validator->fails()) {

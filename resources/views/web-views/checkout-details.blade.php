@@ -7,34 +7,27 @@
     <style>
         .nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
             background: {{$web_config['primary_color']}};
-            border-radius: 6px;
-            color: white !important;
             border-color: {{$web_config['primary_color']}};
         }
 
         .nav-tabs .nav-link {
             background: {{$web_config['secondary_color']}};
             border: 1px solid{{$web_config['secondary_color']}};
-            border-radius: 6px;
-            color: #f2f3ff !important;
-            font-weight: 600 !important;
-            font-size: 18px !important;
         }
     </style>
 @endpush
 
 @section('content')
 
-    <div class="container pb-5 mb-2 mb-md-4 rtl" style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">
+    <div class="container pb-5 mb-2 mb-md-4 rtl __inline-54" style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">
         <div class="row">
             <div class="col-md-12 mb-5 pt-5">
-                <div class="feature_header" style="background: #dcdcdc;line-height: 1px">
+                <div class="feature_header __feature_header">
                     <span>{{ \App\CPU\translate('sign_in')}}</span>
                 </div>
             </div>
             <section class="col-lg-8">
-                <hr>
-                <div class="checkout_details mt-3">
+                <div class="checkout_details">
                 @include('web-views.partials._checkout-steps',['step'=>1])
                 <!-- Shipping methods table-->
                     <h2 class="h4 pb-3 mb-2 mt-5">{{\App\CPU\translate('Authentication')}}</h2>
@@ -104,7 +97,7 @@
                                                             <input type="checkbox" name="remember"
                                                                    {{ old('remember') ? 'checked' : '' }}
                                                                    id="remember_me">
-                                                            <label for="remember_me" style="cursor: pointer">
+                                                            <label for="remember_me" class="cursor-pointer">
                                                                 {{\App\CPU\translate('remember_me')}}
                                                             </label>
 

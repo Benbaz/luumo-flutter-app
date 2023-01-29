@@ -15,6 +15,8 @@ use App\Model\CartShipping;
 use App\Model\Category;
 use App\Model\Contact;
 use App\Model\DealOfTheDay;
+use App\Model\DeliveryCountryCode;
+use App\Model\DeliveryZipCode;
 use App\Model\FlashDeal;
 use App\Model\FlashDealProduct;
 use App\Model\HelpTopic;
@@ -28,6 +30,7 @@ use App\Model\Shop;
 use App\Model\Order;
 use App\Model\Transaction;
 use App\Model\Translation;
+use App\Traits\CommonTrait;
 use App\User;
 use App\Model\Wishlist;
 use Brian2694\Toastr\Facades\Toastr;
@@ -46,6 +49,7 @@ use App\CPU\Convert;
 
 class WebController extends Controller
 {
+    use CommonTrait;
     public function maintenance_mode()
     {
         $maintenance_mode = Helpers::get_business_settings('maintenance_mode') ?? 0;
@@ -80,7 +84,7 @@ class WebController extends Controller
         //end
 
         $latest_products = Product::with(['reviews'])->active()->orderBy('id', 'desc')->take(8)->get();
-        $categories = Category::where('position', 0)->priority()->take(11)->get();
+        $categories = Category::where(['position'=> 0])->priority()->take(11)->get();
         $brands = Brand::active()->take(15)->get();
         //best sell product
         $bestSellProduct = OrderDetail::with('product.reviews')
@@ -226,44 +230,70 @@ class WebController extends Controller
     public function checkout_details(Request $request)
     {
         $cart_group_ids = CartManager::get_cart_group_ids();
-        // return count($ cart_group_ids);
         $shippingMethod = Helpers::get_business_settings('shipping_method');
-        $carts = Cart::whereIn('cart_group_id', $cart_group_ids)->get();
 
-        $physical_product = false;
-        foreach($carts as $cart){
-            if($cart->product_type == 'physical'){
-                $physical_product = true;
-            }
-        }
-
-        foreach($carts as $cart)
-        {
-            if ($shippingMethod == 'inhouse_shipping') {
-                $admin_shipping = ShippingType::where('seller_id',0)->first();
-                $shipping_type = isset($admin_shipping)==true?$admin_shipping->shipping_type:'order_wise';
-            } else {
-                if($cart->seller_is == 'admin'){
-                    $admin_shipping = ShippingType::where('seller_id',0)->first();
-                    $shipping_type = isset($admin_shipping)==true?$admin_shipping->shipping_type:'order_wise';
-                }else{
-                    $seller_shipping = ShippingType::where('seller_id',$cart->seller_id)->first();
-                    $shipping_type = isset($seller_shipping)==true?$seller_shipping->shipping_type:'order_wise';
-                }
-            }
-
-            if($shipping_type == 'order_wise'){
-                $cart_shipping = CartShipping::where('cart_group_id', $cart->cart_group_id)->first();
-                if (!isset($cart_shipping)) {
-                    Toastr::info(translate('select_shipping_method_first'));
-                    return redirect('shop-cart');
+        $physical_product_view = false;
+        foreach($cart_group_ids as $group_id) {
+            $carts = Cart::where('cart_group_id', $group_id)->get();
+            foreach ($carts as $cart) {
+                if ($cart->product_type == 'physical') {
+                    $physical_product_view = true;
                 }
             }
         }
 
+        foreach($cart_group_ids as $group_id) {
+            $carts = Cart::where('cart_group_id', $group_id)->get();
+
+            $physical_product = false;
+            foreach ($carts as $cart) {
+                if ($cart->product_type == 'physical') {
+                    $physical_product = true;
+                }
+            }
+            if($physical_product) {
+                foreach ($carts as $cart) {
+                    if ($shippingMethod == 'inhouse_shipping') {
+                        $admin_shipping = ShippingType::where('seller_id', 0)->first();
+                        $shipping_type = isset($admin_shipping) == true ? $admin_shipping->shipping_type : 'order_wise';
+                    } else {
+                        if ($cart->seller_is == 'admin') {
+                            $admin_shipping = ShippingType::where('seller_id', 0)->first();
+                            $shipping_type = isset($admin_shipping) == true ? $admin_shipping->shipping_type : 'order_wise';
+                        } else {
+                            $seller_shipping = ShippingType::where('seller_id', $cart->seller_id)->first();
+                            $shipping_type = isset($seller_shipping) == true ? $seller_shipping->shipping_type : 'order_wise';
+                        }
+                    }
+
+                    if ($physical_product && $shipping_type == 'order_wise') {
+                        $cart_shipping = CartShipping::where('cart_group_id', $cart->cart_group_id)->first();
+                        if (!isset($cart_shipping)) {
+                            Toastr::info(translate('select_shipping_method_first'));
+                            return redirect('shop-cart');
+                        }
+                    }
+                }
+            }
+        }
+
+        $country_restrict_status = Helpers::get_business_settings('delivery_country_restriction');
+        $zip_restrict_status = Helpers::get_business_settings('delivery_zip_code_area_restriction');
+
+        if ($country_restrict_status) {
+            $countries = $this->get_delivery_country_array();
+        } else {
+            $countries = COUNTRIES;
+        }
+
+        if ($zip_restrict_status) {
+            $zip_codes = DeliveryZipCode::all();
+        } else {
+            $zip_codes = 0;
+        }
 
         if (count($cart_group_ids) > 0) {
-            return view('web-views.checkout-shipping', compact('physical_product'));
+            return view('web-views.checkout-shipping', compact('physical_product_view', 'zip_codes', 'country_restrict_status', 'zip_restrict_status', 'countries'));
 
         }
 
@@ -274,39 +304,60 @@ class WebController extends Controller
     public function checkout_payment()
     {
         $cart_group_ids = CartManager::get_cart_group_ids();
-
         $shippingMethod = Helpers::get_business_settings('shipping_method');
-        $carts = Cart::whereIn('cart_group_id', $cart_group_ids)->get();
 
-        $cod_show = false;
-        foreach($carts as $cart)
-        {
-            if($cart->product_type == 'physical'){
-                $cod_show = true;
-            }
-            if ($shippingMethod == 'inhouse_shipping') {
-                $admin_shipping = ShippingType::where('seller_id',0)->first();
-                $shipping_type = isset($admin_shipping)==true?$admin_shipping->shipping_type:'order_wise';
-            } else {
-                if($cart->seller_is == 'admin'){
-                    $admin_shipping = ShippingType::where('seller_id',0)->first();
-                    $shipping_type = isset($admin_shipping)==true?$admin_shipping->shipping_type:'order_wise';
-                }else{
-                    $seller_shipping = ShippingType::where('seller_id',$cart->seller_id)->first();
-                    $shipping_type = isset($seller_shipping)==true?$seller_shipping->shipping_type:'order_wise';
+        $physical_products[] = false;
+        foreach($cart_group_ids as $group_id) {
+            $carts = Cart::where('cart_group_id', $group_id)->get();
+            $physical_product = false;
+            foreach ($carts as $cart) {
+                if ($cart->product_type == 'physical') {
+                    $physical_product = true;
                 }
             }
-            if($shipping_type == 'order_wise'){
-                $cart_shipping = CartShipping::where('cart_group_id', $cart->cart_group_id)->first();
-                if (!isset($cart_shipping)) {
-                    Toastr::info(translate('select_shipping_method_first'));
-                    return redirect('shop-cart');
+            $physical_products[] = $physical_product;
+        }
+        unset($physical_products[0]);
+
+        $cod_not_show = in_array(false, $physical_products);
+
+        foreach($cart_group_ids as $group_id) {
+            $carts = Cart::where('cart_group_id', $group_id)->get();
+
+            $physical_product = false;
+            foreach ($carts as $cart) {
+                if ($cart->product_type == 'physical') {
+                    $physical_product = true;
+                }
+            }
+
+            if($physical_product) {
+                foreach ($carts as $cart) {
+                    if ($shippingMethod == 'inhouse_shipping') {
+                        $admin_shipping = ShippingType::where('seller_id', 0)->first();
+                        $shipping_type = isset($admin_shipping) == true ? $admin_shipping->shipping_type : 'order_wise';
+                    } else {
+                        if ($cart->seller_is == 'admin') {
+                            $admin_shipping = ShippingType::where('seller_id', 0)->first();
+                            $shipping_type = isset($admin_shipping) == true ? $admin_shipping->shipping_type : 'order_wise';
+                        } else {
+                            $seller_shipping = ShippingType::where('seller_id', $cart->seller_id)->first();
+                            $shipping_type = isset($seller_shipping) == true ? $seller_shipping->shipping_type : 'order_wise';
+                        }
+                    }
+                    if ($shipping_type == 'order_wise') {
+                        $cart_shipping = CartShipping::where('cart_group_id', $cart->cart_group_id)->first();
+                        if (!isset($cart_shipping)) {
+                            Toastr::info(translate('select_shipping_method_first'));
+                            return redirect('shop-cart');
+                        }
+                    }
                 }
             }
         }
 
         if (session()->has('address_id') && count($cart_group_ids) > 0) {
-            return view('web-views.checkout-payment', compact('cod_show'));
+            return view('web-views.checkout-payment', compact('cod_not_show'));
         }
 
         Toastr::error(translate('incomplete_info'));
@@ -943,6 +994,24 @@ class WebController extends Controller
     {
         $privacy_policy = BusinessSetting::where('type', 'privacy_policy')->first();
         return view('web-views.privacy-policy', compact('privacy_policy'));
+    }
+
+    public function refund_policy()
+    {
+        $refund_policy = BusinessSetting::where('type', 'refund-policy')->first();
+        return view('web-views.refund-policy', compact('refund_policy'));
+    }
+
+    public function return_policy()
+    {
+        $return_policy = BusinessSetting::where('type', 'return-policy')->first();
+        return view('web-views.return-policy', compact('return_policy'));
+    }
+
+    public function cancellation_policy()
+    {
+        $cancellation_policy = BusinessSetting::where('type', 'cancellation-policy')->first();
+        return view('web-views.cancellation-policy', compact('cancellation_policy'));
     }
 
     //order Details

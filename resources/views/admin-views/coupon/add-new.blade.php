@@ -3,7 +3,8 @@
 @section('title', \App\CPU\translate('Coupon Add'))
 
 @push('css_or_js')
-    <link href="{{asset('public/assets/back-end')}}/css/select2.min.css" rel="stylesheet"/>
+    <link href="{{ asset('public/assets/select2/css/select2.min.css')}}" rel="stylesheet">
+    <link href="{{ asset('public/assets/back-end/css/custom.css')}}" rel="stylesheet">
 @endpush
 
 @section('content')
@@ -28,10 +29,11 @@
                             <div class="row">
                                 <div class="col-md-6 col-lg-4 form-group">
                                     <label for="name" class="title-color font-weight-medium d-flex">{{\App\CPU\translate('coupon_type')}}</label>
-                                    <select class="form-control" name="coupon_type" required>
-                                        <option disabled selected>{{\App\CPU\translate('Select Coupon Type')}}</option>
-                                        {{--<option value="delivery_charge_free">Delivery Charge Free</option>--}}
+                                    <select class="form-control" id="coupon_type" name="coupon_type" required>
+                                        <option disabled selected>{{\App\CPU\translate('Select_coupon_type')}}</option>
                                         <option value="discount_on_purchase">{{\App\CPU\translate('Discount_on_Purchase')}}</option>
+                                        <option value="free_delivery">{{\App\CPU\translate('Free_Delivery')}}</option>
+                                        <option value="first_order">{{\App\CPU\translate('First_Order')}}</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6 col-lg-4 form-group">
@@ -46,36 +48,59 @@
                                     </div>
                                     <input type="text" name="code" value=""
                                            class="form-control" id="code"
-                                           placeholder="{{\App\CPU\translate('Ex: EID100')}}" required>
+                                           placeholder="{{\App\CPU\translate('Ex')}}: EID100" required>
                                 </div>
-                                <div class="col-md-6 col-lg-4 form-group">
+                                <div class="col-md-6 col-lg-4 form-group first_order">
+                                    <label for="name" class="title-color font-weight-medium d-flex">{{\App\CPU\translate('coupon_bearer')}}</label>
+                                    <select class="form-control" name="coupon_bearer" id="coupon_bearer" >
+                                        <option disabled selected>{{\App\CPU\translate('Select_coupon_bearer')}}</option>
+                                        <option value="seller">{{\App\CPU\translate('seller')}}</option>
+                                        <option value="inhouse">{{\App\CPU\translate('admin')}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 col-lg-4 form-group coupon_by first_order">
+                                    <label for="name" class="title-color font-weight-medium d-flex">{{\App\CPU\translate('seller')}}</label>
+                                    <select class="js-example-basic-multiple js-states js-example-responsive form-control" name="seller_id" id="seller_wise_coupon">
+                                        <option disabled selected>{{\App\CPU\translate('select_seller')}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 col-lg-4 form-group coupon_type first_order">
+                                    <label for="name" class="title-color font-weight-medium d-flex">{{\App\CPU\translate('customer')}}</label>
+                                    <select class="js-example-basic-multiple js-states js-example-responsive form-control" name="customer_id" >
+                                        <option disabled selected>{{\App\CPU\translate('Select_customer')}}</option>
+                                        <option value="0">{{\App\CPU\translate('all_customer')}}</option>
+                                        @foreach($customers as $customer)
+                                            <option value="{{ $customer->id }}">{{ $customer->f_name. ' '. $customer->l_name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-6 col-lg-4 form-group first_order">
                                     <label
                                         for="exampleFormControlInput1" class="title-color font-weight-medium d-flex">{{\App\CPU\translate('limit')}} {{\App\CPU\translate('for')}} {{\App\CPU\translate('same')}} {{\App\CPU\translate('user')}}</label>
                                     <input type="number" name="limit" value="{{ old('limit') }}" min="0" id="coupon_limit" class="form-control"
-                                           placeholder="{{\App\CPU\translate('EX')}}: {{\App\CPU\translate('10')}}">
+                                           placeholder="{{\App\CPU\translate('EX')}}: 10">
                                 </div>
-                                <div class="col-md-6 col-lg-4 form-group">
+                                <div class="col-md-6 col-lg-4 form-group free_delivery">
                                     <label for="name" class="title-color font-weight-medium d-flex">{{\App\CPU\translate('discount_type')}}</label>
-                                    <select id="discount_type" class="form-control" name="discount_type"
-                                            onchange="checkDiscountType(this.value)"
-                                            style="width: 100%">
+                                    <select id="discount_type" class="form-control w-100" name="discount_type"
+                                            onchange="checkDiscountType(this.value)">
                                         <option value="amount">{{\App\CPU\translate('Amount')}}</option>
                                         <option value="percentage">{{\App\CPU\translate('percentage (%)')}}</option>
                                     </select>
                                 </div>
-                                <div class="col-md-6 col-lg-4 form-group">
-                                    <label for="name" class="title-color font-weight-medium d-flex">{{\App\CPU\translate('Discount_Amount')}}</label>
+                                <div class="col-md-6 col-lg-4 form-group free_delivery">
+                                    <label for="name" class="title-color font-weight-medium d-flex">{{\App\CPU\translate('Discount_Amount')}} <span id="discount_percent"> (%)</span></label>
                                     <input type="number" min="1" max="1000000" name="discount" value="{{ old('discount') }}" class="form-control"
                                            id="discount"
-                                           placeholder="{{\App\CPU\translate('Ex: 500')}}" required>
+                                           placeholder="{{\App\CPU\translate('Ex: 500')}}">
                                 </div>
                                 <div class="col-md-6 col-lg-4 form-group">
                                     <label for="name" class="title-color font-weight-medium d-flex">{{\App\CPU\translate('minimum_purchase ($)')}}</label>
                                     <input type="number" min="1" max="1000000" name="min_purchase" value="{{ old('min_purchase') }}" class="form-control"
                                         id="minimum purchase"
-                                        placeholder="{{\App\CPU\translate('Ex: 100')}}" required>
+                                        placeholder="{{\App\CPU\translate('Ex: 100')}}">
                                 </div>
-                                <div class="col-md-6 col-lg-4 form-group" id="max-discount">
+                                <div class="col-md-6 col-lg-4 form-group free_delivery" id="max-discount">
                                     <label for="name" class="title-color font-weight-medium d-flex">{{\App\CPU\translate('maximum_discount ($)')}}</label>
                                     <input type="number" min="1" max="1000000" name="max_discount" value="{{ old('max_discount') }}"
                                         class="form-control" id="maximum discount"
@@ -144,10 +169,7 @@
                                 <th>{{\App\CPU\translate('coupon_type')}}</th>
                                 <th>{{\App\CPU\translate('Duration')}}</th>
                                 <th>{{\App\CPU\translate('user_limit')}}</th>
-                                <th>{{\App\CPU\translate('Discount')}}</th>
-                                <th>{{\App\CPU\translate('discount_type')}}</th>
-                                <th>{{\App\CPU\translate('minimum_purchase')}}</th>
-                                <th>{{\App\CPU\translate('maximum_discount')}}</th>
+                                <th>{{\App\CPU\translate('discount_bearer')}}</th>
                                 <th>{{\App\CPU\translate('Status')}}</th>
                                 <th class="text-center">{{\App\CPU\translate('Action')}}</th>
                             </tr>
@@ -158,9 +180,9 @@
                                     <td >{{$cou->firstItem() + $k}}</td>
                                     <td>
                                         <div>{{substr($c['title'],0,20)}}</div>
-                                        <strong>code: {{$c['code']}}</strong>
+                                        <strong>{{\App\CPU\translate('code')}}: {{$c['code']}}</strong>
                                     </td>
-                                    <td style="text-transform: capitalize">{{str_replace('_',' ',$c['coupon_type'])}}</td>
+                                    <td class="text-capitalize">{{\App\CPU\translate(str_replace('_',' ',$c['coupon_type']))}}</td>
                                     <td>
                                         <div class="d-flex flex-wrap gap-1">
                                             <span>{{date('d M, y',strtotime($c['start_date']))}} - </span>
@@ -171,10 +193,7 @@
                                         <span>{{\App\CPU\translate('Limit')}}: <strong>{{ $c['limit'] }},</strong></span>
                                         <span class="ml-1">{{\App\CPU\translate('Used')}}: <strong>{{ $c['order_count'] }}</strong></span>
                                     </td>
-                                    <td>{{$c['discount_type']=='amount'?\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($c['discount'])):$c['discount']}}</td>
-                                    <td><span class="text-capitalize">{{$c['discount_type']}}</span></td>
-                                    <td>{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($c['min_purchase']))}}</td>
-                                    <td>{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($c['max_discount']))}}</td>
+                                    <td>{{ $c['coupon_bearer'] == 'inhouse' ? 'admin':$c['coupon_bearer'] }}</td>
                                     <td>
                                         <label class="switcher">
                                             <input type="checkbox" class="switcher_input"
@@ -185,6 +204,9 @@
                                     </td>
                                     <td>
                                         <div class="d-flex gap-10 justify-content-center">
+                                            <button class="btn btn-outline--primary square-btn btn-sm mr-1" onclick="get_details(this)" data-id="{{ $c['id'] }}" data-toggle="modal" data-target="#exampleModalCenter">
+                                                <img src="{{asset('/public/assets/back-end/img/eye.svg')}}" class="svg" alt="">
+                                            </button>
                                             <a class="btn btn-outline--primary btn-sm edit"
                                             href="{{route('admin.coupon.update',[$c['id']])}}"
                                             title="{{ \App\CPU\translate('Edit')}}"
@@ -209,6 +231,12 @@
                             @endforeach
                             </tbody>
                         </table>
+                        <div class="modal fade" id="quick-view" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered coupon-details" role="document">
+                                <div class="modal-content" id="quick-view-modal">
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="table-responsive mt-4">
@@ -237,6 +265,7 @@
     $(document).ready(function() {
             generateCode();
 
+            $('#discount_percent').hide();
             let discount_type = $('#discount_type').val();
             if (discount_type == 'amount') {
                 $('#max-discount').hide()
@@ -255,6 +284,26 @@
         $("#expire_date").on("change", function () {
             $('#start_date').attr('max',$(this).val());
         });
+
+        function get_details(t){
+            let id = $(t).data('id')
+
+            $.ajax({
+                type: 'GET',
+                url: '{{route('admin.coupon.quick-view-details')}}',
+                data: {
+                    id: id
+                },
+                beforeSend: function () {
+                    $('#loading').show();
+                },
+                success: function (data) {
+                    $('#loading').hide();
+                    $('#quick-view').modal('show');
+                    $('#quick-view-modal').empty().html(data.view);
+                }
+            });
+        }
 
         function checkDiscountType(val) {
             if (val == 'amount') {
@@ -294,9 +343,70 @@
     $('#discount_type').on('change', function (){
         let type = $('#discount_type').val();
         if(type === 'amount'){
-            $('#discount').attr('placeholder', 'Ex: 500');
+            $('#discount').attr({
+                'placeholder': 'Ex: 500',
+                "max":"1000000"
+            });
+            $('#discount_percent').hide();
         }else if(type === 'percentage'){
-            $('#discount').attr('placeholder', 'Ex: 10%');
+            $('#discount').attr({
+                "max":"100",
+                "placeholder":"Ex: 10%"
+            });
+            $('#discount_percent').show();
+        }
+    });
+    $('#coupon_bearer').on('change', function (){
+        let coupon_bearer = $('#coupon_bearer').val();
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+            }
+        });
+        $.ajax({
+            type: 'POST',
+            url: '{{route('admin.coupon.ajax-get-seller')}}',
+            data: {
+                coupon_bearer: coupon_bearer
+            },
+            success: function (result) {
+                $("#seller_wise_coupon").html(result);
+            }
+        });
+    });
+
+    $('#coupon_type').on('change', function (){
+        let discount_type = $('#discount_type').val();
+        let type = $('#coupon_type').val();
+
+        if(type === 'free_delivery'){
+            if (discount_type === 'amount') {
+                $('.first_order').show();
+                $('.free_delivery').hide();
+            } else if (discount_type === 'percentage') {
+                $('.first_order').show();
+                $('.free_delivery').hide();
+            }
+        }else if(type === 'first_order'){
+            if (discount_type === 'amount') {
+                $('.free_delivery').show();
+                $('.first_order').hide();
+                $('#max-discount').hide()
+            } else if (discount_type === 'percentage') {
+                $('.free_delivery').show();
+                $('.first_order').hide();
+                $('#max-discount').show()
+            }
+        }else{
+            if (discount_type === 'amount') {
+                $('.first_order').show();
+                $('.free_delivery').show();
+                $('#max-discount').hide()
+            } else if (discount_type === 'percentage') {
+                $('.first_order').show();
+                $('.free_delivery').show();
+                $('#max-discount').show()
+            }
         }
     });
 </script>

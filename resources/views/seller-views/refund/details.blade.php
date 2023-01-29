@@ -136,8 +136,7 @@
 
                         <div class="col-sm-6 col-md-4 d-flex flex-column gap-10">
                             <span>{{\App\CPU\translate('payment_method')}} : {{str_replace('_',' ',$order->payment_method)}}</span>
-                            <span>{{\App\CPU\translate('order_details')}} : </span>
-                            <div><a class="btn btn--primary btn-sm" href="{{route('seller.orders.details',['id'=>$order->id])}}">{{\App\CPU\translate('click_here')}}</a></div>
+                            <span>{{\App\CPU\translate('order_details')}} : <a class="btn btn--primary btn-sm" href="{{route('seller.orders.details',['id'=>$order->id])}}">{{\App\CPU\translate('click_here')}}</a></span>
                         </div>
                     </div>
                 </div>

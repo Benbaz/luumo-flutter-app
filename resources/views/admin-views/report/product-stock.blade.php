@@ -73,8 +73,8 @@
                                                 <select
                                                     class="form-control"
                                                     name="sort">
-                                                    <option value="ASC" {{ $sort == 'ASC' ? 'selected' : '' }}>{{\App\CPU\translate('wishlist_sort_by_(low_to_high)')}}</option>
-                                                    <option value="DESC" {{ $sort == 'DESC' ? 'selected' : '' }}>{{\App\CPU\translate('wishlist_sort_by_(high_to_low)')}}</option>
+                                                    <option value="ASC" {{ $sort == 'ASC' ? 'selected' : '' }}>{{\App\CPU\translate('sort_by_(low_to_high)')}}</option>
+                                                    <option value="DESC" {{ $sort == 'DESC' ? 'selected' : '' }}>{{\App\CPU\translate('sort_by_(high_to_low)')}}</option>
                                                 </select>
                                             </div>
                                         </div>

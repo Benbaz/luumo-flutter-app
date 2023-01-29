@@ -76,18 +76,24 @@
                                                 onerror="this.src='{{asset('public/assets/back-end/img/400x400/img2.jpg')}}'"
                                                 src="{{asset('storage/app/public/shop')}}/{{$seller->shop->image}}"
                                                 alt="">
-                                            <div>{{ \Str::limit($seller->shop->name, 20)}}</div>
+                                            <div><a class="title-color" href="{{ route('admin.sellers.view', ['id' => $seller->id]) }}">{{ \Str::limit($seller->shop->name, 20)}}</a></div>
                                         </div>
                                     </td>
-                                    <td>{{$seller->f_name}} {{$seller->l_name}}</td>
+                                    <td>
+                                        <a title="{{\App\CPU\translate('View')}}"
+                                           class="title-color"
+                                           href="{{route('admin.sellers.view',$seller->id)}}">
+                                            {{$seller->f_name}} {{$seller->l_name}}
+                                        </a>
+                                    </td>
                                     <td>
                                         <div class="mb-1">
-                                            <strong>{{$seller->email}}</strong>
+                                            <strong><a class="title-color hover-c1" href="mailto:{{$seller->email}}">{{$seller->email}}</a></strong>
                                         </div>
-                                        {{$seller->phone}}
+                                        <a class="title-color hover-c1" href="tel:{{$seller->phone}}">{{$seller->phone}}</a>
                                     </td>
                                     <td>
-                                        {!! $seller->status=='approved'?'<label class="badge badge-success">Active</label>':'<label class="badge badge-danger">In-Active</label>' !!}
+                                        {!! $seller->status=='approved'?'<label class="badge badge-success">'.\App\CPU\translate('Active').'</label>':'<label class="badge badge-danger">'.\App\CPU\translate('In-Active').'</label>' !!}
                                     </td>
                                     <td class="text-center">
                                         <a href="{{route('admin.sellers.product-list',[$seller['id']])}}"

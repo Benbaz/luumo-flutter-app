@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\CPU\Helpers;
 use App\Http\Controllers\Controller;
+use App\Model\BusinessSetting;
 use App\Model\OrderTransaction;
 use App\Model\Transaction;
 use App\User;
@@ -48,7 +49,17 @@ class TransactionController extends Controller
                                         'search'=>$search]);
 
 
-        return view('admin-views.transaction.list', compact('customers', 'transactions','search','status', 'from', 'to', 'customer_id'));
+        return view('admin-views.transaction.order-list', compact('customers', 'transactions','search','status', 'from', 'to', 'customer_id'));
+    }
+
+    public function download_order_transaction_pdf(Request $request)
+    {
+        $company_phone =BusinessSetting::where('type', 'company_phone')->first()->value;
+        $company_email =BusinessSetting::where('type', 'company_email')->first()->value;
+        $company_name =BusinessSetting::where('type', 'company_name')->first()->value;
+        $company_web_logo =BusinessSetting::where('type', 'company_web_logo')->first()->value;
+
+        return view('admin-views.transaction.order_list_pdf', compact('company_phone', 'company_name', 'company_email', 'company_web_logo'));
     }
 
     /**
@@ -109,5 +120,10 @@ class TransactionController extends Controller
 
         return (new FastExcel($tranData))->download('Transaction_All_details.xlsx');
 
+    }
+
+    public function expense_list(Request $request)
+    {
+        return view('admin-views.transaction.expense-list');
     }
 }

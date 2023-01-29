@@ -41,7 +41,7 @@
                                 <div class="d-flex flex-column gap-2 mt-3">
                                     <!-- Order status -->
                                     <div class="order-status d-flex justify-content-sm-end gap-10 text-capitalize">
-                                        <span class="title-color">Status: </span>
+                                        <span class="title-color">{{\App\CPU\translate('status')}}: </span>
                                         @if($order['order_status']=='pending')
                                             <span class="badge badge-soft-info font-weight-bold radius-50 d-flex align-items-center py-1 px-2">
                                                 {{\App\CPU\translate(str_replace('_',' ',$order['order_status']))}}
@@ -68,7 +68,7 @@
                                     <!-- Payment Method -->
                                     <div class="payment-method d-flex justify-content-sm-end gap-10 text-capitalize">
                                         <span class="title-color">{{\App\CPU\translate('Payment')}} {{\App\CPU\translate('Method')}} :</span>
-                                        <strong> {{str_replace('_',' ',$order['payment_method'])}}</strong>
+                                        <strong>  {{\App\CPU\translate(str_replace('_',' ',$order['payment_method']))}}</strong>
                                     </div>
 
                                     <!-- reference-code -->
@@ -79,7 +79,7 @@
 
                                     <!-- Payment Status -->
                                     <div class="payment-status d-flex justify-content-sm-end gap-10">
-                                        <span class="title-color">Payment Status:</span>
+                                        <span class="title-color">{{\App\CPU\translate('Payment_Status')}}:</span>
                                         @if($order['payment_status']=='paid')
                                             <span class="text-success font-weight-bold">
                                                 {{\App\CPU\translate('Paid')}}
@@ -217,17 +217,17 @@
                             <div class="col-md-9 col-lg-8">
                                 <dl class="row text-sm-right">
 
-                                    <dt class="col-sm-6">{{\App\CPU\translate('extra_discount')}}</dt>
+                                    <dt class="col-sm-5">{{\App\CPU\translate('extra_discount')}}</dt>
                                     <dd class="col-sm-6 title-color">
                                         <strong>- {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($extra_discount))}}</strong>
                                     </dd>
 
-                                    <dt class="col-sm-6">{{\App\CPU\translate('coupon_discount')}}</dt>
+                                    <dt class="col-sm-5">{{\App\CPU\translate('coupon_discount')}}</dt>
                                     <dd class="col-sm-6 title-color">
                                         <strong>- {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($coupon_discount))}}</strong>
                                     </dd>
 
-                                    <dt class="col-sm-6">{{\App\CPU\translate('Total')}}</dt>
+                                    <dt class="col-sm-5">{{\App\CPU\translate('Total')}}</dt>
                                     <dd class="col-sm-6 title-color">
                                         <strong>{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($total+$shipping-$extra_discount-$coupon_discount))}}</strong>
                                     </dd>
@@ -256,8 +256,7 @@
 
                             <div class="media flex-wrap gap-3">
                                 <div class="">
-                                    <img
-                                        class="avatar rounded-circle avatar-70" style="width: 75px;height: 42px"
+                                    <img class="avatar rounded-circle avatar-70 __inline-4"
                                         onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
                                         src="{{asset('storage/app/public/profile/'.$order->customer->image)}}"
                                         alt="Image">
@@ -269,9 +268,6 @@
                                     </span>
                                     <span class="title-color break-all"><strong>{{$order->customer['phone']}}</strong></span>
                                     <span class="title-color break-all">{{$order->customer['email']}}</span>
-                                </div>
-                                <div class="media-body text-right">
-                                    {{--<i class="tio-chevron-right text-body"></i>--}}
                                 </div>
                             </div>
                         </div>
@@ -303,7 +299,7 @@
                     <div class="row">
                         <div class="col-md-12 modal_body_map">
                             <div class="location-map" id="location-map">
-                                <div style="width: 100%; height: 400px;" id="location_map_canvas"></div>
+                                <div class="__h-400px w-100" id="location_map_canvas"></div>
                             </div>
                         </div>
                     </div>

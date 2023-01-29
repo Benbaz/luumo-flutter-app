@@ -219,10 +219,10 @@
                                             ?'info'
                                             :'success'))
                                     }}">
-                                    {{\App\CPU\translate(''.$wt->transaction_type)}}
+                                    {{\App\CPU\translate($wt->transaction_type)}}
                                 </span>
                             </td>
-                            <td>{{str_replace('_',' ',$wt->reference)}}</td>
+                            <td>{{ str_replace('_',' ',$wt->reference) }}</td>
                             <td class="text-center">{{date('Y/m/d '.config('timeformat'), strtotime($wt->created_at))}}</td>
                         </tr>
                     @endforeach

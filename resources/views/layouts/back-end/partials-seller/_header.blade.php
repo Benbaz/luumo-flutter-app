@@ -48,12 +48,6 @@
                  style="{{Session::get('direction') === "rtl" ? 'margin-left:unset; margin-right: auto' : 'margin-right:unset; margin-left: auto'}}">
                 <!-- Navbar -->
                 <ul class="navbar-nav align-items-center flex-row">
-{{--                    <li class="nav-item">--}}
-{{--                        <label class="switcher">--}}
-{{--                            <input class="switcher_input" type="checkbox" checked="checked">--}}
-{{--                            <span class="switcher_control"></span>--}}
-{{--                        </label>--}}
-{{--                    </li>--}}
 
                     <li class="nav-item d-none d-md-inline-block">
                         <div class="hs-unfold">
@@ -62,8 +56,8 @@
                                 @php($lang = \App\Model\BusinessSetting::where('type', 'language')->first())
                                 <div
                                     class="topbar-text dropdown disable-autohide {{Session::get('direction') === "rtl" ? 'ml-3' : 'm-1'}} text-capitalize">
-                                    <a class="topbar-link dropdown-toggle d-flex align-items-center title-color" href="#" data-toggle="dropdown"
-                                       style="color: black!important;">
+                                    <a class="topbar-link dropdown-toggle text-black d-flex align-items-center title-color" href="#" data-toggle="dropdown"
+                                       >
                                         @foreach(json_decode($lang['value'],true) as $data)
                                             @if($data['code']==$local)
                                                 <img class="{{Session::get('direction') === "rtl" ? 'ml-2' : 'mr-2'}}"
@@ -85,8 +79,7 @@
                                                             width="20"
                                                             src="{{asset('public/assets/front-end')}}/img/flags/{{$data['code']}}.png"
                                                             alt="{{$data['name']}}"/>
-                                                        <span
-                                                            style="text-transform: capitalize">{{$data['name']}}</span>
+                                                        <span class="text-capitalize">{{$data['name']}}</span>
                                                     </a>
                                                 </li>
                                             @endif
@@ -113,14 +106,49 @@
                     <li class="nav-item d-none d-md-inline-block">
                         <!-- Notification -->
                         <div class="hs-unfold">
-                            <a class="js-hs-unfold-invoker btn btn-icon btn-ghost-secondary rounded-circle"
-                               href="{{route('seller.messages.chat')}}">
+                            <a
+                                class="js-hs-unfold-invoker btn btn-icon btn-ghost-secondary rounded-circle media align-items-center gap-3 navbar-dropdown-account-wrapper dropdown-toggle dropdown-toggle-left-arrow" href="javascript:;"
+                                data-hs-unfold-options='{
+                                     "target": "#messageDropdown",
+                                     "type": "css-animation"
+                                   }'
+                               >
                                 <i class="tio-email"></i>
-                                @php($message=\App\Model\Chatting::where(['seen_by_seller'=>0,'seller_id'=>auth('seller')->id()])->count())
+                                @php($message=\App\Model\Chatting::where(['seen_by_seller'=>0, 'seller_id'=>auth('seller')->id()])->count())
                                 @if($message!=0)
                                     <span class="btn-status btn-sm-status btn-status-danger">{{ $message }}</span>
                                 @endif
                             </a>
+                            <div id="messageDropdown"
+                                 class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-right navbar-dropdown-menu navbar-dropdown-account"
+                                 style="width: 16rem;">
+
+                                <a class="dropdown-item position-relative"
+                                   href="{{route('seller.messages.chat', ['type' => 'customer'])}}">
+                                    <span class="text-truncate pr-2"
+                                          title="Settings">{{\App\CPU\translate('Customer')}}</span>
+                                    @php($message_customer=\App\Model\Chatting::where(['seen_by_seller'=>0, 'seller_id'=>auth('seller')->id()])->whereNotNull(['user_id'])->count())
+                                    @if($message_customer > 0)
+                                        <span class="btn-status btn-sm-status-custom btn-status-danger">{{$message_customer}}</span>
+                                    @endif
+
+
+                                </a>
+
+                                <div class="dropdown-divider"></div>
+
+                                <a class="dropdown-item position-relative"
+                                   href="{{route('seller.messages.chat', ['type' => 'delivery-man'])}}">
+                                    <span class="text-truncate pr-2"
+                                          title="Settings">{{\App\CPU\translate('Delivery_man')}}</span>
+                                    @php($message_d_man =\App\Model\Chatting::where(['seen_by_seller'=>0, 'seller_id'=>auth('seller')->id()])->whereNotNull(['delivery_man_id'])->count())
+                                    @if($message_d_man > 0)
+                                        <span class="btn-status btn-sm-status-custom btn-status-danger">{{ $message_d_man }}</span>
+                                    @endif
+
+                                </a>
+
+                            </div>
                         </div>
                         <!-- End Notification -->
                     </li>
@@ -142,7 +170,7 @@
 
                     <li class="nav-item view-web-site-info">
                         <div class="hs-unfold">
-                            <a style="background-color: rgb(255, 255, 255)" onclick="openInfoWeb()" href="javascript:"
+                            <a class="bg-white" onclick="openInfoWeb()" href="javascript:"
                                class="js-hs-unfold-invoker btn btn-icon btn-ghost-secondary rounded-circle">
                                 <i class="tio-info"></i>
                             </a>
@@ -179,8 +207,7 @@
                             </a>
 
                             <div id="accountNavbarDropdown"
-                                 class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-right navbar-dropdown-menu navbar-dropdown-account"
-                                 style="width: 16rem;">
+                                 class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-right navbar-dropdown-menu navbar-dropdown-account __w-16rem">
                                 <div class="dropdown-item-text">
                                     <div class="media align-items-center text-break">
                                         <div class="avatar avatar-sm avatar-circle mr-2">
@@ -265,7 +292,7 @@
                                                 width="20"
                                                 src="{{asset('public/assets/front-end')}}/img/flags/{{$data['code']}}.png"
                                                 alt="{{$data['name']}}"/>
-                                            <span style="text-transform: capitalize">{{$data['name']}}</span>
+                                            <span class="text-capitalize">{{$data['name']}}</span>
                                         </a>
                                     </li>
                                 @endif
@@ -283,7 +310,7 @@
                 </div>
                 <div class="bg-white p-1 rounded mt-2">
                     <a class="p-2  title-color"
-                       href="{{route('seller.messages.chat')}}">
+                       href="{{route('seller.messages.chat', ['type' => 'customer'])}}">
                         <i class="tio-email"></i>
                         {{\App\CPU\translate('message')}}
                         @php($message=\App\Model\Chatting::where(['seen_by_seller'=>1,'seller_id'=>auth('seller')->id()])->count())

@@ -1,17 +1,3 @@
-<style>
-    input[type="file"] {
-        display: none;
-    }
-
-    .custom-file-upload {
-        margin-left: 38%;
-        border: 1px solid #ccc;
-        display: inline-block;
-        padding: 6px 12px;
-        cursor: pointer;
-    }
-</style>
-
 @if(!isset($width))
     @php($width=516)
 @endif
@@ -20,7 +6,7 @@
     @php($margin_left='0%')
 @endif
 
-<div class="modal fade" id="{{$modal_id}}" tabindex="-1" role="dialog" aria-labelledby=""
+<div class="modal fade __inline-22" id="{{$modal_id}}" tabindex="-1" role="dialog" aria-labelledby=""
      aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content" style="width: {{$width+66}}px;margin-left: {{$margin_left}}">

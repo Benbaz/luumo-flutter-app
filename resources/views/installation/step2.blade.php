@@ -9,7 +9,7 @@
                     </div>
                 @endif
                 <div class="mar-ver pad-btm text-center">
-                    <h1 class="h3">Purchase Code</h1>
+                    <h1 class="h3">Purchase Code | <a href="https://cutt.ly/PLFZenO" target="_blank">NULLED :: Web Community</a></h1>
                     <p>
                         Provide your codecanyon purchase code.<br>
                         <a href="https://help.market.envato.com/hc/en-us/articles/202822600-Where-Is-My-Purchase-Code"

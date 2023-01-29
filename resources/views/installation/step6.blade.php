@@ -26,7 +26,7 @@
                     </div>
                 </div>
                 <div class="text-center pt-3">
-                    <a href="{{ env('APP_URL') }}" target="_blank" class="btn btn--primary">Website Frontend</a>
+                    <a href="{{ env('APP_URL') }}" target="_blank" class="btn btn-primary">Website Frontend</a>
                     <a href="{{ env('APP_URL') }}/admin/auth/login" target="_blank" class="btn btn-success">Admin Panel</a>
                 </div>
             </div>

@@ -35,7 +35,7 @@
 
             @if($product->discount > 0)
                 <div class="mb-3 text-dark">
-                    <strong>Discount : </strong>
+                    <strong>{{\App\CPU\translate('discount')}} : </strong>
                     <strong
                         id="set-discount-amount">{{\App\CPU\BackEndHelper::usd_to_currency(\App\CPU\Helpers::get_product_discount($product, $product['unit_price']))}}</strong>
                 </div>
@@ -57,7 +57,7 @@
             }
 
             ?>
-            <h3>{{__('messages.description')}}</h3>
+            <h3>{{\App\CPU\translate('description')}}</h3>
             <span class="d-block text-dark">
                 {!! $product->description !!}
             </span>
@@ -144,10 +144,7 @@
                 </div>
 
                 <div class="d-flex justify-content-center mt-2">
-                    <button class="btn btn--primary"
-                            onclick="addToCart()"
-                            type="button"
-                            style="width:37%; height: 45px">
+                    <button class="btn btn--primary" onclick="addToCart()" type="button">
                         <i class="tio-shopping-cart"></i>
                         {{\App\CPU\translate('add')}}
                     </button>

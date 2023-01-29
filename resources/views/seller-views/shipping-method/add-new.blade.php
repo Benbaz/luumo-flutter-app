@@ -196,6 +196,7 @@
                     </tbody>
                 </table>
             </div>
+
         </div>
     </div>
 @endsection
@@ -257,7 +258,7 @@
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: '{{\App\CPU\translate('Yes, delete it!')}}'
+                confirmButtonText: '{{\App\CPU\translate('Yes')}}, {{\App\CPU\translate('delete it')}}'
             }).then((result) => {
                 if (result.value) {
                     $.ajaxSetup({

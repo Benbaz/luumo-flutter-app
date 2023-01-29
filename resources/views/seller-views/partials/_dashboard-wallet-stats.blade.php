@@ -49,7 +49,7 @@
                     <div class="d-flex gap-2 justify-content-between align-items-center">
                         <div class="d-flex flex-column align-items-start">
                             <h3 class="mb-1 fz-24">{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($data['withdrawn']))}}</h3>
-                            <div class="text-capitalize mb-0">{{\App\CPU\translate('Aready_Withdrawn')}}</div>
+                            <div class="text-capitalize mb-0">{{\App\CPU\translate('Already_Withdrawn')}}</div>
                         </div>
                         <div>
                             <img width="40" src="{{asset('/public/assets/back-end/img/aw.png')}}" alt="">
@@ -98,4 +98,4 @@
             </div>
         </div>
     </div>
-        
+

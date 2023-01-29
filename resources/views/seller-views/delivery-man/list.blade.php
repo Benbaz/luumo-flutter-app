@@ -34,7 +34,7 @@
                                 </div>
                                 <input id="datatableSearch_" type="search" name="search" class="form-control"
                                         placeholder="Search" aria-label="Search" value="{{$search}}" required>
-                                <button type="submit" class="btn btn--primary">search</button>
+                                <button type="submit" class="btn btn--primary">{{\App\CPU\translate('search')}}</button>
 
                             </div>
                             <!-- End Search -->
@@ -49,38 +49,52 @@
 
             <!-- Table -->
             <div class="table-responsive datatable-custom">
-                <table class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
-                    <thead class="thead-light thead-50 text-capitalize">
+                <table class="table table-hover table-borderless table-thead-bordered table-align-middle card-table">
+                    <thead class="thead-light thead-50 text-capitalize table-nowrap">
                     <tr>
                         <th>{{\App\CPU\translate('SL')}}</th>
                         <th>{{\App\CPU\translate('name')}}</th>
                         <th>{{\App\CPU\translate('Contact_Info')}}</th>
                         <th>{{\App\CPU\translate('Total_Orders')}}</th>
+                        <th>{{\App\CPU\translate('Rating')}}</th>
                         <th>{{\App\CPU\translate('status')}}</th>
                         <th class="text-center">{{\App\CPU\translate('action')}}</th>
                     </tr>
                     </thead>
 
                     <tbody id="set-rows">
-                    @foreach($delivery_men as $key=>$dm)
+                    @forelse($delivery_men as $key=>$dm)
                         <tr>
                             <td>{{$delivery_men->firstitem()+$key}}</td>
                             <td>
-                                <div class="media align-items-center gap-10 flex-wrap">
+                                <div class="media align-items-center gap-10">
                                     <img class="avatar avatar-lg rounded-circle"
                                             onerror="this.src='{{asset('public/assets/back-end/img/160x160/img1.jpg')}}'"
                                             src="{{asset('storage/app/public/delivery-man')}}/{{$dm['image']}}">
-                                    <div class="media-body">{{$dm['f_name'].' '.$dm['l_name']}}</div>
+                                    <div class="media-body">
+                                        <a title="Earning Statement"
+                                           class="title-color hover-c1"
+                                           href="{{ route('seller.delivery-man.earning-statement', ['id' => $dm['id']]) }}">
+                                            {{$dm['f_name'].' '.$dm['l_name']}}
+                                        </a>
+                                    </div>
                                 </div>
                             </td>
                             <td>
                                 <div class="d-flex flex-column gap-1">
                                     <div><a class="title-color hover-c1" href="mailto:{{$dm['email']}}"><strong>{{$dm['email']}}</strong></a></div>
-                                    <a class="title-color hover-c1" href="tel:{{$dm['phone']}}">{{$dm['phone']}}</a>
+                                    <a class="title-color hover-c1" href="tel:+{{$dm['country_code']}}{{$dm['phone']}}">+{{$dm['country_code']. ' ' .$dm['phone']}}</a>
                                 </div>
                             </td>
                             <td>
-                                <span class="badge fz-14 badge-soft--primary">{{$dm['orders_count']}}</span>
+                                <a href="{{ route('seller.orders.list', ['all', 'delivery_man_id' => $dm['id']]) }}" class="badge fz-14 badge-soft--primary">
+                                    <span>{{ $dm->orders_count }}</span>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="{{ route('seller.delivery-man.rating', ['id' => $dm['id']]) }}" class="badge fz-14 badge-soft-info">
+                                    <span>{{ isset($dm->rating[0]->average) ? number_format($dm->rating[0]->average, 2, '.', ' ') : 0 }} <i class="tio-star"></i> </span>
+                                </a>
                             </td>
                             <td>
                                 <label class="switcher">
@@ -96,6 +110,11 @@
                                         href="{{route('seller.delivery-man.edit',[$dm['id']])}}">
                                         <i class="tio-edit"></i>
                                     </a>
+                                    <a title="Earning Statement"
+                                       class="btn btn-outline-info btn-sm square-btn"
+                                       href="{{ route('seller.delivery-man.earning-statement', ['id' => $dm['id']]) }}">
+                                        <i class="tio-money"></i>
+                                    </a>
                                     <a class="btn btn-outline-danger btn-sm square-btn"
                                         title="{{\App\CPU\translate('Delete')}}"
                                         href="javascript:"
@@ -109,7 +128,16 @@
                                 </div>
                             </td>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="7">
+                                <div class="text-center p-4">
+                                    <img class="mb-3 w-160" src="{{ asset('public/assets/back-end/svg/illustrations/sorry.svg') }}" alt="Image Description">
+                                    <p class="mb-0">{{\App\CPU\translate('No_delivery_man_found')}}</p>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforelse
                     </tbody>
                 </table>
 

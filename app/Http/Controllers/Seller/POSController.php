@@ -536,16 +536,23 @@ class POSController extends Controller
                 ->where('customer_type', 'customer')
                 ->where('coupon_code', $request['coupon_code'])->count();
 
-            $coupon = Coupon::where(['code' => $request['coupon_code']])
+            $coupon = Coupon::where(['code' => $request['coupon_code'], 'coupon_bearer'=>'seller'])
             ->where('limit', '>', $couponLimit)
             ->where('status', '=', 1)
             ->whereDate('start_date', '<=', now())
             ->whereDate('expire_date', '>=', now())->first();
         }else{
-            $coupon = Coupon::where(['code' => $request['coupon_code']])
+            $coupon = Coupon::where(['code' => $request['coupon_code'], 'coupon_bearer'=>'seller'])
             ->where('status', '=', 1)
             ->whereDate('start_date', '<=', now())
             ->whereDate('expire_date', '>=', now())->first();
+        }
+
+        if(!$coupon || $coupon->coupon_type == 'free_delivery' || $coupon->coupon_type == 'first_order') {
+            return response()->json([
+                'coupon' => 'coupon_invalid',
+                'view' => view('seller-views.pos._cart', compact('cart_id'))->render()
+            ]);
         }
 
         $carts = session($cart_id);
@@ -554,17 +561,14 @@ class POSController extends Controller
         $product_tax =0;
         $ext_discount = 0;
 
-        if($coupon!=null)
-        {
-            if($carts!=null)
-            {
-                foreach($carts as $cart)
-                {
+        if(($coupon->seller_id=='0' || $coupon->seller_id==auth('seller')->id()) && ($coupon->customer_id == '0' || $coupon->customer_id == $user_id)) {
+            if ($carts != null) {
+                foreach ($carts as $cart) {
                     if (is_array($cart)) {
-                    $product = Product::find($cart['id']);
-                    $total_product_price += $cart['price'] * $cart['quantity'];
-                    $product_discount += $cart['discount'] * $cart['quantity'];
-                    $product_tax += Helpers::tax_calculation($cart['price'], $product['tax'], $product['tax_type'])*$cart['quantity'];
+                        $product = Product::find($cart['id']);
+                        $total_product_price += $cart['price'] * $cart['quantity'];
+                        $product_discount += $cart['discount'] * $cart['quantity'];
+                        $product_tax += Helpers::tax_calculation($cart['price'], $product['tax'], $product['tax_type']) * $cart['quantity'];
                     }
                 }
                 if ($total_product_price >= $coupon['min_purchase']) {
@@ -580,37 +584,31 @@ class POSController extends Controller
                     }
                     $total = $total_product_price - $product_discount + $product_tax - $discount - $ext_discount;
                     //return $total;
-                    if($total < 0)
-                    {
+                    if ($total < 0) {
                         return response()->json([
-                           'coupon' =>"amount_low",
-                           'view' => view('seller-views.pos._cart',compact('cart_id'))->render()
-                    ]);
+                            'coupon' => "amount_low",
+                            'view' => view('seller-views.pos._cart', compact('cart_id'))->render()
+                        ]);
                     }
 
                     $cart = session($cart_id, collect([]));
                     $cart['coupon_code'] = $request['coupon_code'];
                     $cart['coupon_discount'] = $discount;
                     $cart['coupon_title'] = $coupon->title;
+                    $cart['coupon_bearer'] = $coupon->coupon_bearer;
                     $request->session()->put($cart_id, $cart);
 
                     return response()->json([
-                           'coupon' =>'success',
-                           'view' => view('seller-views.pos._cart',compact('cart_id'))->render()
+                        'coupon' => 'success',
+                        'view' => view('seller-views.pos._cart', compact('cart_id'))->render()
                     ]);
                 }
-            }else{
+            } else {
                 return response()->json([
-                    'coupon' =>'cart_empty',
-                    'view' => view('seller-views.pos._cart',compact('cart_id'))->render()
+                    'coupon' => 'cart_empty',
+                    'view' => view('seller-views.pos._cart', compact('cart_id'))->render()
                 ]);
             }
-
-            return response()->json([
-                'coupon' =>'coupon_invalid',
-                'view' => view('seller-views.pos._cart',compact('cart_id'))->render()
-            ]);
-
         }
 
         return response()->json([
@@ -834,6 +832,8 @@ class POSController extends Controller
             'order_amount' => BackEndHelper::currency_to_usd($request->amount),
             'discount_amount' => $cart['coupon_discount']??0,
             'coupon_code' => $cart['coupon_code']??null,
+            'discount_type' => (isset($cart['coupon_code']) && $cart['coupon_code']) ? 'coupon_discount' : NULL,
+            'coupon_discount_bearer' => $cart['coupon_bearer']??'inhouse',
             'created_at' => now(),
             'updated_at' => now(),
         ];

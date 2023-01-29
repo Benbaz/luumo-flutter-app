@@ -99,7 +99,7 @@
             </div>
 
             @if ($product->code !== null)
-                <div class="barcode_image">{!! DNS1D::getBarcodeHTML($product->code, 'CODABAR') !!}</div>
+                <div class="barcode_image">{!! DNS1D::getBarcodeHTML($product->code, 'C128') !!}</div>
                 <div class="barcode_code text-capitalize">{{ \App\CPU\translate('code') }} : {{ $product->code }}</div>
             @else
                 <p class="text-danger">{{ \App\CPU\translate('please_update_product_code') }}</p>

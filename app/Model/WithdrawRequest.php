@@ -16,4 +16,8 @@ class WithdrawRequest extends Model
     public function seller(){
         return $this->belongsTo(Seller::class,'seller_id');
     }
+
+    public function delivery_men(){
+        return $this->belongsTo(DeliveryMan::class,'delivery_man_id');
+    }
 }

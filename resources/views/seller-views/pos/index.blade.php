@@ -143,7 +143,7 @@
                             </center>
                             <hr class="non-printable">
                         </div>
-                        <div class="row" id="printableArea" style="margin: auto;">
+                        <div class="row m-auto" id="printableArea">
                             @include('seller-views.pos.order.invoice')
                         </div>
 

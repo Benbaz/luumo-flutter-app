@@ -46,6 +46,13 @@
                             <div class="row">
                                 <div class="col-sm-6 col-lg-3">
                                     <div class="form-group d-flex gap-2">
+                                        <input type="checkbox" name="modules[]" value="dashboard" class="module-permission" id="dashboard">
+                                        <label class="title-color mb-0" style="{{Session::get('direction') === "rtl" ? 'margin-right: 1.25rem;' : ''}};"
+                                               for="dashboard">{{\App\CPU\translate('Dashboard')}}</label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-lg-3">
+                                    <div class="form-group d-flex gap-2">
                                         <input type="checkbox" class="module-permission" name="modules[]" value="order_management" id="order">
                                         <label class="title-color mb-0" style="{{Session::get('direction') === "rtl" ? 'margin-right: 1.25rem;' : ''}};" for="order">{{\App\CPU\translate('Order_Management')}}</label>
                                     </div>
@@ -59,9 +66,9 @@
                                 </div>
                                 <div class="col-sm-6 col-lg-3">
                                     <div class="form-group d-flex gap-2">
-                                        <input type="checkbox" class="module-permission" name="modules[]" value="promotion_management" id="product">
+                                        <input type="checkbox" class="module-permission" name="modules[]" value="promotion_management" id="promotion_management">
                                         <label class="title-color mb-0" style="{{Session::get('direction') === "rtl" ? 'margin-right: 1.25rem;' : ''}};"
-                                               for="product">{{\App\CPU\translate('Promotion_Management')}}</label>
+                                               for="promotion_management">{{\App\CPU\translate('Promotion_Management')}}</label>
                                     </div>
                                 </div>
                                 <div class="col-sm-6 col-lg-3">
@@ -125,18 +132,18 @@
                                         </div>
                                         <input id="datatableSearch_" type="search" name="search" class="form-control" placeholder="{{\App\CPU\translate('search_role')}}"
                                                value="{{$search}}">
-                                        <button type="submit" class="btn btn--primary">Search</button>
+                                        <button type="submit" class="btn btn--primary">{{\App\CPU\translate('search')}}</button>
                                     </div>
                                 </form>
                                 <!-- End Search -->
                                 <div class="">
                                     <button type="button" class="btn btn-outline--primary text-nowrap" data-toggle="dropdown">
                                         <i class="tio-download-to"></i>
-                                        Export
+                                        {{\App\CPU\translate('export')}}
                                         <i class="tio-chevron-down"></i>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-right">
-                                        <li><a class="dropdown-item" href="{{route('admin.custom-role.export')}}">Excel</a></li>
+                                        <li><a class="dropdown-item" href="{{route('admin.custom-role.export')}}">{{\App\CPU\translate('excel')}}</a></li>
                                         <div class="dropdown-divider"></div>
                                     </ul>
                                 </div>
@@ -165,7 +172,15 @@
                                         <td class="text-capitalize">
                                             @if($r['module_access']!=null)
                                                 @foreach((array)json_decode($r['module_access']) as $m)
-                                                    {{str_replace('_',' ',$m)}} <br>
+                                                    @if($m == 'report')
+                                                        {{\App\CPU\translate('Reports_&_Analytics')}} <br>
+                                                    @elseif($m == 'user_section')
+                                                        {{\App\CPU\translate('User_Management')}} <br>
+                                                    @elseif($m == 'support_section')
+                                                        {{\App\CPU\translate('Help_&_Support_Section')}} <br>
+                                                    @else
+                                                        {{\App\CPU\translate(str_replace('_',' ',$m))}} <br>
+                                                    @endif
                                                 @endforeach
                                             @endif
                                         </td>

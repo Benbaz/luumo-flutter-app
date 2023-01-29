@@ -50,11 +50,11 @@
                             <div>
                                 <button type="button" class="btn btn-outline--primary" data-toggle="dropdown">
                                     <i class="tio-download-to"></i>
-                                    Export
+                                    {{\App\CPU\translate('Export')}}
                                     <i class="tio-chevron-down"></i>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-right">
-                                    <li><a class="dropdown-item" href="{{route('admin.product.export-excel',['in_house', ''])}}">Excel</a></li>
+                                    <li><a class="dropdown-item" href="{{route('admin.product.export-excel',['in_house', ''])}}">{{\App\CPU\translate('Excel')}}</a></li>
                                     <div class="dropdown-divider"></div>
                                 </ul>
                             </div>
@@ -100,7 +100,7 @@
                                     </a>
                                 </td>
                                 <td class="text-right">
-                                    {{ ucfirst($p['product_type']) }}
+                                    {{\App\CPU\translate(str_replace('_',' ',$p['product_type']))}}
                                 </td>
                                 <td class="text-right">
                                     {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($p['purchase_price']))}}
@@ -128,12 +128,9 @@
                                             href="{{ route('admin.product.barcode', [$p['id']]) }}">
                                             <i class="tio-barcode"></i>
                                         </a>
-
-                                        <!-- <a class="btn btn-info btn-sm"
-                                            title="{{\App\CPU\translate('view')}}"
-                                            href="{{route('admin.product.view',[$p['id']])}}">
-                                            <i class="tio-visible"></i>
-                                        </a> -->
+                                        <a class="btn btn-outline-info btn-sm square-btn" title="View" href="{{route('admin.product.view',[$p['id']])}}">
+                                            <i class="tio-invisible"></i>
+                                        </a>
                                         <a class="btn btn-outline--primary btn-sm square-btn"
                                             title="{{\App\CPU\translate('Edit')}}"
                                             href="{{route('admin.product.edit',[$p['id']])}}">

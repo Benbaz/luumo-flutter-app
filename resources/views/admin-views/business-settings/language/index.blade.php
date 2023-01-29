@@ -2,10 +2,6 @@
 
 @section('title', \App\CPU\translate('Language'))
 
-@push('css_or_js')
-
-@endpush
-
 @section('content')
     <div class="content container-fluid">
         <!-- Page Title -->
@@ -305,7 +301,7 @@
                     showCancelButton: true,
                     confirmButtonColor: 'primary',
                     cancelButtonColor: 'secondary',
-                    confirmButtonText: '{{\App\CPU\translate("Yes, delete it")}}!'
+                    confirmButtonText: '{{\App\CPU\translate('Yes')}}, {{\App\CPU\translate('delete it')}}!'
                 }).then((result) => {
                     if (result.value) {
                         window.location.href = $(this).attr("id");

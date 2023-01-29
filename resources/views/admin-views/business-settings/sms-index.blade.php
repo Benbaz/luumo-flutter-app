@@ -28,7 +28,7 @@
                         <h5 class="mb-0">{{\App\CPU\translate('releans_sms')}}</h5>
                     </div>
                     <div class="card-body text-{{Session::get('direction') === "rtl" ? 'right' : 'left'}}">
-                        <span class="badge text-wrap badge-soft-info mb-3">NB : #OTP# will be replace with otp</span>
+                        <span class="badge text-wrap badge-soft-info mb-3">{{\App\CPU\translate('NB_:_#OTP#_will_be_replace_with_otp')}}</span>
                         @php($config=\App\CPU\Helpers::get_business_settings('releans_sms'))
                         <form action="{{env('APP_MODE')!='demo'?route('admin.business-settings.sms-module-update',['releans_sms']):'javascript:'}}"
                               style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};"
@@ -81,7 +81,7 @@
                         <h5 class="mb-0">{{\App\CPU\translate('twilio_sms')}}</h5>
                     </div>
                     <div class="card-body text-{{Session::get('direction') === "rtl" ? 'right' : 'left'}}">
-                        <span class="badge text-wrap badge-soft-info mb-3">NB : #OTP# will be replace with otp</span>
+                        <span class="badge text-wrap badge-soft-info mb-3">{{\App\CPU\translate('NB_:_#OTP#_will_be_replace_with_otp')}}</span>
                         @php($config=\App\CPU\Helpers::get_business_settings('twilio_sms'))
                         <form action="{{env('APP_MODE')!='demo'?route('admin.business-settings.sms-module-update',['twilio_sms']):'javascript:'}}"
                               style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};"
@@ -143,7 +143,7 @@
                         <h5 class="mb-0">{{\App\CPU\translate('nexmo_sms')}}</h5>
                     </div>
                     <div class="card-body text-{{Session::get('direction') === "rtl" ? 'right' : 'left'}}">
-                        <span class="badge text-wrap badge-soft-info mb-3">NB : #OTP# will be replace with otp</span>
+                        <span class="badge text-wrap badge-soft-info mb-3">{{\App\CPU\translate('NB_:_#OTP#_will_be_replace_with_otp')}}</span>
                         @php($config=\App\CPU\Helpers::get_business_settings('nexmo_sms'))
                         <form action="{{env('APP_MODE')!='demo'?route('admin.business-settings.sms-module-update',['nexmo_sms']):'javascript:'}}"
                               style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};"

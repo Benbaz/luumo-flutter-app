@@ -36,7 +36,7 @@
                                     name="value">{{$terms_condition->value}}</textarea>
                             </div>
                             <div class="form-group">
-                                <input class="form-control btn--primary" type="submit" name="btn">
+                                <input class="form-control btn--primary" type="submit" value="{{\App\CPU\translate('submit')}}" name="btn">
                             </div>
                         </div>
                     </form>

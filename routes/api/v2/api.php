@@ -6,6 +6,7 @@ Route::group(['namespace' => 'api\v2', 'prefix' => 'v2', 'middleware' => ['api_l
     Route::group(['prefix' => 'seller', 'namespace' => 'seller'], function () {
 
         Route::get('seller-info', 'SellerController@seller_info');
+        Route::get('account-delete','SellerController@account_delete');
         Route::get('seller-delivery-man', 'SellerController@seller_delivery_man');
         Route::get('shop-product-reviews', 'SellerController@shop_product_reviews');
         Route::get('shop-product-reviews-status','SellerController@shop_product_reviews_status');
@@ -44,6 +45,7 @@ Route::group(['namespace' => 'api\v2', 'prefix' => 'v2', 'middleware' => ['api_l
             Route::put('order-detail-status/{id}', 'OrderController@order_detail_status');
             Route::put('assign-delivery-man', 'OrderController@assign_delivery_man');
             Route::put('order-wise-product-upload', 'OrderController@digital_file_upload_after_sell');
+            Route::put('delivery-charge-date-update', 'OrderController@amount_date_update');
 
             Route::post('assign-third-party-delivery','OrderController@assign_third_party_delivery');
             Route::post('update-payment-status','OrderController@update_payment_status');
@@ -72,8 +74,10 @@ Route::group(['namespace' => 'api\v2', 'prefix' => 'v2', 'middleware' => ['api_l
         });
 
         Route::group(['prefix' => 'messages'], function () {
-            Route::get('list', 'ChatController@messages');
-            Route::post('send', 'ChatController@send_message');
+            Route::get('list/{type}', 'ChatController@list');
+            Route::get('get-message/{type}/{id}', 'ChatController@get_message');
+            Route::post('send/{type}', 'ChatController@send_message');
+            Route::get('search/{type}', 'ChatController@search');
         });
 
         Route::group(['prefix' => 'auth', 'namespace' => 'auth'], function () {
@@ -94,19 +98,51 @@ Route::group(['namespace' => 'api\v2', 'prefix' => 'v2', 'middleware' => ['api_l
 
         Route::group(['prefix' => 'auth', 'namespace' => 'auth'], function () {
             Route::post('login', 'LoginController@login');
+            Route::post('forgot-password', 'LoginController@reset_password_request');
+            Route::post('verify-otp', 'LoginController@otp_verification_submit');
+            Route::post('reset-password', 'LoginController@reset_password_submit');
         });
 
         Route::group(['middleware' => ['delivery_man_auth']], function () {
+            Route::put('is-online', 'DeliveryManController@is_online');
             Route::get('info', 'DeliveryManController@info');
+            Route::post('distance-api', 'DeliveryManController@distance_api');
             Route::get('current-orders', 'DeliveryManController@get_current_orders');
             Route::get('all-orders', 'DeliveryManController@get_all_orders');
             Route::post('record-location-data', 'DeliveryManController@record_location_data');
             Route::get('order-delivery-history', 'DeliveryManController@get_order_history');
             Route::put('update-order-status', 'DeliveryManController@update_order_status');
+            Route::put('update-expected-delivery', 'DeliveryManController@update_expected_delivery');
             Route::put('update-payment-status', 'DeliveryManController@order_payment_status_update');
+            Route::put('order-update-is-pause', 'DeliveryManController@order_update_is_pause');
             Route::get('order-details', 'DeliveryManController@get_order_details');
             Route::get('last-location', 'DeliveryManController@get_last_location');
             Route::put('update-fcm-token', 'DeliveryManController@update_fcm_token');
+
+            Route::get('delivery-wise-earned', 'DeliveryManController@delivery_wise_earned');
+            Route::get('order-list-by-date', 'DeliveryManController@order_list_date_filter');
+            Route::get('search', 'DeliveryManController@search');
+            Route::get('profile-dashboard-counts', 'DeliveryManController@profile_dashboard_counts');
+            Route::post('change-status', 'DeliveryManController@change_status');
+            Route::put('update-info', 'DeliveryManController@update_info');
+            Route::put('bank-info', 'DeliveryManController@bank_info');
+            Route::get('review-list', 'DeliveryManController@review_list');
+            Route::put('save-review', 'DeliveryManController@is_saved');
+            Route::get('collected_cash_history', 'DeliveryManController@collected_cash_history');
+            Route::get('emergency-contact-list', 'DeliveryManController@emergency_contact_list');
+            Route::get('notifications', 'DeliveryManController@get_all_notification');
+
+            Route::post('withdraw-request', 'WithdrawController@withdraw_request');
+            Route::get('withdraw-list-by-approved', 'WithdrawController@withdraw_list_by_approved');
+
+            Route::group(['prefix' => 'messages'], function (){
+                Route::get('list/{type}', 'ChatController@list');
+                Route::get('get-message/{type}/{id}', 'ChatController@get_message');
+                Route::post('send-message/{type}', 'ChatController@send_message');
+                Route::get('search/{type}', 'ChatController@search');
+            });
         });
+
     });
 });
+

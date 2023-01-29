@@ -43,7 +43,7 @@
                                             id="business_section_{{$key}}">
                                         <label class="form-check-label text-dark"
                                             style="{{Session::get('direction') === "rtl" ? 'margin-right: 1.25rem;' : ''}};"
-                                            for="business_section_{{$key}}">{{ Str::limit($table, 20) }}</label>
+                                            for="business_section_{{$key}}">{{\App\CPU\translate(str_replace('_',' ',Str::limit($table, 20)))}}</label>
                                         <span class="badge-pill badge-secondary mx-2">{{$rows[$key]}}</span>
                                     </div>
                                 </div>
